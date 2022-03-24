@@ -9,6 +9,7 @@
 #include "../CgEvents/CgWindowResizeEvent.h"
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
+#include "../CgEvents/CgColorChangeEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -147,44 +148,58 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
 
     /*Example for using a label */
 
-    QLabel *options_label = new QLabel("Options");
+    QLabel *options_label = new QLabel("Farbe auswählen in RGB");
     tab1_control->addWidget(options_label);
     options_label->setAlignment(Qt::AlignCenter);
 
 
     /*Example for using a spinbox */
 
-    mySpinBox1 = new QSpinBox();
-    tab1_control->addWidget(mySpinBox1);
-    mySpinBox1->setMinimum(1);
-    mySpinBox1->setMaximum(50);
-    mySpinBox1->setValue(3);
-   // mySpinBox1->setSuffix("   suffix");
-   // mySpinBox1->setPrefix("Prefix:  ");
-    connect(mySpinBox1, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
-    tab1_control->addWidget(mySpinBox1);
+    //mySpinBox1->setSuffix("   suffix");
+    SpinBoxRed = new QSpinBox();
+    tab1_control->addWidget(SpinBoxRed);
+    SpinBoxRed->setMinimum(0);
+    SpinBoxRed->setMaximum(255);
+    SpinBoxRed->setValue(100);
+    SpinBoxRed->setPrefix("R: ");
+
+    SpinBoxGreen = new QSpinBox();
+    tab1_control->addWidget(SpinBoxGreen);
+    SpinBoxGreen->setMinimum(0);
+    SpinBoxGreen->setMaximum(255);
+    SpinBoxGreen->setValue(100);
+    SpinBoxGreen->setPrefix("G: ");
+
+    SpinBoxBlue = new QSpinBox();
+    tab1_control->addWidget(SpinBoxBlue);
+    SpinBoxBlue->setMinimum(0);
+    SpinBoxBlue->setMaximum(255);
+    SpinBoxBlue->setValue(100);
+    SpinBoxBlue->setPrefix("B: ");
+
+    connect(SpinBoxRed, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
+    tab1_control->addWidget(SpinBoxRed);
+    tab1_control->addWidget(SpinBoxGreen);
+    tab1_control->addWidget(SpinBoxBlue);
 
 
     /*Example for using a checkbox */
 
-    myCheckBox1 = new QCheckBox("enable Option 1");
-    myCheckBox1->setCheckable(true);
-    myCheckBox1->setChecked(false);
-    connect(myCheckBox1, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
-    tab1_control->addWidget(myCheckBox1);
+//    myCheckBox1 = new QCheckBox("enable Option 1");
+//    myCheckBox1->setCheckable(true);
+//    myCheckBox1->setChecked(false);
+//    connect(myCheckBox1, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
+//    tab1_control->addWidget(myCheckBox1);
 
 
     /*Example for using a button */
 
-    QPushButton* myButton1 = new QPushButton("&drueck mich");
+    QPushButton* myButton1 = new QPushButton("Farbe bestätigen");
     tab1_control->addWidget(myButton1);
 
-    connect(myButton1, SIGNAL( clicked() ), this, SLOT(slotMyButton1Pressed()) );
-
-
+    connect(myButton1, SIGNAL(clicked()), this, SLOT(slotButtonChangeColorPressed()));
 
     parent->setLayout(tab1_control);
-
 }
 
 void CgQtGui::createOptionPanelExample2(QWidget* parent)
@@ -272,9 +287,11 @@ void CgQtGui::slotTrackballChanged()
     notifyObserver(e);
 }
 
-void CgQtGui::slotMyButton1Pressed()
+void CgQtGui::slotButtonChangeColorPressed()
 {
    std::cout << "button 1 pressed " << std::endl;
+   CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButtonColorChangePress, SpinBoxRed->value(), SpinBoxGreen->value(), SpinBoxBlue->value());
+   notifyObserver(e);
 
 }
 

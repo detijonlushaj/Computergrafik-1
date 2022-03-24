@@ -1,3 +1,5 @@
+//Objekte und Strukturen anlegen, verwalten resetten und l¨oschen. Dies stellt den Bereich Control“ des MVC Konzeptes dar.
+
 #include "CgSceneControl.h"
 #include "CgBase/CgEnums.h"
 #include "CgEvents/CgMouseEvent.h"
@@ -6,20 +8,23 @@
 #include "CgEvents/CgLoadObjFileEvent.h"
 #include "CgEvents/CgTrackballEvent.h"
 #include "CgBase/CgBaseRenderer.h"
+#include "CgEvents/CgColorChangeEvent.h"
 #include "CgExampleTriangle.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
 #include <string>
 
+
+
 CgSceneControl::CgSceneControl()
 {
     m_triangle=nullptr;
-     m_current_transformation=glm::mat4(1.);
-      m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
-     m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
-   m_trackball_rotation=glm::mat4(1.);
-     m_triangle= new CgExampleTriangle(21);
+    m_current_transformation=glm::mat4(1.);
+    m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
+    m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
+    m_trackball_rotation=glm::mat4(1.);
+    m_triangle= new CgExampleTriangle(21);
 
 
 }
@@ -160,11 +165,20 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
           std::vector<unsigned int> indx;
           loader->getFaceIndexData(indx);
 
-
-
         m_triangle->init(pos,norm,indx);
         m_renderer->init(m_triangle);
         m_renderer->redraw();
+    }
+
+    //Farber aendern Event
+    if(e->getType() & Cg::CgButtonColorChangePress)
+    {
+        CgColorChangeEvent* ev = (CgColorChangeEvent*)e;
+        std::cout << *ev << std::endl;
+
+//        m_renderer->setUniformValue("mycolor",glm::vec4(100.0,100.0,0.0,1.0));
+//        m_renderer->redraw();
+
     }
 
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.

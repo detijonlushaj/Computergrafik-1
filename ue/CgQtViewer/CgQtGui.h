@@ -101,7 +101,9 @@ private:
     void createOptionPanelExample2(QWidget* panel);
     QButtonGroup* myButtonGroup;
     QCheckBox* myCheckBox1;
-    QSpinBox* mySpinBox1;
+    QSpinBox* SpinBoxRed;
+    QSpinBox* SpinBoxGreen;
+    QSpinBox* SpinBoxBlue;
 
 
 private slots:
@@ -116,7 +118,7 @@ private slots:
     /* slots example qt gui elements */
     void slotMySpinBox1Changed();
     void slotMyCheckBox1Changed();
-    void slotMyButton1Pressed();
+    void slotButtonChangeColorPressed();
     void slotButtonGroupSelectionChanged();
     void slotLoadMeshFile();
 

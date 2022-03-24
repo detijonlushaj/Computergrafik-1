@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_CgQtGui_t {
     QByteArrayData data[12];
-    char stringdata0[191];
+    char stringdata0[199];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,15 +40,15 @@ QT_MOC_LITERAL(5, 39, 15), // "viewportChanged"
 QT_MOC_LITERAL(6, 55, 20), // "slotTrackballChanged"
 QT_MOC_LITERAL(7, 76, 21), // "slotMySpinBox1Changed"
 QT_MOC_LITERAL(8, 98, 22), // "slotMyCheckBox1Changed"
-QT_MOC_LITERAL(9, 121, 20), // "slotMyButton1Pressed"
-QT_MOC_LITERAL(10, 142, 31), // "slotButtonGroupSelectionChanged"
-QT_MOC_LITERAL(11, 174, 16) // "slotLoadMeshFile"
+QT_MOC_LITERAL(9, 121, 28), // "slotButtonChangeColorPressed"
+QT_MOC_LITERAL(10, 150, 31), // "slotButtonGroupSelectionChanged"
+QT_MOC_LITERAL(11, 182, 16) // "slotLoadMeshFile"
 
     },
     "CgQtGui\0mouseEvent\0\0QMouseEvent*\0event\0"
     "viewportChanged\0slotTrackballChanged\0"
     "slotMySpinBox1Changed\0slotMyCheckBox1Changed\0"
-    "slotMyButton1Pressed\0"
+    "slotButtonChangeColorPressed\0"
     "slotButtonGroupSelectionChanged\0"
     "slotLoadMeshFile"
 };
@@ -101,7 +101,7 @@ void CgQtGui::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 2: _t->slotTrackballChanged(); break;
         case 3: _t->slotMySpinBox1Changed(); break;
         case 4: _t->slotMyCheckBox1Changed(); break;
-        case 5: _t->slotMyButton1Pressed(); break;
+        case 5: _t->slotButtonChangeColorPressed(); break;
         case 6: _t->slotButtonGroupSelectionChanged(); break;
         case 7: _t->slotLoadMeshFile(); break;
         default: ;

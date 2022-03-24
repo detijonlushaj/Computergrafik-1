@@ -53,6 +53,7 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
+		CgEvents/CgColorChangeEvent.cpp \
 		CgQtViewer/CGQtGLRenderWidget.cpp \
 		CgQtViewer/CgQtGui.cpp \
 		CgBase/CgObservable.cpp \
@@ -70,6 +71,7 @@ SOURCES       = main.cpp \
 		moc_CgQtGui.cpp \
 		moc_CgQtMainApplication.cpp
 OBJECTS       = main.o \
+		CgColorChangeEvent.o \
 		CGQtGLRenderWidget.o \
 		CgQtGui.o \
 		CgObservable.o \
@@ -143,6 +145,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -161,7 +164,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		CG1Uebung.pro CgQtViewer/CgQtGLRenderWidget.h \
+		CG1Uebung.pro CgEvents/CgColorChangeEvent.h \
+		CgQtViewer/CgQtGLRenderWidget.h \
 		CgQtViewer/CgQtGui.h \
 		CgBase/CgObserver.h \
 		CgBase/CgObservable.h \
@@ -186,6 +190,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CgUtils/ObjLoader.h \
 		CgBase/CgBaseImage.h \
 		CgEvents/CgTrackballEvent.h main.cpp \
+		CgEvents/CgColorChangeEvent.cpp \
 		CgQtViewer/CGQtGLRenderWidget.cpp \
 		CgQtViewer/CgQtGui.cpp \
 		CgBase/CgObservable.cpp \
@@ -267,6 +272,7 @@ Makefile: CG1Uebung.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -343,6 +349,7 @@ Makefile: CG1Uebung.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.co
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -377,8 +384,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents CgQtViewer/CgQtGLRenderWidget.h CgQtViewer/CgQtGui.h CgBase/CgObserver.h CgBase/CgObservable.h CgBase/CgBaseEvent.h CgBase/CgEnums.h CgEvents/CgMouseEvent.h CgQtViewer/CgQtMainApplication.h CgSceneGraph/CgSceneControl.h CgEvents/CgKeyEvent.h CgBase/CgBaseRenderer.h CgBase/CgBaseRenderableObject.h CgSceneGraph/CgExampleTriangle.h CgBase/CgBasePointCloud.h CgBase/CgBaseTriangleMesh.h CgBase/CgBasePolygonMesh.h CgBase/CgBasePolyline.h CgBase/CgBaseSceneControl.h CgQtViewer/CgQtGlBufferObject.h CgQtViewer/CgTrackball.h CgEvents/CgWindowResizeEvent.h CgEvents/CgLoadObjFileEvent.h CgUtils/ObjLoader.h CgBase/CgBaseImage.h CgEvents/CgTrackballEvent.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp CgQtViewer/CGQtGLRenderWidget.cpp CgQtViewer/CgQtGui.cpp CgBase/CgObservable.cpp CgEvents/CgMouseEvent.cpp CgQtViewer/CgQtMainApplication.cpp CgSceneGraph/CgSceneControl.cpp CgEvents/CgKeyEvent.cpp CgSceneGraph/CgExampleTriangle.cpp CgQtViewer/CgQtGlBufferObject.cpp CgQtViewer/CgTrackball.cpp CgEvents/CgWindowResizeEvent.cpp CgEvents/CgLoadObjFileEvent.cpp CgUtils/ObjLoader.cpp CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents CgEvents/CgColorChangeEvent.h CgQtViewer/CgQtGLRenderWidget.h CgQtViewer/CgQtGui.h CgBase/CgObserver.h CgBase/CgObservable.h CgBase/CgBaseEvent.h CgBase/CgEnums.h CgEvents/CgMouseEvent.h CgQtViewer/CgQtMainApplication.h CgSceneGraph/CgSceneControl.h CgEvents/CgKeyEvent.h CgBase/CgBaseRenderer.h CgBase/CgBaseRenderableObject.h CgSceneGraph/CgExampleTriangle.h CgBase/CgBasePointCloud.h CgBase/CgBaseTriangleMesh.h CgBase/CgBasePolygonMesh.h CgBase/CgBasePolyline.h CgBase/CgBaseSceneControl.h CgQtViewer/CgQtGlBufferObject.h CgQtViewer/CgTrackball.h CgEvents/CgWindowResizeEvent.h CgEvents/CgLoadObjFileEvent.h CgUtils/ObjLoader.h CgBase/CgBaseImage.h CgEvents/CgTrackballEvent.h $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp CgEvents/CgColorChangeEvent.cpp CgQtViewer/CGQtGLRenderWidget.cpp CgQtViewer/CgQtGui.cpp CgBase/CgObservable.cpp CgEvents/CgMouseEvent.cpp CgQtViewer/CgQtMainApplication.cpp CgSceneGraph/CgSceneControl.cpp CgEvents/CgKeyEvent.cpp CgSceneGraph/CgExampleTriangle.cpp CgQtViewer/CgQtGlBufferObject.cpp CgQtViewer/CgTrackball.cpp CgEvents/CgWindowResizeEvent.cpp CgEvents/CgLoadObjFileEvent.cpp CgUtils/ObjLoader.cpp CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -457,6 +464,11 @@ main.o: main.cpp CgQtViewer/CgQtMainApplication.h \
 		CgBase/CgEnums.h \
 		CgBase/CgBaseSceneControl.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+CgColorChangeEvent.o: CgEvents/CgColorChangeEvent.cpp CgEvents/CgColorChangeEvent.h \
+		CgBase/CgBaseEvent.h \
+		CgBase/CgEnums.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgColorChangeEvent.o CgEvents/CgColorChangeEvent.cpp
 
 CGQtGLRenderWidget.o: CgQtViewer/CGQtGLRenderWidget.cpp CgQtViewer/CgQtGLRenderWidget.h \
 		CgBase/CgBaseRenderer.h \
