@@ -9,7 +9,7 @@
 #include "../CgEvents/CgWindowResizeEvent.h"
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
-#include "../CgEvents/CgColorChangeEvent.h"
+#include "../CgEvents/CgColorChangeEvent.h"         //change Color
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -197,6 +197,28 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
 
     QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
     tab_ColorChange->addWidget(ButtonChangeColor);
+
+    /*
+    Signale:
+    Signale sind öffentlich zugängliche Funktionen und können von überall ausgegeben werden,
+    aber wir empfehlen, sie nur von der Klasse zu senden, die das Signal und seine
+    Unterklassen definiert.
+    Wenn ein Signal ausgegeben wird, werden die damit verbundenen Slots normalerweise
+    sofort ausgeführt, genau wie ein normaler Funktionsaufruf.
+    Wenn mehrere Slots mit einem Signal verbunden sind, werden die Slots nacheinander in der
+    Reihenfolge ausgeführt, in der sie verbunden wurden, wenn das Signal ausgegeben wird.
+    Signale werden vom moc automatisch generiert und müssen nicht in die .cpp-Datei
+    implementiert werden. Sie können niemals Rückgabetypen haben (d. h. void verwenden).
+
+    Schlüssel:
+    Ein Slot wird aufgerufen, wenn ein damit verbundenes Signal ausgegeben wird.
+    Slots sind normale C++-Funktionen und können normal aufgerufen werden; ihre einzige
+    Besonderheit ist, dass Signale an sie angeschlossen werden können.
+    Sie können Slots auch als virtuell definieren, was wir in der Praxis als sehr nützlich
+    empfunden haben.
+    */
+
+    //use function pointers
 
     connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
 

@@ -170,7 +170,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->redraw();
     }
 
-    //Farber aendern Event
+    //change color event Farber aendern Event
     if(e->getType() & Cg::CgButtonColorChangePress)
     {
         CgColorChangeEvent* ev = (CgColorChangeEvent*)e;
