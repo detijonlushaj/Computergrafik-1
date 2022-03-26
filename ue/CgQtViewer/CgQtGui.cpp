@@ -54,8 +54,8 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     createOptionPanelExample2(otheropt);
 
     QTabWidget* m_tabs = new QTabWidget();
-    m_tabs->addTab(opt,"&My Tab1");
-    m_tabs->addTab(otheropt,"&My Tab2");
+    m_tabs->addTab(opt,"&Change Color");        //tab name
+    m_tabs->addTab(otheropt,"&Tab2");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -67,7 +67,7 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     mainLayout->addWidget(w);
 
     setLayout(mainLayout);
-    setWindowTitle(tr("Übung Computergrafik 1 -  SoSe 2021"));
+    setWindowTitle(tr("Übung Computergrafik 1 -  SoSe 2022"));      //windows name dont work
 
 
     /* create Menu Bar */
@@ -143,44 +143,45 @@ QSlider *CgQtGui::createSlider()
 
 void CgQtGui::createOptionPanelExample1(QWidget* parent)
 {
-    QVBoxLayout *tab1_control = new QVBoxLayout();
+    QVBoxLayout *tab_ColorChange = new QVBoxLayout();
 
 
     /*Example for using a label */
 
     QLabel *options_label = new QLabel("Farbe auswählen in RGB");
-    tab1_control->addWidget(options_label);
+    tab_ColorChange->addWidget(options_label);
     options_label->setAlignment(Qt::AlignCenter);
 
 
-    /*Example for using a spinbox */
+    /*Spinboxes for RGB Color Change  */
 
     //mySpinBox1->setSuffix("   suffix");
     SpinBoxRed = new QSpinBox();
-    tab1_control->addWidget(SpinBoxRed);
+    tab_ColorChange->addWidget(SpinBoxRed);
     SpinBoxRed->setMinimum(0);
     SpinBoxRed->setMaximum(255);
     SpinBoxRed->setValue(100);
     SpinBoxRed->setPrefix("R: ");
 
     SpinBoxGreen = new QSpinBox();
-    tab1_control->addWidget(SpinBoxGreen);
+    tab_ColorChange->addWidget(SpinBoxGreen);
     SpinBoxGreen->setMinimum(0);
     SpinBoxGreen->setMaximum(255);
     SpinBoxGreen->setValue(100);
     SpinBoxGreen->setPrefix("G: ");
 
     SpinBoxBlue = new QSpinBox();
-    tab1_control->addWidget(SpinBoxBlue);
+    tab_ColorChange->addWidget(SpinBoxBlue);
     SpinBoxBlue->setMinimum(0);
     SpinBoxBlue->setMaximum(255);
     SpinBoxBlue->setValue(100);
     SpinBoxBlue->setPrefix("B: ");
 
-    connect(SpinBoxRed, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
-    tab1_control->addWidget(SpinBoxRed);
-    tab1_control->addWidget(SpinBoxGreen);
-    tab1_control->addWidget(SpinBoxBlue);
+//    connect(SpinBoxRed, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
+
+    tab_ColorChange->addWidget(SpinBoxRed);
+    tab_ColorChange->addWidget(SpinBoxGreen);
+    tab_ColorChange->addWidget(SpinBoxBlue);
 
 
     /*Example for using a checkbox */
@@ -192,14 +193,14 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
 //    tab1_control->addWidget(myCheckBox1);
 
 
-    /*Example for using a button */
+    /*Button for RBG Color change */
 
-    QPushButton* myButton1 = new QPushButton("Farbe bestätigen");
-    tab1_control->addWidget(myButton1);
+    QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
+    tab_ColorChange->addWidget(ButtonChangeColor);
 
-    connect(myButton1, SIGNAL(clicked()), this, SLOT(slotButtonChangeColorPressed()));
+    connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
 
-    parent->setLayout(tab1_control);
+    parent->setLayout(tab_ColorChange);
 }
 
 void CgQtGui::createOptionPanelExample2(QWidget* parent)
@@ -289,7 +290,7 @@ void CgQtGui::slotTrackballChanged()
 
 void CgQtGui::slotButtonChangeColorPressed()
 {
-   std::cout << "button 1 pressed " << std::endl;
+   std::cout << "button 1 pressed to change the color" << std::endl;
    CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButtonColorChangePress, SpinBoxRed->value(), SpinBoxGreen->value(), SpinBoxBlue->value());
    notifyObserver(e);
 

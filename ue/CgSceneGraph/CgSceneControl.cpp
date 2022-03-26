@@ -176,8 +176,8 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgColorChangeEvent* ev = (CgColorChangeEvent*)e;
         std::cout << *ev << std::endl;
 
-//        m_renderer->setUniformValue("mycolor",glm::vec4(100.0,100.0,0.0,1.0));
-//        m_renderer->redraw();
+        m_renderer->setUniformValue("mycolor",glm::vec4(100.0,100.0,100.0,1.0));
+        m_renderer->redraw();
 
     }
 
