@@ -178,7 +178,6 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
 
         m_renderer->setUniformValue("mycolor",glm::vec4(100.0,100.0,100.0,1.0));
         m_renderer->redraw();
-
     }
 
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
