@@ -8,6 +8,7 @@
 class CgBaseEvent;
 class CgBaseRenderer;
 class CgExampleTriangle;
+class CgUnityCube;
 
 class CgSceneControl : public CgObserver, public CgBaseSceneControl
 {
@@ -24,6 +25,7 @@ private:
     CgBaseRenderer* m_renderer;
 
     CgExampleTriangle* m_triangle;
+    CgUnityCube* m_cube;
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;
     glm::mat4 m_lookAt_matrix;

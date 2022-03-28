@@ -44,7 +44,6 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     //set Color in the beginn of the Rendering - removed form rederObjects()!
     m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
 
-
     if(m_triangle!=NULL)
     m_renderer->init(m_triangle);
 }
