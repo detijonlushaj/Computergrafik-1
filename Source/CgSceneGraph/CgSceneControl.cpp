@@ -41,6 +41,10 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     m_renderer=r;
     m_renderer->setSceneControl(this);
 
+    //set Color in the beginn of the Rendering - removed form rederObjects()!
+    m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
+
+
     if(m_triangle!=NULL)
     m_renderer->init(m_triangle);
 }
@@ -52,7 +56,6 @@ void CgSceneControl::renderObjects()
     // Materialeigenschaften setzen
     // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
 
-    m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
 
 
     m_renderer->setUniformValue("matDiffuseColor",glm::vec4(0.35,0.31,0.09,1.0));
@@ -176,7 +179,12 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgColorChangeEvent* ev = (CgColorChangeEvent*)e;
         std::cout << *ev << std::endl;
 
-        m_renderer->setUniformValue("mycolor",glm::vec4(100.0,100.0,100.0,1.0));
+
+        double red = ev->getRed() / 255.0;
+        double blue = ev->getBlue() / 255.0;
+        double green = ev->getGreen() / 255.0;
+
+        m_renderer->setUniformValue("mycolor",glm::vec4(red,green,blue,1.0));
         m_renderer->redraw();
     }
 
