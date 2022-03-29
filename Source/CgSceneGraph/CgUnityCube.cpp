@@ -5,74 +5,78 @@
 CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
 {
 
-    //vordere Seite
-    m_vertices.push_back(glm::vec3(0.0, 0.0, 0.0));
-    m_vertices.push_back(glm::vec3(0.0, 1.0, 0.0));
-    m_vertices.push_back(glm::vec3(1.0, 0.0, 0.0));
-    m_vertices.push_back(glm::vec3(1.0, 1.0, 0.0));
+    // Vorderseite
+    m_vertices.push_back(glm::vec3(-sqrt(2)/2,0.0,0.5));  // linke ecke x, y, z
+    m_vertices.push_back(glm::vec3(0.0,-sqrt(2)/2,0.5));  // untere ecke
+    m_vertices.push_back(glm::vec3(0.0,sqrt(2)/2,0.5));   // obere ecke
+    m_vertices.push_back(glm::vec3(sqrt(2)/2,0.0,0.5));   // rechte ecke
 
-    //linke Seite
-    m_vertices.push_back(glm::vec3(0.0, 1.0, -1.0));
-    m_vertices.push_back(glm::vec3(0.0, 0.0, -1.0));
+    // Rückseite
+    m_vertices.push_back(glm::vec3(-sqrt(2)/2,0.0,-0.5));
+    m_vertices.push_back(glm::vec3(0.0,-sqrt(2)/2,-0.5));
+    m_vertices.push_back(glm::vec3(0.0,sqrt(2)/2,-0.5));
+    m_vertices.push_back(glm::vec3(sqrt(2)/2,0.0,-0.5));
 
-    //rechte Seite
-    m_vertices.push_back(glm::vec3(1.0, 0.0, -1.0));
-    m_vertices.push_back(glm::vec3(1.0, 1.0, -1.0));
-
-    //vorne
+    // Umlaufsinn gegen den Uhrzeiger
+    // Fläche Vorderseite:
+    // links, unten, oben
     m_triangle_indices.push_back(0);
     m_triangle_indices.push_back(1);
     m_triangle_indices.push_back(2);
-
+    // oben, unten, rechts
     m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(1);
     m_triangle_indices.push_back(3);
 
-    //hinten
-    m_triangle_indices.push_back(4);
+    // Fläche Rückseite:
+    // unten, links, oben
     m_triangle_indices.push_back(5);
-    m_triangle_indices.push_back(6);
-
     m_triangle_indices.push_back(4);
+    m_triangle_indices.push_back(6);
+    // oben, rechts, unten
+    m_triangle_indices.push_back(6);
     m_triangle_indices.push_back(7);
-    m_triangle_indices.push_back(6);
-
-    //unten
-    m_triangle_indices.push_back(0);
-    m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(5);
 
-    m_triangle_indices.push_back(2);
-    m_triangle_indices.push_back(5);
-    m_triangle_indices.push_back(6);
-
-    //oben
-    m_triangle_indices.push_back(1);
-    m_triangle_indices.push_back(3);
-    m_triangle_indices.push_back(4);
-
-    m_triangle_indices.push_back(3);
-    m_triangle_indices.push_back(4);
-    m_triangle_indices.push_back(7);
-
-
-    //links
+    // Fläche linke untere Seite:
+    // untern vorne, links vorne, unten hinten
     m_triangle_indices.push_back(1);
     m_triangle_indices.push_back(0);
-    m_triangle_indices.push_back(4);
-
-    m_triangle_indices.push_back(0);
     m_triangle_indices.push_back(5);
+    // links vorne, links hinten, unten hinten
+    m_triangle_indices.push_back(0);
+    m_triangle_indices.push_back(4);
+    m_triangle_indices.push_back(5);
+
+    // Fläche linke obere Seite
+    // links vorne, oben vorne, links hinten
+    m_triangle_indices.push_back(0);
+    m_triangle_indices.push_back(2);
+    m_triangle_indices.push_back(4);
+    // oben hinten, oben vorne, links hinten
+    m_triangle_indices.push_back(6);
+    m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(4);
 
-    //rechts
-    m_triangle_indices.push_back(2);
+    // Fläche rechte untere Seite
+    // rechts vorne, unten vorne, unten hinten
+    m_triangle_indices.push_back(3);
+    m_triangle_indices.push_back(1);
+    m_triangle_indices.push_back(5);
+    // rechts hinten, unten hinten, rechts vorne
     m_triangle_indices.push_back(7);
+    m_triangle_indices.push_back(5);
     m_triangle_indices.push_back(3);
 
+    // Fläche rechte obere Seite
+    // rechts vorne, rechts hinten, oben vorne
+    m_triangle_indices.push_back(3);
+    m_triangle_indices.push_back(7);
     m_triangle_indices.push_back(2);
+    // rechts hinten, oben hinten, oben vorne
     m_triangle_indices.push_back(7);
     m_triangle_indices.push_back(6);
+    m_triangle_indices.push_back(2);
 
 
 //    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));

@@ -11,6 +11,7 @@ SOURCES += main.cpp \
     CgBase/CgObservable.cpp \
     CgEvents/CgMouseEvent.cpp \
     CgQtViewer/CgQtMainApplication.cpp \
+    CgSceneGraph/CgPolyline.cpp \
     CgSceneGraph/CgSceneControl.cpp \
     CgEvents/CgKeyEvent.cpp \
     CgSceneGraph/CgExampleTriangle.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     CgBase/CgEnums.h \
     CgEvents/CgMouseEvent.h \
     CgQtViewer/CgQtMainApplication.h \
+    CgSceneGraph/CgPolyline.h \
     CgSceneGraph/CgSceneControl.h \
     CgEvents/CgKeyEvent.h \
     CgBase/CgBaseRenderer.h \

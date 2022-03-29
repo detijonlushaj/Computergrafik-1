@@ -59,6 +59,7 @@ SOURCES       = ../Source/main.cpp \
 		../Source/CgBase/CgObservable.cpp \
 		../Source/CgEvents/CgMouseEvent.cpp \
 		../Source/CgQtViewer/CgQtMainApplication.cpp \
+		../Source/CgSceneGraph/CgPolyline.cpp \
 		../Source/CgSceneGraph/CgSceneControl.cpp \
 		../Source/CgEvents/CgKeyEvent.cpp \
 		../Source/CgSceneGraph/CgExampleTriangle.cpp \
@@ -78,6 +79,7 @@ OBJECTS       = main.o \
 		CgObservable.o \
 		CgMouseEvent.o \
 		CgQtMainApplication.o \
+		CgPolyline.o \
 		CgSceneControl.o \
 		CgKeyEvent.o \
 		CgExampleTriangle.o \
@@ -175,6 +177,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Source/CgBase/CgEnums.h \
 		../Source/CgEvents/CgMouseEvent.h \
 		../Source/CgQtViewer/CgQtMainApplication.h \
+		../Source/CgSceneGraph/CgPolyline.h \
 		../Source/CgSceneGraph/CgSceneControl.h \
 		../Source/CgEvents/CgKeyEvent.h \
 		../Source/CgBase/CgBaseRenderer.h \
@@ -199,6 +202,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Source/CgBase/CgObservable.cpp \
 		../Source/CgEvents/CgMouseEvent.cpp \
 		../Source/CgQtViewer/CgQtMainApplication.cpp \
+		../Source/CgSceneGraph/CgPolyline.cpp \
 		../Source/CgSceneGraph/CgSceneControl.cpp \
 		../Source/CgEvents/CgKeyEvent.cpp \
 		../Source/CgSceneGraph/CgExampleTriangle.cpp \
@@ -388,8 +392,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Source/CgEvents/CgColorChangeEvent.h ../Source/CgQtViewer/CgQtGLRenderWidget.h ../Source/CgQtViewer/CgQtGui.h ../Source/CgBase/CgObserver.h ../Source/CgBase/CgObservable.h ../Source/CgBase/CgBaseEvent.h ../Source/CgBase/CgEnums.h ../Source/CgEvents/CgMouseEvent.h ../Source/CgQtViewer/CgQtMainApplication.h ../Source/CgSceneGraph/CgSceneControl.h ../Source/CgEvents/CgKeyEvent.h ../Source/CgBase/CgBaseRenderer.h ../Source/CgBase/CgBaseRenderableObject.h ../Source/CgSceneGraph/CgExampleTriangle.h ../Source/CgBase/CgBasePointCloud.h ../Source/CgBase/CgBaseTriangleMesh.h ../Source/CgBase/CgBasePolygonMesh.h ../Source/CgBase/CgBasePolyline.h ../Source/CgBase/CgBaseSceneControl.h ../Source/CgQtViewer/CgQtGlBufferObject.h ../Source/CgQtViewer/CgTrackball.h ../Source/CgEvents/CgWindowResizeEvent.h ../Source/CgEvents/CgLoadObjFileEvent.h ../Source/CgSceneGraph/CgUnityCube.h ../Source/CgUtils/ObjLoader.h ../Source/CgBase/CgBaseImage.h ../Source/CgEvents/CgTrackballEvent.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Source/main.cpp ../Source/CgEvents/CgColorChangeEvent.cpp ../Source/CgQtViewer/CGQtGLRenderWidget.cpp ../Source/CgQtViewer/CgQtGui.cpp ../Source/CgBase/CgObservable.cpp ../Source/CgEvents/CgMouseEvent.cpp ../Source/CgQtViewer/CgQtMainApplication.cpp ../Source/CgSceneGraph/CgSceneControl.cpp ../Source/CgEvents/CgKeyEvent.cpp ../Source/CgSceneGraph/CgExampleTriangle.cpp ../Source/CgQtViewer/CgQtGlBufferObject.cpp ../Source/CgQtViewer/CgTrackball.cpp ../Source/CgEvents/CgWindowResizeEvent.cpp ../Source/CgEvents/CgLoadObjFileEvent.cpp ../Source/CgSceneGraph/CgUnityCube.cpp ../Source/CgUtils/ObjLoader.cpp ../Source/CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Source/CgEvents/CgColorChangeEvent.h ../Source/CgQtViewer/CgQtGLRenderWidget.h ../Source/CgQtViewer/CgQtGui.h ../Source/CgBase/CgObserver.h ../Source/CgBase/CgObservable.h ../Source/CgBase/CgBaseEvent.h ../Source/CgBase/CgEnums.h ../Source/CgEvents/CgMouseEvent.h ../Source/CgQtViewer/CgQtMainApplication.h ../Source/CgSceneGraph/CgPolyline.h ../Source/CgSceneGraph/CgSceneControl.h ../Source/CgEvents/CgKeyEvent.h ../Source/CgBase/CgBaseRenderer.h ../Source/CgBase/CgBaseRenderableObject.h ../Source/CgSceneGraph/CgExampleTriangle.h ../Source/CgBase/CgBasePointCloud.h ../Source/CgBase/CgBaseTriangleMesh.h ../Source/CgBase/CgBasePolygonMesh.h ../Source/CgBase/CgBasePolyline.h ../Source/CgBase/CgBaseSceneControl.h ../Source/CgQtViewer/CgQtGlBufferObject.h ../Source/CgQtViewer/CgTrackball.h ../Source/CgEvents/CgWindowResizeEvent.h ../Source/CgEvents/CgLoadObjFileEvent.h ../Source/CgSceneGraph/CgUnityCube.h ../Source/CgUtils/ObjLoader.h ../Source/CgBase/CgBaseImage.h ../Source/CgEvents/CgTrackballEvent.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Source/main.cpp ../Source/CgEvents/CgColorChangeEvent.cpp ../Source/CgQtViewer/CGQtGLRenderWidget.cpp ../Source/CgQtViewer/CgQtGui.cpp ../Source/CgBase/CgObservable.cpp ../Source/CgEvents/CgMouseEvent.cpp ../Source/CgQtViewer/CgQtMainApplication.cpp ../Source/CgSceneGraph/CgPolyline.cpp ../Source/CgSceneGraph/CgSceneControl.cpp ../Source/CgEvents/CgKeyEvent.cpp ../Source/CgSceneGraph/CgExampleTriangle.cpp ../Source/CgQtViewer/CgQtGlBufferObject.cpp ../Source/CgQtViewer/CgTrackball.cpp ../Source/CgEvents/CgWindowResizeEvent.cpp ../Source/CgEvents/CgLoadObjFileEvent.cpp ../Source/CgSceneGraph/CgUnityCube.cpp ../Source/CgUtils/ObjLoader.cpp ../Source/CgEvents/CgTrackballEvent.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -517,6 +521,12 @@ CgQtMainApplication.o: ../Source/CgQtViewer/CgQtMainApplication.cpp ../Source/Cg
 		../Source/CgBase/CgObservable.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgQtMainApplication.o ../Source/CgQtViewer/CgQtMainApplication.cpp
 
+CgPolyline.o: ../Source/CgSceneGraph/CgPolyline.cpp ../Source/CgSceneGraph/CgPolyline.h \
+		../Source/CgBase/CgBaseRenderableObject.h \
+		../Source/CgBase/CgEnums.h \
+		../Source/CgBase/CgBasePolyline.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgPolyline.o ../Source/CgSceneGraph/CgPolyline.cpp
+
 CgSceneControl.o: ../Source/CgSceneGraph/CgSceneControl.cpp ../Source/CgSceneGraph/CgSceneControl.h \
 		../Source/CgBase/CgObserver.h \
 		../Source/CgBase/CgBaseEvent.h \
@@ -532,6 +542,7 @@ CgSceneControl.o: ../Source/CgSceneGraph/CgSceneControl.cpp ../Source/CgSceneGra
 		../Source/CgSceneGraph/CgExampleTriangle.h \
 		../Source/CgBase/CgBaseTriangleMesh.h \
 		../Source/CgBase/CgBaseRenderableObject.h \
+		../Source/CgSceneGraph/CgUnityCube.h \
 		../Source/CgUtils/ObjLoader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgSceneControl.o ../Source/CgSceneGraph/CgSceneControl.cpp
 
@@ -570,6 +581,8 @@ CgLoadObjFileEvent.o: ../Source/CgEvents/CgLoadObjFileEvent.cpp ../Source/CgEven
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgLoadObjFileEvent.o ../Source/CgEvents/CgLoadObjFileEvent.cpp
 
 CgUnityCube.o: ../Source/CgSceneGraph/CgUnityCube.cpp ../Source/CgSceneGraph/CgUnityCube.h \
+		../Source/CgBase/CgBaseTriangleMesh.h \
+		../Source/CgBase/CgBaseRenderableObject.h \
 		../Source/CgBase/CgEnums.h \
 		../Source/CgUtils/ObjLoader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgUnityCube.o ../Source/CgSceneGraph/CgUnityCube.cpp
