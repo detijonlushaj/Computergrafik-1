@@ -10,6 +10,7 @@
 #include "CgBase/CgBaseRenderer.h"
 #include "CgEvents/CgColorChangeEvent.h"
 #include "CgExampleTriangle.h"
+#include "CgUnityCube.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
@@ -19,12 +20,12 @@
 
 CgSceneControl::CgSceneControl()
 {
-    m_triangle=nullptr;
+    m_cube=nullptr;
     m_current_transformation=glm::mat4(1.);
     m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
     m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
     m_trackball_rotation=glm::mat4(1.);
-    m_triangle= new CgExampleTriangle(21);
+    m_cube= new CgUnityCube(1);
 
 
 }
@@ -32,8 +33,8 @@ CgSceneControl::CgSceneControl()
 
 CgSceneControl::~CgSceneControl()
 {
-    if(m_triangle!=NULL)
-        delete m_triangle;
+    if(m_cube!=NULL)
+        delete m_cube;
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
@@ -44,8 +45,8 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     //set Color in the beginn of the Rendering - removed form rederObjects()!
     m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
 
-    if(m_triangle!=NULL)
-    m_renderer->init(m_triangle);
+    if(m_cube!=NULL)
+    m_renderer->init(m_cube);
 }
 
 
@@ -79,8 +80,8 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
     m_renderer->setUniformValue("normalMatrix",normal_matrix);
 
-    if(m_triangle!=NULL)
-    m_renderer->render(m_triangle);
+    if(m_cube!=NULL)
+    m_renderer->render(m_cube);
 
 }
 
@@ -167,8 +168,8 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
           std::vector<unsigned int> indx;
           loader->getFaceIndexData(indx);
 
-        m_triangle->init(pos,norm,indx);
-        m_renderer->init(m_triangle);
+        m_cube->init(pos,norm,indx);
+        m_renderer->init(m_cube);
         m_renderer->redraw();
     }
 

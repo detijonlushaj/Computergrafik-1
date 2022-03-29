@@ -24,7 +24,6 @@ private:
 
     CgBaseRenderer* m_renderer;
 
-    CgExampleTriangle* m_triangle;
     CgUnityCube* m_cube;
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;
