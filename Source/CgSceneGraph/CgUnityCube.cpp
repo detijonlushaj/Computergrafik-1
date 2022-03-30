@@ -56,9 +56,9 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
     m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(4);
     // oben hinten, oben vorne, links hinten
-    m_triangle_indices.push_back(6);
-    m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(4);
+    m_triangle_indices.push_back(2);
+    m_triangle_indices.push_back(6);
 
     // Fläche rechte untere Seite
     // rechts vorne, unten vorne, unten hinten
@@ -66,9 +66,9 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
     m_triangle_indices.push_back(1);
     m_triangle_indices.push_back(5);
     // rechts hinten, unten hinten, rechts vorne
-    m_triangle_indices.push_back(7);
-    m_triangle_indices.push_back(5);
     m_triangle_indices.push_back(3);
+    m_triangle_indices.push_back(5);
+    m_triangle_indices.push_back(7);
 
     // Fläche rechte obere Seite
     // rechts vorne, rechts hinten, oben vorne
@@ -87,11 +87,6 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
         glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 normal = glm::cross(vec1, vec2);
         normal=glm::normalize(normal);
-
-      // glm::vec3 normal = (glm::vec3)glm::cross(vec1, vec2);
-//        glm::vec3 normal = glm::vec3(vec1[1]vec2[2]-vec1[2]vec2[1], vec1[3]vec2[1]-vec1[1]vec2[3], vec1[0]vec2[1]-vec1[1]vec2[0]);
-//        std::cout << vec1[1]vec2[2]-vec1[2]vec2[1] << " " << vec1[3]vec2[1]-vec1[1]vec2[3] << " " << vec1[0]vec2[1]-vec1[1]vec2[0];
-//        std::cout << normal[0] << " " << normal[1] << " "<< normal[2] << std::endl;
 
         std::cout << normal[0] << " " << normal[1] << " "<< normal[2] << std::endl;
         m_face_normals.push_back(normal);
