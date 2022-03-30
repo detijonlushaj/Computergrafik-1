@@ -4,6 +4,9 @@
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
 #include <glm/glm.hpp>
+#include "CgPolyline.h"
+#include "CgPolyline.h"
+
 
 class CgBaseEvent;
 class CgBaseRenderer;
@@ -25,6 +28,10 @@ private:
     CgBaseRenderer* m_renderer;
 
     CgUnityCube* m_cube;
+    std::vector<CgPolyline*> m_polyline;
+
+
+
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;
     glm::mat4 m_lookAt_matrix;

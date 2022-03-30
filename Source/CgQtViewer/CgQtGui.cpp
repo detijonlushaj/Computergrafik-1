@@ -54,7 +54,7 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     createOptionPanelExample2(otheropt);
 
     QTabWidget* m_tabs = new QTabWidget();
-    m_tabs->addTab(opt,"&Change Color");        //tab name
+    m_tabs->addTab(opt,"&Color");        //tab name
     m_tabs->addTab(otheropt,"&Tab2");
     container->addWidget(m_tabs);
 
@@ -160,24 +160,29 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
     tab_ColorChange->addWidget(SpinBoxRed);
     SpinBoxRed->setMinimum(0);
     SpinBoxRed->setMaximum(255);
-    SpinBoxRed->setValue(100);
+    SpinBoxRed->setValue(255);
     SpinBoxRed->setPrefix("R: ");
 
     SpinBoxGreen = new QSpinBox();
     tab_ColorChange->addWidget(SpinBoxGreen);
     SpinBoxGreen->setMinimum(0);
     SpinBoxGreen->setMaximum(255);
-    SpinBoxGreen->setValue(100);
+    SpinBoxGreen->setValue(255);
     SpinBoxGreen->setPrefix("G: ");
 
     SpinBoxBlue = new QSpinBox();
     tab_ColorChange->addWidget(SpinBoxBlue);
     SpinBoxBlue->setMinimum(0);
     SpinBoxBlue->setMaximum(255);
-    SpinBoxBlue->setValue(100);
+    SpinBoxBlue->setValue(255);
     SpinBoxBlue->setPrefix("B: ");
 
 //    connect(SpinBoxRed, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
+
+    //change value by chaning the value of the spinbox
+    connect(SpinBoxRed, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+    connect(SpinBoxGreen, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+    connect(SpinBoxBlue, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
 
     tab_ColorChange->addWidget(SpinBoxRed);
     tab_ColorChange->addWidget(SpinBoxGreen);

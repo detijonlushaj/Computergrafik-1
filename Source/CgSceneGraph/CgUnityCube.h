@@ -33,9 +33,7 @@ public:
 
     const std::vector<glm::vec3>& getFaceNormals() const;
     const std::vector<glm::vec3>& getFaceColors() const;
-
-
-
+    const std::vector<glm::vec3>& getFaceCentroid() const;
 
 private:
 
@@ -48,6 +46,7 @@ private:
 
     std::vector<glm::vec3> m_face_normals;
     std::vector<glm::vec3> m_face_colors;
+    std::vector<glm::vec3> m_face_centroid;
 
     const Cg::ObjectType m_type;
     const unsigned int m_id;

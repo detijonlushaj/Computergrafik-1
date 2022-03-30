@@ -11,6 +11,7 @@
 #include "CgEvents/CgColorChangeEvent.h"
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
+#include "CgPolyline.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
@@ -21,11 +22,20 @@
 CgSceneControl::CgSceneControl()
 {
     m_cube=nullptr;
+
+
     m_current_transformation=glm::mat4(1.);
     m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
     m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
     m_trackball_rotation=glm::mat4(1.);
-    m_cube= new CgUnityCube(1);
+
+
+    m_cube= new CgUnityCube(21);
+
+    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+        m_polyline.push_back(new CgPolyline(i, m_cube->getFaceCentroid()[i], m_cube->getFaceCentroid()[i] + m_cube->getFaceCentroid()[i]));
+    }
+
 
 
 }
@@ -33,8 +43,15 @@ CgSceneControl::CgSceneControl()
 
 CgSceneControl::~CgSceneControl()
 {
-    if(m_cube!=NULL)
+    if(m_cube!=NULL){
         delete m_cube;
+    }
+
+//    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+//        if(m_polyline[i] != NULL) {
+//            delete m_polyline[i];
+//        }
+//    }
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
@@ -46,7 +63,13 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
 
     if(m_cube!=NULL)
-    m_renderer->init(m_cube);
+        m_renderer->init(m_cube);
+
+    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+        if(m_polyline[i] != NULL) {
+            m_renderer->init(m_polyline[i]);
+        }
+    }
 }
 
 
@@ -70,9 +93,6 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
 
-
-
-
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
     glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
 
@@ -80,9 +100,15 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
     m_renderer->setUniformValue("normalMatrix",normal_matrix);
 
-    if(m_cube!=NULL)
-    m_renderer->render(m_cube);
+    if(m_cube!=NULL){
+        m_renderer->render(m_cube);
+    }
 
+    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+        if(m_polyline[i] != NULL) {
+            m_renderer->render(m_polyline[i]);
+        }
+    }
 }
 
 
