@@ -94,7 +94,7 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
 //        std::cout << normal[0] << " " << normal[1] << " "<< normal[2] << std::endl;
 
         std::cout << normal[0] << " " << normal[1] << " "<< normal[2] << std::endl;
-        m_vertex_normals.push_back(normal);
+        m_face_normals.push_back(normal);
 
         // vec3 besteht aus floats nicht doubles
         glm::vec3 vec_centroid = (m_vertices[m_triangle_indices[i]] + m_vertices[m_triangle_indices[i+1]] + m_vertices[m_triangle_indices[i+2]]) / (3.0f);

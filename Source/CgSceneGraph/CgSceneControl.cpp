@@ -33,7 +33,7 @@ CgSceneControl::CgSceneControl()
     m_cube= new CgUnityCube(21);
 
     for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-        m_polyline.push_back(new CgPolyline(i, m_cube->getFaceCentroid()[i], m_cube->getFaceCentroid()[i] + m_cube->getFaceNormals()[i]));
+        m_polyline.push_back(new CgPolyline(i, m_cube->getFaceCentroid()[i], (m_cube->getFaceCentroid()[i]) + (m_cube->getFaceNormals()[i])));
     }
 
 
