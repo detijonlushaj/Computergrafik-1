@@ -33,7 +33,7 @@ CgSceneControl::CgSceneControl()
     m_cube= new CgUnityCube(21);
 
     for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-        m_polyline.push_back(new CgPolyline(i, m_cube->getFaceCentroid()[i], m_cube->getFaceCentroid()[i] + m_cube->getFaceCentroid()[i]));
+        m_polyline.push_back(new CgPolyline(i, m_cube->getFaceCentroid()[i], m_cube->getFaceCentroid()[i] + m_cube->getFaceNormals()[i]));
     }
 
 
@@ -47,11 +47,11 @@ CgSceneControl::~CgSceneControl()
         delete m_cube;
     }
 
-//    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        if(m_polyline[i] != NULL) {
-//            delete m_polyline[i];
-//        }
-//    }
+    for(int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+        if(m_polyline[i] != NULL) {
+            delete m_polyline[i];
+        }
+    }
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
