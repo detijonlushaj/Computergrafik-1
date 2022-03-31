@@ -9,25 +9,24 @@
 class CgPolyline : public CgBasePolyline
 {
 public:
-    CgPolyline();
     CgPolyline(int id, glm::vec3, glm::vec3);
 
     virtual ~CgPolyline();
 
     //inherited from CgBaseRenderableObject
-    Cg::ObjectType getType() const;
-    unsigned int getID() const;
+    Cg::ObjectType getType() const override;
+    unsigned int getID() const override;
 
-    const std::vector<glm::vec3>& getVertices() const;
-    glm::vec3 getColor() const;
-    unsigned int getLineWidth() const;
+    const std::vector<glm::vec3>& getVertices() const override;
+    glm::vec3 getColor() const override;
+    unsigned int getLineWidth() const override;
 
 private:
+    const Cg::ObjectType m_type;
+    const unsigned int m_id;
     std::vector<glm::vec3> m_vertices;
     glm::vec3 m_face_colors;
     int m_line_width;
-    const Cg::ObjectType m_type;
-    const unsigned int m_id;
 };
 
 inline Cg::ObjectType  CgPolyline::getType() const {return m_type;}

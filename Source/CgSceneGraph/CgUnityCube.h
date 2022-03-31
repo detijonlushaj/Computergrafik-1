@@ -17,22 +17,22 @@ public:
     ~CgUnityCube();
 
     //inherited from CgBaseRenderableObject
-    Cg::ObjectType getType() const;
-    unsigned int getID() const;
+    Cg::ObjectType getType() const override;
+    unsigned int getID() const override;
 
     void init (std::vector<glm::vec3> arg_verts, std::vector<glm::vec3> arg_normals, std::vector<unsigned int> arg_triangle_indices);
     void init( std::string filename);
 
     //inherited from CgBaseTriangleMesh
-    const std::vector<glm::vec3>& getVertices() const;
-    const std::vector<glm::vec3>& getVertexNormals() const;
-    const std::vector<glm::vec3>& getVertexColors() const;
-    const std::vector<glm::vec2>& getVertexTexCoords() const;
+    const std::vector<glm::vec3>& getVertices() const override;
+    const std::vector<glm::vec3>& getVertexNormals() const override;
+    const std::vector<glm::vec3>& getVertexColors() const override;
+    const std::vector<glm::vec2>& getVertexTexCoords() const override;
 
-    const std::vector<unsigned int>& getTriangleIndices() const;
+    const std::vector<unsigned int>& getTriangleIndices() const override;
 
-    const std::vector<glm::vec3>& getFaceNormals() const;
-    const std::vector<glm::vec3>& getFaceColors() const;
+    const std::vector<glm::vec3>& getFaceNormals() const override;
+    const std::vector<glm::vec3>& getFaceColors() const override;
     const std::vector<glm::vec3>& getFaceCentroid() const;
 
 private:
@@ -50,7 +50,6 @@ private:
 
     const Cg::ObjectType m_type;
     const unsigned int m_id;
-
 };
 
 

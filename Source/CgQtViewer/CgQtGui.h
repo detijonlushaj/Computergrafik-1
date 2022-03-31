@@ -97,13 +97,19 @@ private:
 
 
     /* example for usage of qt gui elements, feel free to add what you like */
-    void createOptionPanelExample1(QWidget* panel);
-    void createOptionPanelExample2(QWidget* panel);
+    void OptionPanelColorChange(QWidget* panel);
+    void createOptionPaneLaneRiesenfeld_UA(QWidget* panel);
+    void createOptionPanelExample(QWidget* panel);
+
     QButtonGroup* myButtonGroup;
-    QCheckBox*  myCheckBox1;
+    QCheckBox*  CheckBox_shownormals;
     QSpinBox*   SpinBoxRed;
     QSpinBox*   SpinBoxGreen;
     QSpinBox*   SpinBoxBlue;
+
+    QSpinBox*   SpinBox_LR_UA;
+
+
 
 
 private slots:

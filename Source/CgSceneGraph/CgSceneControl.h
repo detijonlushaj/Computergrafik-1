@@ -30,13 +30,10 @@ private:
     CgUnityCube* m_cube;
     std::vector<CgPolyline*> m_polyline;
 
-
-
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;
     glm::mat4 m_lookAt_matrix;
     glm::mat4 m_proj_matrix;
-
 };
 
 #endif // CGSCENECONTROL_H

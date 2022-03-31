@@ -47,15 +47,20 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QHBoxLayout *container = new QHBoxLayout;
 
 
-    QWidget *opt = new QWidget;
-    createOptionPanelExample1(opt);
+    QWidget *opt_color = new QWidget;
+    OptionPanelColorChange(opt_color);
 
     QWidget *otheropt = new QWidget;
-    createOptionPanelExample2(otheropt);
+    createOptionPaneLaneRiesenfeld_UA(otheropt);
+
+    QWidget *otheropt2 = new QWidget;
+    createOptionPanelExample(otheropt2);
+
 
     QTabWidget* m_tabs = new QTabWidget();
-    m_tabs->addTab(opt,"&Color");        //tab name
-    m_tabs->addTab(otheropt,"&Tab2");
+    m_tabs->addTab(opt_color,"&Color");        //tab name
+    m_tabs->addTab(otheropt,"&L-R UA");
+    m_tabs->addTab(otheropt2,"&Tab");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -135,26 +140,17 @@ QSlider *CgQtGui::createSlider()
     return slider;
 }
 
-
-
-
-
-
-
-void CgQtGui::createOptionPanelExample1(QWidget* parent)
+void CgQtGui::OptionPanelColorChange(QWidget* parent)
 {
     QVBoxLayout *tab_ColorChange = new QVBoxLayout();
 
-
     /*Example for using a label */
-
     QLabel *options_label = new QLabel("Farbe auswählen in RGB");
     tab_ColorChange->addWidget(options_label);
     options_label->setAlignment(Qt::AlignCenter);
 
 
     /*Spinboxes for RGB Color Change  */
-
     //mySpinBox1->setSuffix("   suffix");
     SpinBoxRed = new QSpinBox();
     tab_ColorChange->addWidget(SpinBoxRed);
@@ -177,16 +173,73 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
     SpinBoxBlue->setValue(255);
     SpinBoxBlue->setPrefix("B: ");
 
-//    connect(SpinBoxRed, SIGNAL(valueChanged(int) ), this, SLOT(slotMySpinBox1Changed()) );
-
     //change value by chaning the value of the spinbox
-    connect(SpinBoxRed, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
-    connect(SpinBoxGreen, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
-    connect(SpinBoxBlue, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+//    connect(SpinBoxRed, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+//    connect(SpinBoxGreen, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+//    connect(SpinBoxBlue, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
 
     tab_ColorChange->addWidget(SpinBoxRed);
     tab_ColorChange->addWidget(SpinBoxGreen);
     tab_ColorChange->addWidget(SpinBoxBlue);
+
+
+    /*Button for RBG Color change */
+    QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
+    tab_ColorChange->addWidget(ButtonChangeColor);
+
+    //use function pointers
+    connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
+
+    parent->setLayout(tab_ColorChange);
+}
+
+void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
+{
+    QVBoxLayout *tab_LR_UA = new QVBoxLayout();
+
+    /*Example for using a label */
+    QLabel *options_label = new QLabel("Lane-Riesenfeld Unterteilungsalgorithmus");
+    tab_LR_UA->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignCenter);
+
+    /*Spinboxes for the Algorithm */
+    SpinBox_LR_UA = new QSpinBox();
+    tab_LR_UA->addWidget(SpinBox_LR_UA);
+    SpinBox_LR_UA->setMinimum(0);
+    SpinBox_LR_UA->setMaximum(10);
+    SpinBox_LR_UA->setValue(0);
+    SpinBox_LR_UA->setPrefix("Unterteilungsschritte: ");
+    tab_LR_UA->addWidget(SpinBox_LR_UA);
+//    connect(SpinBox_LR_UA, SIGNAL( valueChanged(int)  ), this, SLOT(fnk()));
+
+    //set spacing
+    tab_LR_UA->addSpacing(50);
+
+
+    /*checkbox for the normals */
+    CheckBox_shownormals = new QCheckBox("show normals");
+    CheckBox_shownormals->setCheckable(true);
+    CheckBox_shownormals->setChecked(false);
+    tab_LR_UA->addWidget(CheckBox_shownormals);
+//    connect(CheckBox_shownormals, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
+
+
+    /*Button for RBG Color change */
+    QPushButton* Button_LR_UA = new QPushButton("click");
+    tab_LR_UA->addWidget(Button_LR_UA);
+//    connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
+
+    QPushButton* Button_LR_UA_reset = new QPushButton("reset");
+    tab_LR_UA->addWidget(Button_LR_UA_reset);
+//    connect(Button_LR_UA_reset, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
+
+    parent->setLayout(tab_LR_UA);
+
+
+}
+
+void CgQtGui::createOptionPanelExample(QWidget* parent)
+{
 
 
     /*Example for using a checkbox */
@@ -198,43 +251,7 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
 //    tab1_control->addWidget(myCheckBox1);
 
 
-    /*Button for RBG Color change */
-
-    QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
-    tab_ColorChange->addWidget(ButtonChangeColor);
-
-    /*
-    Signale:
-    Signale sind öffentlich zugängliche Funktionen und können von überall ausgegeben werden,
-    aber wir empfehlen, sie nur von der Klasse zu senden, die das Signal und seine
-    Unterklassen definiert.
-    Wenn ein Signal ausgegeben wird, werden die damit verbundenen Slots normalerweise
-    sofort ausgeführt, genau wie ein normaler Funktionsaufruf.
-    Wenn mehrere Slots mit einem Signal verbunden sind, werden die Slots nacheinander in der
-    Reihenfolge ausgeführt, in der sie verbunden wurden, wenn das Signal ausgegeben wird.
-    Signale werden vom moc automatisch generiert und müssen nicht in die .cpp-Datei
-    implementiert werden. Sie können niemals Rückgabetypen haben (d. h. void verwenden).
-
-    Schlüssel:
-    Ein Slot wird aufgerufen, wenn ein damit verbundenes Signal ausgegeben wird.
-    Slots sind normale C++-Funktionen und können normal aufgerufen werden; ihre einzige
-    Besonderheit ist, dass Signale an sie angeschlossen werden können.
-    Sie können Slots auch als virtuell definieren, was wir in der Praxis als sehr nützlich
-    empfunden haben.
-    */
-
-    //use function pointers
-
-    connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
-
-    parent->setLayout(tab_ColorChange);
-}
-
-void CgQtGui::createOptionPanelExample2(QWidget* parent)
-{
-
-
-    QVBoxLayout *tab2_control = new QVBoxLayout();
+    QVBoxLayout *tab_control = new QVBoxLayout();
     QHBoxLayout *subBox = new QHBoxLayout();
 
 
@@ -270,10 +287,10 @@ void CgQtGui::createOptionPanelExample2(QWidget* parent)
     vbox->addStretch(1);
     myGroupBox->setLayout(vbox);
     subBox->addWidget(myGroupBox);
-    tab2_control->addLayout(subBox);
+    tab_control->addLayout(subBox);
 
     connect(myButtonGroup, SIGNAL( buttonClicked(int) ), this, SLOT( slotButtonGroupSelectionChanged() ) );
-    parent->setLayout(tab2_control);
+    parent->setLayout(tab_control);
 
 }
 

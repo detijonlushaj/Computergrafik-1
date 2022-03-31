@@ -3,7 +3,6 @@
 #include "CgUtils/ObjLoader.h"
 #include <iostream>
 
-
 CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
 {
 
@@ -87,8 +86,6 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
         glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 normal = glm::cross(vec1, vec2);
         normal=glm::normalize(normal);
-
-        std::cout << normal[0] << " " << normal[1] << " "<< normal[2] << std::endl;
         m_face_normals.push_back(normal);
 
         // vec3 besteht aus floats nicht doubles
@@ -97,8 +94,6 @@ CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
     }
 
 }
-
-
 
 CgUnityCube::~CgUnityCube()
 {
