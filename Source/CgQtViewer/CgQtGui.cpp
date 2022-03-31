@@ -110,11 +110,9 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     filled->setChecked(false);
 
 
-
     polygonmode_group->addAction(points);
     polygonmode_group->addAction(wireframe);
     polygonmode_group->addAction(filled);
-
 
 
     // todo: Add Quit-Action
@@ -122,10 +120,7 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     m_menuBar->addMenu( settings_menu );
     m_menuBar->addMenu( polygon_mode_menu );
 
-
     m_mainWindow->setMenuBar(m_menuBar);
-
-
 
 }
 
@@ -156,7 +151,7 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     tab_ColorChange->addWidget(SpinBoxRed);
     SpinBoxRed->setMinimum(0);
     SpinBoxRed->setMaximum(255);
-    SpinBoxRed->setValue(255);
+    SpinBoxRed->setValue(0);
     SpinBoxRed->setPrefix("R: ");
 
     SpinBoxGreen = new QSpinBox();
@@ -170,23 +165,39 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     tab_ColorChange->addWidget(SpinBoxBlue);
     SpinBoxBlue->setMinimum(0);
     SpinBoxBlue->setMaximum(255);
-    SpinBoxBlue->setValue(255);
+    SpinBoxBlue->setValue(0);
     SpinBoxBlue->setPrefix("B: ");
 
     //change value by chaning the value of the spinbox
-//    connect(SpinBoxRed, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
-//    connect(SpinBoxGreen, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
-//    connect(SpinBoxBlue, SIGNAL( valueChanged(int)  ), this, SLOT(slotButtonChangeColorPressed()));
+    connect(SpinBoxRed, SIGNAL(valueChanged(int)), this, SLOT(slotButtonChangeColorPressed()));
+    connect(SpinBoxGreen, SIGNAL(valueChanged(int)), this, SLOT(slotButtonChangeColorPressed()));
+    connect(SpinBoxBlue, SIGNAL(valueChanged(int)), this, SLOT(slotButtonChangeColorPressed()));
 
     tab_ColorChange->addWidget(SpinBoxRed);
     tab_ColorChange->addWidget(SpinBoxGreen);
     tab_ColorChange->addWidget(SpinBoxBlue);
 
-
     /*Button for RBG Color change */
     QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
     tab_ColorChange->addWidget(ButtonChangeColor);
 
+    /*  Signale:
+    Signale sind öffentlich zugängliche Funktionen und können von überall ausgegeben werden,
+    aber wir empfehlen, sie nur von der Klasse zu senden, die das Signal und seine
+    Unterklassen definiert.
+    Wenn ein Signal ausgegeben wird, werden die damit verbundenen Slots normalerweise
+    sofort ausgeführt, genau wie ein normaler Funktionsaufruf.
+    Wenn mehrere Slots mit einem Signal verbunden sind, werden die Slots nacheinander in der
+    Reihenfolge ausgeführt, in der sie verbunden wurden, wenn das Signal ausgegeben wird.
+    Signale werden vom moc automatisch generiert und müssen nicht in die .cpp-Datei
+    implementiert werden. Sie können niemals Rückgabetypen haben (d. h. void verwenden).
+        Schlüssel:
+    Ein Slot wird aufgerufen, wenn ein damit verbundenes Signal ausgegeben wird.
+    Slots sind normale C++-Funktionen und können normal aufgerufen werden; ihre einzige
+    Besonderheit ist, dass Signale an sie angeschlossen werden können.
+    Sie können Slots auch als virtuell definieren, was wir in der Praxis als sehr nützlich
+    empfunden haben.
+    */
     //use function pointers
     connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
 
