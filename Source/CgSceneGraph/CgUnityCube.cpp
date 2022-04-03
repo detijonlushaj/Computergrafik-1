@@ -3,7 +3,9 @@
 #include "CgUtils/ObjLoader.h"
 #include <iostream>
 
-CgUnityCube::CgUnityCube(int id): m_type(Cg::TriangleMesh), m_id(id)
+CgUnityCube::CgUnityCube(int id):
+m_type(Cg::TriangleMesh),
+m_id(id)
 {
 
     // Vorderseite

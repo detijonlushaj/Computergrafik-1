@@ -4,10 +4,11 @@ CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent()
 {
 }
 
-CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent(Cg::EventType type, int n, bool show){
-    m_type = type;
-    SubdivisionStep = n;
-    showNormals = show;
+CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent(Cg::EventType type, int n, bool show):
+m_type(type),
+SubdivisionStep(n),
+showNormals(show)
+{
 }
 CgLaneRiesenfeldEvent::~CgLaneRiesenfeldEvent(){
 }

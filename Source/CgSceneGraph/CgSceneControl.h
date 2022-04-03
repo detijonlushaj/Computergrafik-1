@@ -22,7 +22,7 @@ public:
     void setRenderer(CgBaseRenderer* r);
 
     void renderObjects();
-    std::vector<glm::vec3> LR_UA(std::vector<glm::vec3> pp,int n);
+    std::vector<glm::vec3> LR_UA(std::vector<glm::vec3> curve,int n);
 
 private:
 
@@ -32,7 +32,7 @@ private:
     std::vector<CgPolyline*> m_polylines;
 
     CgPolyline* m_polyline;
-    std::vector<glm::vec3> pp;
+    std::vector<glm::vec3> curve;
 
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;

@@ -35,13 +35,12 @@ CgSceneControl::CgSceneControl()
 //        m_polylines.push_back(new CgPolyline(i, pp));
 //    }
 
-    pp.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
-    pp.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
-    pp.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
-    pp.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
+    curve.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
+    curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
+    curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
+    curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
 
-
-    m_polyline = new CgPolyline(21, pp );
+    m_polyline = new CgPolyline(21, curve);
 
 }
 
@@ -210,7 +209,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->redraw();
     }
 
-    if(e->getType() & Cg::CgButton_LR_UA)
+    if(e->getType() & Cg::CgButton_LR_UA_start)
     {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;

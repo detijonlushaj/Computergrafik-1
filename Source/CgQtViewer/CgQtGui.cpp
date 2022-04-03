@@ -182,23 +182,6 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     QPushButton* ButtonChangeColor = new QPushButton("Farbe bestätigen");
     tab_ColorChange->addWidget(ButtonChangeColor);
 
-    /*  Signale:
-    Signale sind öffentlich zugängliche Funktionen und können von überall ausgegeben werden,
-    aber wir empfehlen, sie nur von der Klasse zu senden, die das Signal und seine
-    Unterklassen definiert.
-    Wenn ein Signal ausgegeben wird, werden die damit verbundenen Slots normalerweise
-    sofort ausgeführt, genau wie ein normaler Funktionsaufruf.
-    Wenn mehrere Slots mit einem Signal verbunden sind, werden die Slots nacheinander in der
-    Reihenfolge ausgeführt, in der sie verbunden wurden, wenn das Signal ausgegeben wird.
-    Signale werden vom moc automatisch generiert und müssen nicht in die .cpp-Datei
-    implementiert werden. Sie können niemals Rückgabetypen haben (d. h. void verwenden).
-        Schlüssel:
-    Ein Slot wird aufgerufen, wenn ein damit verbundenes Signal ausgegeben wird.
-    Slots sind normale C++-Funktionen und können normal aufgerufen werden; ihre einzige
-    Besonderheit ist, dass Signale an sie angeschlossen werden können.
-    Sie können Slots auch als virtuell definieren, was wir in der Praxis als sehr nützlich
-    empfunden haben.
-    */
     //use function pointers
     connect(ButtonChangeColor, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
 
@@ -237,7 +220,7 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
 //    connect(CheckBox_shownormals, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
 
 
-    /*Button for RBG Color change */
+    /*Button */
     QPushButton* Button_LR_UA = new QPushButton("click");
     tab_LR_UA->addWidget(Button_LR_UA);
     connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_Pressed()));
@@ -357,7 +340,7 @@ void CgQtGui::slotButtonChangeColorPressed()
 void CgQtGui::slotButton_LR_UA_Pressed()
 {
    std::cout << "button pressed for the algorithm" << std::endl;
-   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked() );
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked() );
    notifyObserver(e);
 
 }

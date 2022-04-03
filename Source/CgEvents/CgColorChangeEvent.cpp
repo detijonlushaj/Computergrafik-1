@@ -5,12 +5,12 @@ CgColorChangeEvent::CgColorChangeEvent()
 
 }
 
-CgColorChangeEvent::CgColorChangeEvent(Cg::EventType type, int red, int green, int blue)
+CgColorChangeEvent::CgColorChangeEvent(Cg::EventType type, int red, int green, int blue):
+m_type(type),
+m_red(red),
+m_green(green),
+m_blue(blue)
 {
-    m_type = type;
-    m_red = red;
-    m_green = green;
-    m_blue = blue;
 }
 
 CgColorChangeEvent::~CgColorChangeEvent()
