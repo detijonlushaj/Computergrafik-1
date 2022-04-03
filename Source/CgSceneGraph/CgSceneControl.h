@@ -22,7 +22,6 @@ public:
     void setRenderer(CgBaseRenderer* r);
 
     void renderObjects();
-    std::vector<glm::vec3> LR_UA(std::vector<glm::vec3> curve,int n);
 
 private:
 

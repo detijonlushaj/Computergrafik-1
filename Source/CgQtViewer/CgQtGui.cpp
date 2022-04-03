@@ -1,5 +1,3 @@
-
-
 #include "CgQtGLRenderWidget.h"
 #include "CgQtGui.h"
 #include "CgQtMainApplication.h"
@@ -9,7 +7,7 @@
 #include "../CgEvents/CgWindowResizeEvent.h"
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
-#include "../CgEvents/CgColorChangeEvent.h"         //change Color
+#include "../CgEvents/CgColorChangeEvent.h"         //change Color#
 #include "../CgEvents/CgLaneRiesenfeldEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
@@ -31,14 +29,17 @@
 #include <QFileDialog>
 #include <iostream>
 
+
 CgQtGui::CgQtGui(CgQtMainApplication *mw)
     : m_mainWindow(mw)
 {
     m_glRenderWidget = new CgQtGLRenderWidget;
 
+
     connect(m_glRenderWidget, SIGNAL(mouseEvent(QMouseEvent*)), this, SLOT(mouseEvent(QMouseEvent*)));
     connect(m_glRenderWidget, SIGNAL(viewportChanged(int,int)), this, SLOT(viewportChanged(int,int)));
     connect(m_glRenderWidget, SIGNAL(trackballChanged()), this, SLOT(slotTrackballChanged()));
+
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *container = new QHBoxLayout;
@@ -118,7 +119,6 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     m_menuBar->addMenu( polygon_mode_menu );
 
     m_mainWindow->setMenuBar(m_menuBar);
-
 }
 
 QSlider *CgQtGui::createSlider()
@@ -201,19 +201,18 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     SpinBox_LR_UA->setValue(0);
     SpinBox_LR_UA->setPrefix("Unterteilungsschritte: ");
     tab_LR_UA->addWidget(SpinBox_LR_UA);
-//    connect(SpinBox_LR_UA, SIGNAL( valueChanged(int)  ), this, SLOT(slotButton_LR_UA_Pressed()));
 
     //set spacing
     tab_LR_UA->addSpacing(50);
+
 
     /*checkbox for the normals */
     CheckBox_shownormals = new QCheckBox("show normals");
     CheckBox_shownormals->setCheckable(true);
     CheckBox_shownormals->setChecked(false);
     tab_LR_UA->addWidget(CheckBox_shownormals);
-//    connect(CheckBox_shownormals, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
 
-    /*Button */
+
     QPushButton* Button_LR_UA = new QPushButton("click");
     tab_LR_UA->addWidget(Button_LR_UA);
     connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_Pressed()));
@@ -223,21 +222,23 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     connect(Button_LR_UA_reset, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_reset_Pressed()));
 
     parent->setLayout(tab_LR_UA);
-
-
 }
 
 void CgQtGui::createOptionPanelExample(QWidget* parent)
 {
-    /*Example for using a checkbox */
+   /*Example for using a checkbox */
+
 //    myCheckBox1 = new QCheckBox("enable Option 1");
 //    myCheckBox1->setCheckable(true);
 //    myCheckBox1->setChecked(false);
 //    connect(myCheckBox1, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
 //    tab1_control->addWidget(myCheckBox1);
 
+
     QVBoxLayout *tab_control = new QVBoxLayout();
     QHBoxLayout *subBox = new QHBoxLayout();
+
+
 
     /*Example for using a button group */
 
@@ -274,22 +275,22 @@ void CgQtGui::createOptionPanelExample(QWidget* parent)
 
     connect(myButtonGroup, SIGNAL( buttonClicked(int) ), this, SLOT( slotButtonGroupSelectionChanged() ) );
     parent->setLayout(tab_control);
-
 }
-
 
 void CgQtGui::slotButtonGroupSelectionChanged()
 {
+
 }
 
 void CgQtGui::slotMySpinBox1Changed()
 {
+
 }
 
 void CgQtGui::slotMyCheckBox1Changed()
 {
-}
 
+}
 
 void CgQtGui::slotLoadMeshFile()
 {
@@ -307,27 +308,25 @@ void CgQtGui::slotTrackballChanged()
 
 void CgQtGui::slotButtonChangeColorPressed()
 {
-//   std::cout << "button pressed to change the color" << std::endl;
+   std::cout << "button 1 pressed to change the color" << std::endl;
    CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButtonColorChangePress, SpinBoxRed->value(), SpinBoxGreen->value(), SpinBoxBlue->value());
    notifyObserver(e);
 
 }
 
-
 void CgQtGui::slotButton_LR_UA_Pressed()
 {
    std::cout << "button pressed for the algorithm" << std::endl;
-   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked(), false );
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked());
    notifyObserver(e);
-
 }
 
 void CgQtGui::slotButton_LR_UA_reset_Pressed()
 {
-    std::cout << "button pressed for the algorithm" << std::endl;
-    CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked(), true );
-    notifyObserver(e);
-
+   std::cout << "button pressed to reset the algorithm" << std::endl;
+   SpinBox_LR_UA->setValue(0);
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_reset, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked());
+   notifyObserver(e);
 }
 
 void CgQtGui::mouseEvent(QMouseEvent* event)
@@ -357,9 +356,6 @@ void CgQtGui::mouseEvent(QMouseEvent* event)
                                         (Cg::MouseButtons)event->button());
        notifyObserver(e);
    }
-
-
-
 }
 
 void CgQtGui::keyPressEvent(QKeyEvent *event)
@@ -368,20 +364,13 @@ void CgQtGui::keyPressEvent(QKeyEvent *event)
    notifyObserver(e);
 }
 
-
 void CgQtGui::viewportChanged(int w, int h)
 {
      CgBaseEvent* e = new CgWindowResizeEvent(Cg::WindowResizeEvent,w,h);
      notifyObserver(e);
 }
 
-
 CgBaseRenderer* CgQtGui::getRenderer()
 {
     return m_glRenderWidget;
 }
-
-
-
-
-

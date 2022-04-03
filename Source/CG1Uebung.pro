@@ -21,6 +21,7 @@ SOURCES += main.cpp \
     CgEvents/CgWindowResizeEvent.cpp \
     CgEvents/CgLoadObjFileEvent.cpp \
     CgSceneGraph/CgUnityCube.cpp \
+    CgUtils/Functions.cpp \
     CgUtils/ObjLoader.cpp \
     CgEvents/CgTrackballEvent.cpp
 
@@ -51,6 +52,7 @@ HEADERS += \
     CgEvents/CgWindowResizeEvent.h \
     CgEvents/CgLoadObjFileEvent.h \
     CgSceneGraph/CgUnityCube.h \
+    CgUtils/Functions.h \
     CgUtils/ObjLoader.h \
     CgBase/CgBaseImage.h \
     CgEvents/CgTrackballEvent.h

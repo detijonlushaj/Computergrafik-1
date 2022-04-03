@@ -4,11 +4,10 @@ CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent()
 {
 }
 
-CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent(Cg::EventType type, int n, bool show, bool reset):
+CgLaneRiesenfeldEvent::CgLaneRiesenfeldEvent(Cg::EventType type, int n, bool show):
 m_type(type),
 SubdivisionStep(n),
-m_showNormals(show),
-m_reset(reset)
+m_showNormals(show)
 {
 }
 CgLaneRiesenfeldEvent::~CgLaneRiesenfeldEvent(){
@@ -22,7 +21,7 @@ Cg::EventType CgLaneRiesenfeldEvent::getType()
 
 CgBaseEvent* CgLaneRiesenfeldEvent::clone()
 {
-    return new CgLaneRiesenfeldEvent(m_type, SubdivisionStep, m_showNormals, m_reset);
+    return new CgLaneRiesenfeldEvent(m_type, SubdivisionStep, m_showNormals);
 }
 
 
@@ -35,13 +34,10 @@ int CgLaneRiesenfeldEvent::getShowNormals() const{
     return m_showNormals;
 }
 
-bool CgLaneRiesenfeldEvent::getReset() const {
-    return m_reset;
-}
 
 std::ostream& operator<<(std::ostream& os,const CgLaneRiesenfeldEvent& e)
 {
-    os << "Type: "<< e.m_type << "\t (SubdivisionStep:" << e.getSubdivisionStep() << "\t normals: " << e.getShowNormals() << "\t reset: " << e.getReset() <<")";
+    os << "Type: "<< e.m_type << "\t (SubdivisionStep:" << e.getSubdivisionStep() << "\t normals: " << e.getShowNormals() <<")";
     return os;
 }
 

@@ -13,6 +13,7 @@
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
 #include "CgPolyline.h"
+#include "../CgUtils/Functions.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
@@ -20,42 +21,45 @@
 
 CgSceneControl::CgSceneControl()
 {
-    m_cube = nullptr;
+    m_cube=nullptr;
 
     m_current_transformation=glm::mat4(1.);
     m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
     m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
     m_trackball_rotation=glm::mat4(1.);
 
+    // Würfel zeichnen
 //    m_cube= new CgUnityCube(21);
 //    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        std::vector<glm::vec3> pp;
-//        pp.push_back(m_cube->getFaceCentroid()[i]);
-//        pp.push_back((m_cube->getFaceCentroid()[i]) + (m_cube->getFaceNormals()[i]) );
-//        m_polylines.push_back(new CgPolyline(i, pp));
+//        std::vector<glm::vec3> vertices;
+//        vertices.push_back(m_cube->getFaceCentroid()[i]);
+//        vertices.push_back(m_cube->getFaceCentroid()[i] + m_cube->getFaceNormals()[i]);
+//        m_polylines.push_back(new CgPolyline(i, vertices));
 //    }
 
+    // Linien erstellen
     curve.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
     curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
-
     m_polyline = new CgPolyline(21, curve);
-
 }
 
 
 CgSceneControl::~CgSceneControl()
 {
-//    if(m_cube!=NULL)
-//        delete m_cube;
+    if(m_cube!=NULL){
+        delete m_cube;
+    }
 
-//    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        if(m_polylines[i] != NULL)
-//            delete m_polylines[i];
-//    }
+    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+        if(m_polylines[i] != NULL) {
+            delete m_polylines[i];
+        }
+    }
+
     if (m_polyline != NULL)
-        delete m_polyline;
+            delete m_polyline;
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
@@ -70,28 +74,30 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
 //        m_renderer->init(m_cube);
 
 //    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        if(m_polylines[i] != NULL)
+//        if(m_polylines[i] != NULL) {
 //            m_renderer->init(m_polylines[i]);
+//        }
 //    }
 
     if(m_polyline!=NULL)
-        m_renderer->init(m_polyline);
+            m_renderer->init(m_polyline);
 }
 
 
 void CgSceneControl::renderObjects()
 {
+
     // Materialeigenschaften setzen
     // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
 
-    m_renderer->setUniformValue("matDiffuseColor"       ,glm::vec4(0.35,0.31,0.09,1.0));
-    m_renderer->setUniformValue("lightDiffuseColor"     ,glm::vec4(1.0,1.0,1.0,1.0));
+    m_renderer->setUniformValue("matDiffuseColor",glm::vec4(0.35,0.31,0.09,1.0));
+    m_renderer->setUniformValue("lightDiffuseColor",glm::vec4(1.0,1.0,1.0,1.0));
 
-    m_renderer->setUniformValue("matAmbientColor"       ,glm::vec4(0.25,0.22,0.06,1.0));
-    m_renderer->setUniformValue("lightAmbientColor"     ,glm::vec4(1.0,1.0,1.0,1.0));
+    m_renderer->setUniformValue("matAmbientColor",glm::vec4(0.25,0.22,0.06,1.0));
+    m_renderer->setUniformValue("lightAmbientColor",glm::vec4(1.0,1.0,1.0,1.0));
 
-    m_renderer->setUniformValue("matSpecularColor"      ,glm::vec4(0.8,0.72,0.21,1.0));
-    m_renderer->setUniformValue("lightSpecularColor"    ,glm::vec4(1.0,1.0,1.0,1.0));
+    m_renderer->setUniformValue("matSpecularColor",glm::vec4(0.8,0.72,0.21,1.0));
+    m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
     glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
@@ -100,17 +106,18 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
     m_renderer->setUniformValue("normalMatrix",normal_matrix);
 
-//    if(m_cube!=NULL)
+//    if(m_cube!=NULL){
 //        m_renderer->render(m_cube);
+//    }
 
 //    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        if(m_polylines[i] != NULL)
+//        if(m_polylines[i] != NULL) {
 //            m_renderer->render(m_polylines[i]);
+//        }
 //    }
 
     if(m_polyline!=NULL)
-        m_renderer->render(m_polyline);
-
+            m_renderer->render(m_polyline);
 }
 
 void CgSceneControl::handleEvent(CgBaseEvent* e)
@@ -129,6 +136,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     if(e->getType() & Cg::CgTrackballEvent)
     {
         CgTrackballEvent* ev = (CgTrackballEvent*)e;
+
 
         m_trackball_rotation=ev->getRotationMatrix();
         m_renderer->redraw();
@@ -175,6 +183,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
 
         CgLoadObjFileEvent* ev = (CgLoadObjFileEvent*)e;
 
+
         ObjLoader* loader= new ObjLoader();
         loader->load(ev->FileName());
 
@@ -183,14 +192,14 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         std::vector<glm::vec3> pos;
         loader->getPositionData(pos);
 
-        std::vector<glm::vec3> norm;
-        loader->getNormalData(norm);
+         std::vector<glm::vec3> norm;
+         loader->getNormalData(norm);
 
-        std::vector<unsigned int> indx;
-        loader->getFaceIndexData(indx);
+          std::vector<unsigned int> indx;
+          loader->getFaceIndexData(indx);
 
-//        m_cube->init(pos,norm,indx);
-//        m_renderer->init(m_cube);
+        m_cube->init(pos,norm,indx);
+        m_renderer->init(m_cube);
         m_renderer->redraw();
     }
 
@@ -200,7 +209,6 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgColorChangeEvent* ev = (CgColorChangeEvent*)e;
         std::cout << *ev << std::endl;
 
-
         double red = ev->getRed() / 255.0;
         double blue = ev->getBlue() / 255.0;
         double green = ev->getGreen() / 255.0;
@@ -209,56 +217,19 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->redraw();
     }
 
-    if(e->getType() & Cg::CgButton_LR_UA_start)
-    {
+    if(e->getType() & Cg::CgButton_LR_UA_start) {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
 
-        int n = ev->getSubdivisionStep();
-//        bool showNormals = ev->getShowNormals();
+        Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(m_polyline->getVertices(), ev->getSubdivisionStep());
 
-//        LR_UA(m_polyline->getVertices(),n);
+    }
 
-
-//        std::cout << (m_polyline->getVertices().at(0)[1]) << std::endl;
-
+    if(e->getType() & Cg::CgButton_LR_UA_reset) {
+        CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
+        std::cout << *ev << std::endl;
     }
 
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
     delete e;
 }
-
-std::vector<glm::vec3> LR_UA(std::vector<glm::vec3> pp, int n){
-
-    if(pp.size() < 3) return pp;
-
-    int size = pp.size();
-    for (int i = 0; i < size; i++)
-    {
-        pp.push_back( glm::vec3(0.0, 0.0, 0.0));
-    }
-
-    for (int i = 0; i < pp.size(); i = i + 2 )
-    {
-        pp.at(pp.size()-i-1) = pp.at(size-1-(i/2) );
-        pp.at(pp.size()-i-2) = pp.at(size-1-(i/2) );
-    }
-
-    //2-4 Schritte sind ueblich!
-    for (int j = 0; j < n; j++)
-    {
-        for (int i = 0; i < pp.size(); i++)
-        {
-            glm::vec3  newpoint= ( pp.at(i) + pp.at(i+1) );
-            newpoint[0] = newpoint[0]/2;
-            newpoint[1] = newpoint[1]/2;
-            newpoint[2] = newpoint[2]/2;
-
-            pp.at(i) = newpoint;
-        }
-        pp.erase(pp.begin()+pp.size()-1);
-    }
-
-    return pp;
-}
-
