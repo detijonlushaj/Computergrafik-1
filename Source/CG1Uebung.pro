@@ -6,6 +6,7 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     CgEvents/CgColorChangeEvent.cpp \
+    CgEvents/CgLaneRiesenfeldEvent.cpp \
     CgQtViewer/CGQtGLRenderWidget.cpp \
     CgQtViewer/CgQtGui.cpp \
     CgBase/CgObservable.cpp \
@@ -25,6 +26,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     CgEvents/CgColorChangeEvent.h \
+    CgEvents/CgLaneRiesenfeldEvent.h \
     CgQtViewer/CgQtGLRenderWidget.h \
     CgQtViewer/CgQtGui.h \
     CgBase/CgObserver.h \

@@ -10,6 +10,7 @@
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
 #include "../CgEvents/CgColorChangeEvent.h"         //change Color
+#include "../CgEvents/CgLaneRiesenfeldEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -204,6 +205,7 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     parent->setLayout(tab_ColorChange);
 }
 
+
 void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
 {
     QVBoxLayout *tab_LR_UA = new QVBoxLayout();
@@ -221,7 +223,7 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     SpinBox_LR_UA->setValue(0);
     SpinBox_LR_UA->setPrefix("Unterteilungsschritte: ");
     tab_LR_UA->addWidget(SpinBox_LR_UA);
-//    connect(SpinBox_LR_UA, SIGNAL( valueChanged(int)  ), this, SLOT(fnk()));
+//    connect(SpinBox_LR_UA, SIGNAL( valueChanged(int)  ), this, SLOT(slotButton_LR_UA_Pressed()));
 
     //set spacing
     tab_LR_UA->addSpacing(50);
@@ -238,11 +240,11 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     /*Button for RBG Color change */
     QPushButton* Button_LR_UA = new QPushButton("click");
     tab_LR_UA->addWidget(Button_LR_UA);
-//    connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
+    connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_Pressed()));
 
     QPushButton* Button_LR_UA_reset = new QPushButton("reset");
     tab_LR_UA->addWidget(Button_LR_UA_reset);
-//    connect(Button_LR_UA_reset, SIGNAL( clicked() ), this, SLOT(slotButtonChangeColorPressed()));
+    connect(Button_LR_UA_reset, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_reset_Pressed()));
 
     parent->setLayout(tab_LR_UA);
 
@@ -345,12 +347,28 @@ void CgQtGui::slotTrackballChanged()
 
 void CgQtGui::slotButtonChangeColorPressed()
 {
-   std::cout << "button 1 pressed to change the color" << std::endl;
+//   std::cout << "button pressed to change the color" << std::endl;
    CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButtonColorChangePress, SpinBoxRed->value(), SpinBoxGreen->value(), SpinBoxBlue->value());
    notifyObserver(e);
 
 }
 
+
+void CgQtGui::slotButton_LR_UA_Pressed()
+{
+   std::cout << "button pressed for the algorithm" << std::endl;
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked() );
+   notifyObserver(e);
+
+}
+
+void CgQtGui::slotButton_LR_UA_reset_Pressed()
+{
+//   std::cout << "button pressed to reset the algorithm" << std::endl;
+//   CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButton_LR_UA_reset);
+//   notifyObserver(e);
+
+}
 
 void CgQtGui::mouseEvent(QMouseEvent* event)
 {
@@ -396,8 +414,6 @@ void CgQtGui::viewportChanged(int w, int h)
      CgBaseEvent* e = new CgWindowResizeEvent(Cg::WindowResizeEvent,w,h);
      notifyObserver(e);
 }
-
-
 
 
 CgBaseRenderer* CgQtGui::getRenderer()

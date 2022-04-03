@@ -124,9 +124,14 @@ private slots:
     /* slots example qt gui elements */
     void slotMySpinBox1Changed();
     void slotMyCheckBox1Changed();
-    void slotButtonChangeColorPressed();
     void slotButtonGroupSelectionChanged();
     void slotLoadMeshFile();
+
+    void slotButtonChangeColorPressed();
+    void slotButton_LR_UA_Pressed();
+    void slotButton_LR_UA_reset_Pressed();
+
+
 
 
 

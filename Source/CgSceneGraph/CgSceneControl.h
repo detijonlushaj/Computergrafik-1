@@ -22,13 +22,17 @@ public:
     void setRenderer(CgBaseRenderer* r);
 
     void renderObjects();
+    std::vector<glm::vec3> LR_UA(std::vector<glm::vec3> pp,int n);
 
 private:
 
     CgBaseRenderer* m_renderer;
 
     CgUnityCube* m_cube;
-    std::vector<CgPolyline*> m_polyline;
+    std::vector<CgPolyline*> m_polylines;
+
+    CgPolyline* m_polyline;
+    std::vector<glm::vec3> pp;
 
     glm::mat4 m_current_transformation;
     glm::mat4 m_trackball_rotation;
