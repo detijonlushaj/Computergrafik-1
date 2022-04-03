@@ -151,7 +151,6 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		../Source/.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -285,7 +284,6 @@ Makefile: ../Source/CG1Uebung.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g+
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -363,7 +361,6 @@ Makefile: ../Source/CG1Uebung.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g+
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
-.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -517,7 +514,8 @@ CgQtGui.o: ../Source/CgQtViewer/CgQtGui.cpp ../Source/CgQtViewer/CgQtGLRenderWid
 		../Source/CgEvents/CgWindowResizeEvent.h \
 		../Source/CgEvents/CgLoadObjFileEvent.h \
 		../Source/CgEvents/CgTrackballEvent.h \
-		../Source/CgEvents/CgColorChangeEvent.h
+		../Source/CgEvents/CgColorChangeEvent.h \
+		../Source/CgEvents/CgLaneRiesenfeldEvent.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgQtGui.o ../Source/CgQtViewer/CgQtGui.cpp
 
 CgObservable.o: ../Source/CgBase/CgObservable.cpp ../Source/CgBase/CgObservable.h \
@@ -558,6 +556,7 @@ CgSceneControl.o: ../Source/CgSceneGraph/CgSceneControl.cpp ../Source/CgSceneGra
 		../Source/CgEvents/CgTrackballEvent.h \
 		../Source/CgBase/CgBaseRenderer.h \
 		../Source/CgEvents/CgColorChangeEvent.h \
+		../Source/CgEvents/CgLaneRiesenfeldEvent.h \
 		../Source/CgSceneGraph/CgExampleTriangle.h \
 		../Source/CgBase/CgBaseTriangleMesh.h \
 		../Source/CgSceneGraph/CgUnityCube.h \
