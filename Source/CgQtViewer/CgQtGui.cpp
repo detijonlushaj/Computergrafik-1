@@ -31,18 +31,14 @@
 #include <QFileDialog>
 #include <iostream>
 
-
-
 CgQtGui::CgQtGui(CgQtMainApplication *mw)
     : m_mainWindow(mw)
 {
     m_glRenderWidget = new CgQtGLRenderWidget;
 
-
     connect(m_glRenderWidget, SIGNAL(mouseEvent(QMouseEvent*)), this, SLOT(mouseEvent(QMouseEvent*)));
     connect(m_glRenderWidget, SIGNAL(viewportChanged(int,int)), this, SLOT(viewportChanged(int,int)));
     connect(m_glRenderWidget, SIGNAL(trackballChanged()), this, SLOT(slotTrackballChanged()));
-
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     QHBoxLayout *container = new QHBoxLayout;
@@ -188,7 +184,6 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     parent->setLayout(tab_ColorChange);
 }
 
-
 void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
 {
     QVBoxLayout *tab_LR_UA = new QVBoxLayout();
@@ -211,14 +206,12 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     //set spacing
     tab_LR_UA->addSpacing(50);
 
-
     /*checkbox for the normals */
     CheckBox_shownormals = new QCheckBox("show normals");
     CheckBox_shownormals->setCheckable(true);
     CheckBox_shownormals->setChecked(false);
     tab_LR_UA->addWidget(CheckBox_shownormals);
 //    connect(CheckBox_shownormals, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
-
 
     /*Button */
     QPushButton* Button_LR_UA = new QPushButton("click");
@@ -236,21 +229,15 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
 
 void CgQtGui::createOptionPanelExample(QWidget* parent)
 {
-
-
     /*Example for using a checkbox */
-
 //    myCheckBox1 = new QCheckBox("enable Option 1");
 //    myCheckBox1->setCheckable(true);
 //    myCheckBox1->setChecked(false);
 //    connect(myCheckBox1, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
 //    tab1_control->addWidget(myCheckBox1);
 
-
     QVBoxLayout *tab_control = new QVBoxLayout();
     QHBoxLayout *subBox = new QHBoxLayout();
-
-
 
     /*Example for using a button group */
 
@@ -291,34 +278,24 @@ void CgQtGui::createOptionPanelExample(QWidget* parent)
 }
 
 
-
 void CgQtGui::slotButtonGroupSelectionChanged()
 {
-
 }
 
 void CgQtGui::slotMySpinBox1Changed()
 {
-
 }
 
 void CgQtGui::slotMyCheckBox1Changed()
 {
-
 }
 
 
 void CgQtGui::slotLoadMeshFile()
 {
-
-
-
    QString file=  QFileDialog::getOpenFileName(this, tr("Open Obj-File"),"",tr("Model Files (*.obj)"));
-
-
-    CgBaseEvent* e = new CgLoadObjFileEvent(Cg::LoadObjFileEvent, file.toStdString());
-
-    notifyObserver(e);
+   CgBaseEvent* e = new CgLoadObjFileEvent(Cg::LoadObjFileEvent, file.toStdString());
+   notifyObserver(e);
 }
 
 
@@ -340,16 +317,16 @@ void CgQtGui::slotButtonChangeColorPressed()
 void CgQtGui::slotButton_LR_UA_Pressed()
 {
    std::cout << "button pressed for the algorithm" << std::endl;
-   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked() );
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked(), false );
    notifyObserver(e);
 
 }
 
 void CgQtGui::slotButton_LR_UA_reset_Pressed()
 {
-//   std::cout << "button pressed to reset the algorithm" << std::endl;
-//   CgBaseEvent* e= new CgColorChangeEvent(Cg::CgButton_LR_UA_reset);
-//   notifyObserver(e);
+    std::cout << "button pressed for the algorithm" << std::endl;
+    CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked(), true );
+    notifyObserver(e);
 
 }
 
