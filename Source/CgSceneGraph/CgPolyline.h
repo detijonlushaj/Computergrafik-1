@@ -22,6 +22,9 @@ public:
     glm::vec3 getColor() const override;
     unsigned int getLineWidth() const override;
 
+    //eigene methoden
+    void setVertices(std::vector<glm::vec3>);
+
 private:
     const Cg::ObjectType m_type;
     const unsigned int m_id;

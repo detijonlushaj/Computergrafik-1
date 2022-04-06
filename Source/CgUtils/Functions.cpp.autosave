@@ -5,11 +5,11 @@ std::vector<glm::vec3> Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(std:
     // Unter 3 macht der Algorithmus keinen Sinn
     if(verticesold.size() < 3 || n == 0) return verticesold;
 
-    std::vector<glm::vec3> *vertices = new std::vector<glm::vec3>();
+    std::vector<glm::vec3> vertices = new std::vector<glm::vec3>();
 
     for (std::vector<unsigned int>::size_type i = 0; i < verticesold.size(); i++)
     {
-        *vertices.push_back(verticesold.at(i));
+        vertices.push_back(verticesold.at(i));
     }
 
     int size = vertices.size();

@@ -221,13 +221,17 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
 
-        Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(m_polyline->getVertices(), ev->getSubdivisionStep());
+        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, ev->getSubdivisionStep()));
+
+        m_renderer->redraw();
 
     }
 
     if(e->getType() & Cg::CgButton_LR_UA_reset) {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
+        m_polyline->setVertices(curve);
+        m_renderer->redraw();
     }
 
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
