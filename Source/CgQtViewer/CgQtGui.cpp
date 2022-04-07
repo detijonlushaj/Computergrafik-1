@@ -236,7 +236,7 @@ void CgQtGui::createOptionPanelRotation(QWidget* parent)
     SpinBox_rotatorische_Segmente->setMinimum(0);
     SpinBox_rotatorische_Segmente->setMaximum(10);
     SpinBox_rotatorische_Segmente->setValue(0);
-    SpinBox_rotatorische_Segmente->setPrefix("Unterteilungsschritte: ");
+    //SpinBox_rotatorische_Segmente->setPrefix("");
 
     //set spacing
     tab_Rotation->addSpacing(50);
