@@ -98,17 +98,19 @@ private:
 
     /* example for usage of qt gui elements, feel free to add what you like */
     void OptionPanelColorChange(QWidget* panel);
-    void createOptionPaneLaneRiesenfeld_UA(QWidget* panel);
-    void createOptionPanelExample(QWidget* panel);
+    void createOptionPanelLaneRiesenfeld_UA(QWidget* panel);
+    void createOptionPanelRotation(QWidget* panel);
+    void createOptionPanelExample1(QWidget* panel);
 
     QButtonGroup* myButtonGroup;
-    QCheckBox*  CheckBox_shownormals;
     QSpinBox*   SpinBoxRed;
     QSpinBox*   SpinBoxGreen;
     QSpinBox*   SpinBoxBlue;
 
     QSpinBox*   SpinBox_LR_UA;
 
+    QSpinBox*   SpinBox_rotatorische_Segmente;
+    QCheckBox*  CheckBox_shownormals;
 
 
 
@@ -130,6 +132,8 @@ private slots:
     void slotButtonChangeColorPressed();
     void slotButton_LR_UA_Pressed();
     void slotButton_LR_UA_reset_Pressed();
+
+    void slotButtonRotation();
 
 
 

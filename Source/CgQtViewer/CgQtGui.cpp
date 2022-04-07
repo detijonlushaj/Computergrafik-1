@@ -7,8 +7,11 @@
 #include "../CgEvents/CgWindowResizeEvent.h"
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
-#include "../CgEvents/CgColorChangeEvent.h"         //change Color#
+
+#include "../CgEvents/CgColorChangeEvent.h"
 #include "../CgEvents/CgLaneRiesenfeldEvent.h"
+#include "../CgEvents/CgRotationEvent.h"
+
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -48,17 +51,20 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QWidget *opt_color = new QWidget;
     OptionPanelColorChange(opt_color);
 
+    QWidget *opt_LR_UA = new QWidget;
+    createOptionPanelLaneRiesenfeld_UA(opt_LR_UA);
+
+    QWidget *opt_rotation = new QWidget;
+    createOptionPanelRotation(opt_rotation);
+
     QWidget *otheropt = new QWidget;
-    createOptionPaneLaneRiesenfeld_UA(otheropt);
-
-    QWidget *otheropt2 = new QWidget;
-    createOptionPanelExample(otheropt2);
-
+    createOptionPanelExample1(otheropt);
 
     QTabWidget* m_tabs = new QTabWidget();
     m_tabs->addTab(opt_color,"&Color");        //tab name
-    m_tabs->addTab(otheropt,"&L-R UA");
-    m_tabs->addTab(otheropt2,"&Tab");
+    m_tabs->addTab(opt_LR_UA,"&L-R UA");
+    m_tabs->addTab(opt_rotation,"&Rotation");
+    m_tabs->addTab(otheropt,"&tab");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -184,7 +190,7 @@ void CgQtGui::OptionPanelColorChange(QWidget* parent)
     parent->setLayout(tab_ColorChange);
 }
 
-void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
+void CgQtGui::createOptionPanelLaneRiesenfeld_UA(QWidget* parent)
 {
     QVBoxLayout *tab_LR_UA = new QVBoxLayout();
 
@@ -205,14 +211,6 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     //set spacing
     tab_LR_UA->addSpacing(50);
 
-
-    /*checkbox for the normals */
-    CheckBox_shownormals = new QCheckBox("show normals");
-    CheckBox_shownormals->setCheckable(true);
-    CheckBox_shownormals->setChecked(false);
-    tab_LR_UA->addWidget(CheckBox_shownormals);
-
-
     QPushButton* Button_LR_UA = new QPushButton("click");
     tab_LR_UA->addWidget(Button_LR_UA);
     connect(Button_LR_UA, SIGNAL( clicked() ), this, SLOT(slotButton_LR_UA_Pressed()));
@@ -224,7 +222,41 @@ void CgQtGui::createOptionPaneLaneRiesenfeld_UA(QWidget* parent)
     parent->setLayout(tab_LR_UA);
 }
 
-void CgQtGui::createOptionPanelExample(QWidget* parent)
+void CgQtGui::createOptionPanelRotation(QWidget* parent)
+{
+    QVBoxLayout *tab_Rotation = new QVBoxLayout();
+
+    QLabel *options_label = new QLabel("Anzahl rotatorische Segmente");
+    tab_Rotation->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignCenter);
+
+    /*Spinboxes for the Algorithm */
+    SpinBox_rotatorische_Segmente = new QSpinBox();
+    tab_Rotation->addWidget(SpinBox_rotatorische_Segmente);
+    SpinBox_rotatorische_Segmente->setMinimum(0);
+    SpinBox_rotatorische_Segmente->setMaximum(10);
+    SpinBox_rotatorische_Segmente->setValue(0);
+    SpinBox_rotatorische_Segmente->setPrefix("Unterteilungsschritte: ");
+
+    //set spacing
+    tab_Rotation->addSpacing(50);
+
+    /*checkbox for the normals */
+    CheckBox_shownormals = new QCheckBox("show normals");
+    CheckBox_shownormals->setCheckable(true);
+    CheckBox_shownormals->setChecked(false);
+    tab_Rotation->addWidget(CheckBox_shownormals);
+    parent->setLayout(tab_Rotation);
+
+    //set spacing
+    tab_Rotation->addSpacing(50);
+
+    QPushButton* Button_Rotation = new QPushButton("click");
+    tab_Rotation->addWidget(Button_Rotation);
+    connect(Button_Rotation, SIGNAL( clicked() ), this, SLOT(slotButtonRotation()));
+}
+
+void CgQtGui::createOptionPanelExample1(QWidget* parent)
 {
    /*Example for using a checkbox */
 
@@ -317,7 +349,7 @@ void CgQtGui::slotButtonChangeColorPressed()
 void CgQtGui::slotButton_LR_UA_Pressed()
 {
    std::cout << "button pressed for the algorithm" << std::endl;
-   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked());
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_start, SpinBox_LR_UA->value());
    notifyObserver(e);
 }
 
@@ -325,9 +357,18 @@ void CgQtGui::slotButton_LR_UA_reset_Pressed()
 {
    std::cout << "button pressed to reset the algorithm" << std::endl;
    SpinBox_LR_UA->setValue(0);
-   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_reset, SpinBox_LR_UA->value(),CheckBox_shownormals->isChecked());
+   CgBaseEvent* e= new CgLaneRiesenfeldEvent(Cg::CgButton_LR_UA_reset, SpinBox_LR_UA->value());
    notifyObserver(e);
 }
+
+void CgQtGui::slotButtonRotation()
+{
+   std::cout << "button pressed to rotate around the Y-axis" << std::endl;
+   CgBaseEvent* e = new CgRotationEvent(Cg::CgButtonRotation, SpinBox_rotatorische_Segmente->value(),CheckBox_shownormals->isChecked() );
+   notifyObserver(e);
+
+}
+
 
 void CgQtGui::mouseEvent(QMouseEvent* event)
 {

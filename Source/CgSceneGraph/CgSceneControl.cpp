@@ -10,6 +10,7 @@
 #include "CgBase/CgBaseRenderer.h"
 #include "CgEvents/CgColorChangeEvent.h"
 #include "CgEvents/CgLaneRiesenfeldEvent.h"
+#include "CgEvents/CgRotationEvent.h"
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
 #include "CgPolyline.h"
@@ -42,10 +43,10 @@ CgSceneControl::CgSceneControl()
     curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
     curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
+    curve.push_back( glm::vec3(-1.5  ,-1.5  , 0.0) );
+    curve.push_back( glm::vec3(-3.0  ,0.0  , 0.0) );
 
-
-
-    m_polyline = new CgPolyline(21, Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, 2));
+    m_polyline = new CgPolyline(Functions::getId(), curve);
 }
 
 
@@ -224,8 +225,19 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
 
-        //m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, ev->getSubdivisionStep()));
+        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, ev->getSubdivisionStep()));
 
+        std::cout << "m_polyline:\n";
+        for (int i = 0; i < (int) m_polyline->getVertices().size(); i++) {
+            std::cout << i << " " << m_polyline->getVertices().at(i)[0] << " " << m_polyline->getVertices().at(i)[1] << " " << m_polyline->getVertices().at(i)[2] << std::endl;
+        }
+
+//        std::cout << "curve:\n";
+//        for (int i = 0; i < curve.size(); i++) {
+//            std::cout << i << " " << curve.at(i)[0] << " " << curve.at(i)[1] << " " << curve.at(i)[2] << std::endl;
+//        }
+
+        m_renderer->render(m_polyline);
         m_renderer->redraw();
 
     }
@@ -237,6 +249,10 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->redraw();
     }
 
+    if(e->getType() & Cg::CgButtonRotation) {
+        CgRotationEvent* ev = (CgRotationEvent*)e;
+        std::cout << *ev << std::endl;
+    }
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
     delete e;
 }
