@@ -35,7 +35,7 @@ CgSceneControl::CgSceneControl()
 
     // Würfel zeichnen
 //    m_cube= new CgUnityCube(21);
-//    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+//    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
 //        std::vector<glm::vec3> vertices;
 //        vertices.push_back(m_cube->getFaceCentroid()[i]);
 //        vertices.push_back(m_cube->getFaceCentroid()[i] + m_cube->getFaceNormals()[i]);
@@ -58,7 +58,7 @@ CgSceneControl::~CgSceneControl()
         delete m_cube;
     }
 
-    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
         if(m_polylines[i] != NULL) {
             delete m_polylines[i];
         }
@@ -83,7 +83,7 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     if(m_cube!=NULL)
         m_renderer->init(m_cube);
 
-//    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+//    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
 //        if(m_polylines[i] != NULL) {
 //            m_renderer->init(m_polylines[i]);
 //        }
@@ -103,31 +103,30 @@ void CgSceneControl::renderObjects()
     // Materialeigenschaften setzen
     // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
 
-    m_renderer->setUniformValue("matDiffuseColor",glm::vec4(0.35,0.31,0.09,1.0));
-    m_renderer->setUniformValue("lightDiffuseColor",glm::vec4(1.0,1.0,1.0,1.0));
+    m_renderer->setUniformValue("matDiffuseColor"   ,glm::vec4(0.35,0.31,0.09,1.0));
+    m_renderer->setUniformValue("lightDiffuseColor" ,glm::vec4(1.0,1.0,1.0,1.0));
 
-    m_renderer->setUniformValue("matAmbientColor",glm::vec4(0.25,0.22,0.06,1.0));
-    m_renderer->setUniformValue("lightAmbientColor",glm::vec4(1.0,1.0,1.0,1.0));
+    m_renderer->setUniformValue("matAmbientColor"   ,glm::vec4(0.25,0.22,0.06,1.0));
+    m_renderer->setUniformValue("lightAmbientColor" ,glm::vec4(1.0,1.0,1.0,1.0));
 
-    m_renderer->setUniformValue("matSpecularColor",glm::vec4(0.8,0.72,0.21,1.0));
+    m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
     glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
 
-    m_renderer->setUniformValue("projMatrix",m_proj_matrix);
-    m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
-    m_renderer->setUniformValue("normalMatrix",normal_matrix);
+    m_renderer->setUniformValue("projMatrix"        ,m_proj_matrix);
+    m_renderer->setUniformValue("modelviewMatrix"   ,mv_matrix);
+    m_renderer->setUniformValue("normalMatrix"      ,normal_matrix);
 
-    if(m_cube!=NULL){
+    if(m_cube!=NULL)
         m_renderer->render(m_cube);
-    }
 
     if(m_polyline!=NULL)
-            m_renderer->render(m_polyline);
+        m_renderer->render(m_polyline);
 
     if(m_rotation!=NULL)
-            m_renderer->render(m_rotation);
+        m_renderer->render(m_rotation);
 
 }
 
@@ -147,7 +146,6 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     if(e->getType() & Cg::CgTrackballEvent)
     {
         CgTrackballEvent* ev = (CgTrackballEvent*)e;
-
 
         m_trackball_rotation=ev->getRotationMatrix();
         m_renderer->redraw();
@@ -203,11 +201,11 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         std::vector<glm::vec3> pos;
         loader->getPositionData(pos);
 
-         std::vector<glm::vec3> norm;
-         loader->getNormalData(norm);
+        std::vector<glm::vec3> norm;
+        loader->getNormalData(norm);
 
-          std::vector<unsigned int> indx;
-          loader->getFaceIndexData(indx);
+        std::vector<unsigned int> indx;
+        loader->getFaceIndexData(indx);
 
         m_cube->init(pos,norm,indx);
         m_renderer->init(m_cube);
@@ -224,14 +222,14 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         double blue = ev->getBlue() / 255.0;
         double green = ev->getGreen() / 255.0;
 
-        m_renderer->setUniformValue("mycolor",glm::vec4(red,green,blue,1.0));
+        m_renderer->setUniformValue("mycolor"   ,glm::vec4(red,green,blue,1.0));
         m_renderer->redraw();
     }
 
     if(e->getType() & Cg::CgButton_LR_UA_start) {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
-        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(m_polyline->getVertices(), ev->getSubdivisionStep()));
+        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, ev->getSubdivisionStep()));
 
         m_renderer->init(m_polyline);
         m_renderer->redraw();
@@ -256,12 +254,15 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
 
         double angle = 2*M_PI / (double)ev->getRotatorischeSegmente();
         int original_size = m_polyline->getVertices().size();
+
         for (int j = 0; j < ev->getRotatorischeSegmente(); ++j) {
+
             for (int i = 0; i < original_size; ++i) {
                 float x = m_polyline->getVertices().at(i)[0]*cos(angle) - m_polyline->getVertices().at(i)[2]*sin(angle);
                 float z = m_polyline->getVertices().at(i)[2]*cos(angle) + m_polyline->getVertices().at(i)[0]*sin(angle);
                 m_polyline->addVertice(glm::vec3(x, m_polyline->getVertices().at(i)[1], z));
             }
+
             angle+=2*M_PI / (double)ev->getRotatorischeSegmente();
         }
 
@@ -271,20 +272,22 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_polyline = nullptr;
 
         if (ev->getNormals() == true) {
-            for(std::vector<unsigned int>::size_type i = 0; i < m_rotation->getFaceCentroid().size() ; i++) {
+            for(unsigned int i = 0; i < m_rotation->getFaceCentroid().size() ; ++i) {
                 std::vector<glm::vec3> vertices;
                 vertices.push_back(m_rotation->getFaceCentroid()[i]);
                 vertices.push_back(m_rotation->getFaceCentroid()[i] + m_rotation->getFaceNormals()[i]);
                 m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
             }
         }
-        for(std::vector<unsigned int>::size_type i = 0; i < m_polylines.size() ; i++) {
+
+        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
             m_renderer->init(m_polylines[i]);
-         }
+        }
 
         m_renderer->init(m_rotation);
         m_renderer->redraw();
     }
+
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
     delete e;
 }

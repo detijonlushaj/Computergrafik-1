@@ -6,7 +6,7 @@
 CgPolyline::CgPolyline(int id, std::vector<glm::vec3> vertices):
 m_type(Cg::Polyline), m_id(id), m_line_width{1}, m_face_colors{glm::vec3(0, 255.0, 0)}
 {
-    for(int i = 0; i < (int) vertices.size(); i++) {
+    for(int i = 0; i < (int) vertices.size(); ++i) {
         m_vertices.push_back(vertices.at(i));
     }
 }
@@ -31,7 +31,7 @@ unsigned int CgPolyline::getLineWidth() const {
 
 void CgPolyline::setVertices(std::vector<glm::vec3> newvertices){
     m_vertices.clear();
-    for(std::vector<unsigned int>::size_type i = 0; i< newvertices.size(); i++) {
+    for(unsigned int i = 0; i< newvertices.size(); ++i) {
         m_vertices.push_back(newvertices.at(i));
     }
 }

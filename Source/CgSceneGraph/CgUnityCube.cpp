@@ -9,16 +9,16 @@ m_id(id)
 {
 
     // Vorderseite
-    m_vertices.push_back(glm::vec3(-sqrt(2)/2,0.0,0.5));  // linke ecke x, y, z
-    m_vertices.push_back(glm::vec3(0.0,-sqrt(2)/2,0.5));  // untere ecke
-    m_vertices.push_back(glm::vec3(0.0,sqrt(2)/2,0.5));   // obere ecke
-    m_vertices.push_back(glm::vec3(sqrt(2)/2,0.0,0.5));   // rechte ecke
+    m_vertices.push_back(glm::vec3(-sqrt(2)/2   ,0.0            ,0.5));  // linke ecke x, y, z
+    m_vertices.push_back(glm::vec3(0.0          ,-sqrt(2)/2     ,0.5));  // untere ecke
+    m_vertices.push_back(glm::vec3(0.0          ,sqrt(2)/2      ,0.5));   // obere ecke
+    m_vertices.push_back(glm::vec3(sqrt(2)/2    ,0.0            ,0.5));   // rechte ecke
 
     // Rückseite
-    m_vertices.push_back(glm::vec3(-sqrt(2)/2,0.0,-0.5));
-    m_vertices.push_back(glm::vec3(0.0,-sqrt(2)/2,-0.5));
-    m_vertices.push_back(glm::vec3(0.0,sqrt(2)/2,-0.5));
-    m_vertices.push_back(glm::vec3(sqrt(2)/2,0.0,-0.5));
+    m_vertices.push_back(glm::vec3(-sqrt(2)/2   ,0.0            ,-0.5));
+    m_vertices.push_back(glm::vec3(0.0          ,-sqrt(2)/2     ,-0.5));
+    m_vertices.push_back(glm::vec3(0.0          ,sqrt(2)/2      ,-0.5));
+    m_vertices.push_back(glm::vec3(sqrt(2)/2    ,0.0            ,-0.5));
 
     // Umlaufsinn gegen den Uhrzeiger
     // Fläche Vorderseite:
@@ -83,7 +83,7 @@ m_id(id)
     m_triangle_indices.push_back(2);
 
     // Normalen & Schwerpunkt berechnen
-    for (int i = 0; i < m_triangle_indices.size(); i+=3) {
+    for (unsigned int i = 0; i < m_triangle_indices.size(); i+=3) {
         glm::vec3 vec1 = m_vertices[m_triangle_indices[i+1]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 normal = glm::cross(vec1, vec2);

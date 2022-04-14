@@ -7,21 +7,22 @@ CgRotation::CgRotation(int id, std::vector<glm::vec3> indices, int originial_siz
 {
     m_vertices.clear();
 
-    for (int i = 0; i < indices.size(); ++i) {
+    for (unsigned int i = 0; i < indices.size(); ++i) {
         m_vertices.push_back(indices.at(i));
     }
-int pos;
+    int pos;
 
-    for (unsigned int i = 0; i < (m_vertices.size()/originial_size)-1; i+=1) { // i-tes Segment
-        for (int j = 0; j < originial_size - 1; ++j) { // pos j im i-ten segment
-             pos = i*originial_size+j;
-            m_triangle_indices.push_back(pos);
-            m_triangle_indices.push_back(pos+1);
-            m_triangle_indices.push_back(originial_size+1+pos);
+    for (unsigned int i = 0; i < (m_vertices.size()/originial_size)-1; i+=1) {      // i-tes Segment
+        for (int j = 0; j < originial_size - 1; ++j) {                              // pos j im i-ten segment
+            pos = i * originial_size + j;
 
             m_triangle_indices.push_back(pos);
-            m_triangle_indices.push_back(originial_size+1+pos);
-            m_triangle_indices.push_back(originial_size+pos);
+            m_triangle_indices.push_back(pos + 1);
+            m_triangle_indices.push_back(pos + originial_size + 1);
+
+            m_triangle_indices.push_back(pos);
+            m_triangle_indices.push_back(pos + originial_size + 1);
+            m_triangle_indices.push_back(pos + originial_size);
         }
     }
 
@@ -29,6 +30,7 @@ int pos;
     for (int i = 0; i < m_triangle_indices.size(); i+=3) {
         glm::vec3 vec1 = m_vertices[m_triangle_indices[i+1]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
+
         glm::vec3 normal = glm::cross(vec1, vec2);
         normal=glm::normalize(normal);
         m_face_normals.push_back(normal);
