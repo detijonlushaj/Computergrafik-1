@@ -14,15 +14,19 @@
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
 #include "CgPolyline.h"
+#include "CgRotation.h"
 #include "../CgUtils/Functions.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
 #include <string>
+#include <cmath>
 
 CgSceneControl::CgSceneControl()
 {
     m_cube=nullptr;
+    m_rotation=nullptr;
+    m_polyline=nullptr;
 
     m_current_transformation=glm::mat4(1.);
     m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
@@ -43,8 +47,6 @@ CgSceneControl::CgSceneControl()
     curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
     curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
-    curve.push_back( glm::vec3(-1.5  ,-1.5  , 0.0) );
-    curve.push_back( glm::vec3(-3.0  ,0.0  , 0.0) );
 
     m_polyline = new CgPolyline(Functions::getId(), curve);
 }
@@ -64,6 +66,10 @@ CgSceneControl::~CgSceneControl()
 
     if (m_polyline != NULL)
             delete m_polyline;
+
+    if(m_rotation!=NULL){
+        delete m_rotation;
+    }
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
@@ -74,8 +80,8 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     //set Color in the beginn of the Rendering - removed form rederObjects()!
     m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
 
-//    if(m_cube!=NULL)
-//        m_renderer->init(m_cube);
+    if(m_cube!=NULL)
+        m_renderer->init(m_cube);
 
 //    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
 //        if(m_polylines[i] != NULL) {
@@ -85,6 +91,9 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
 
     if(m_polyline!=NULL)
             m_renderer->init(m_polyline);
+
+    if(m_rotation!=NULL)
+            m_renderer->init(m_rotation);
 }
 
 
@@ -110,18 +119,16 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
     m_renderer->setUniformValue("normalMatrix",normal_matrix);
 
-//    if(m_cube!=NULL){
-//        m_renderer->render(m_cube);
-//    }
-
-//    for(std::vector<unsigned int>::size_type i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
-//        if(m_polylines[i] != NULL) {
-//            m_renderer->render(m_polylines[i]);
-//        }
-//    }
+    if(m_cube!=NULL){
+        m_renderer->render(m_cube);
+    }
 
     if(m_polyline!=NULL)
             m_renderer->render(m_polyline);
+
+    if(m_rotation!=NULL)
+            m_renderer->render(m_rotation);
+
 }
 
 void CgSceneControl::handleEvent(CgBaseEvent* e)
@@ -224,34 +231,59 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     if(e->getType() & Cg::CgButton_LR_UA_start) {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
+        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(m_polyline->getVertices(), ev->getSubdivisionStep()));
 
-        m_polyline->setVertices(Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(curve, ev->getSubdivisionStep()));
-
-        std::cout << "m_polyline:\n";
-        for (int i = 0; i < (int) m_polyline->getVertices().size(); i++) {
-            std::cout << i << " " << m_polyline->getVertices().at(i)[0] << " " << m_polyline->getVertices().at(i)[1] << " " << m_polyline->getVertices().at(i)[2] << std::endl;
-        }
-
-//        std::cout << "curve:\n";
-//        for (int i = 0; i < curve.size(); i++) {
-//            std::cout << i << " " << curve.at(i)[0] << " " << curve.at(i)[1] << " " << curve.at(i)[2] << std::endl;
-//        }
-
-        m_renderer->render(m_polyline);
+        m_renderer->init(m_polyline);
         m_renderer->redraw();
-
     }
 
     if(e->getType() & Cg::CgButton_LR_UA_reset) {
         CgLaneRiesenfeldEvent* ev = (CgLaneRiesenfeldEvent*)e;
         std::cout << *ev << std::endl;
         m_polyline->setVertices(curve);
+        m_renderer->init(m_polyline);
         m_renderer->redraw();
     }
 
     if(e->getType() & Cg::CgButtonRotation) {
         CgRotationEvent* ev = (CgRotationEvent*)e;
         std::cout << *ev << std::endl;
+
+        delete m_rotation;
+        if(m_polyline == nullptr) {
+            m_polyline = new CgPolyline(Functions::getId(),curve);
+        }
+
+        double angle = 2*M_PI / (double)ev->getRotatorischeSegmente();
+        int original_size = m_polyline->getVertices().size();
+        for (int j = 0; j < ev->getRotatorischeSegmente(); ++j) {
+            for (int i = 0; i < original_size; ++i) {
+                float x = m_polyline->getVertices().at(i)[0]*cos(angle) - m_polyline->getVertices().at(i)[2]*sin(angle);
+                float z = m_polyline->getVertices().at(i)[2]*cos(angle) + m_polyline->getVertices().at(i)[0]*sin(angle);
+                m_polyline->addVertice(glm::vec3(x, m_polyline->getVertices().at(i)[1], z));
+            }
+            angle+=2*M_PI / (double)ev->getRotatorischeSegmente();
+        }
+
+        m_rotation = new CgRotation(Functions::getId(), m_polyline->getVertices(), original_size);
+
+        delete m_polyline;
+        m_polyline = nullptr;
+
+        if (ev->getNormals() == true) {
+            for(std::vector<unsigned int>::size_type i = 0; i < m_rotation->getFaceCentroid().size() ; i++) {
+                std::vector<glm::vec3> vertices;
+                vertices.push_back(m_rotation->getFaceCentroid()[i]);
+                vertices.push_back(m_rotation->getFaceCentroid()[i] + m_rotation->getFaceNormals()[i]);
+                m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+            }
+        }
+        for(std::vector<unsigned int>::size_type i = 0; i < m_polylines.size() ; i++) {
+            m_renderer->init(m_polylines[i]);
+         }
+
+        m_renderer->init(m_rotation);
+        m_renderer->redraw();
     }
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
     delete e;
