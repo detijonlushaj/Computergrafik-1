@@ -12,6 +12,7 @@ public:
     CgLoadObjFile();
     CgLoadObjFile(int id);
     CgLoadObjFile(int id,std::vector<glm::vec3> arg_verts,  std::vector<glm::vec3> arg_normals, std::vector<unsigned int> arg_triangle_indices);
+    CgLoadObjFile(int id,std::vector<glm::vec3> arg_verts, std::vector<unsigned int> arg_triangle_indices);
 
 
     ~CgLoadObjFile();

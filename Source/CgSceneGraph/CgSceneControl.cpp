@@ -31,28 +31,26 @@ CgSceneControl::CgSceneControl()
     m_polyline      =nullptr;
     m_loadObj       =nullptr;
 
-    m_current_transformation=glm::mat4(1.);
-    m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
-    m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
-    m_trackball_rotation=glm::mat4(1.);
+    m_current_transformation    =glm::mat4(1.);
+    m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
+    m_proj_matrix               =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
+    m_trackball_rotation        =glm::mat4(1.);
 
 //    m_triangle = new CgExampleTriangle(Functions::getId());
 
-//    m_cube= new CgUnityCube(Functions::getId());
-//    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
-//        std::vector<glm::vec3> vertices;
-//        vertices.push_back(m_cube->getFaceCentroid()[i]);
-//        vertices.push_back(m_cube->getFaceCentroid()[i] + m_cube->getFaceNormals()[i]);
-//        m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
-//    }    
+//    m_cube= new CgUnityCube(21);
+//    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; i++) {
+//        std::vector<glm::vec3> pp;
+//        pp.push_back(m_cube->getFaceCentroid()[i]);
+//        pp.push_back((m_cube->getFaceCentroid()[i]) + (m_cube->getFaceNormals()[i]) );
+//        m_polylines.push_back(new CgPolyline(i, pp));
+//    }
 
     curve.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
     curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
     curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
-
     m_polyline = new CgPolyline(Functions::getId(), curve);
-
 
 }
 
@@ -65,18 +63,16 @@ CgSceneControl::~CgSceneControl()
     if(m_cube!=NULL)
         delete m_cube;
 
-    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
-        if(m_polylines[i] != NULL) {
+    for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
+        if(m_polylines[i] != NULL)
             delete m_polylines[i];
-        }
     }
 
     if (m_polyline != NULL)
             delete m_polyline;
 
-    if(m_rotation!=NULL){
+    if(m_rotation!=NULL)
         delete m_rotation;
-    }
 
     if(m_loadObj!=NULL)
         delete m_loadObj;
@@ -96,11 +92,10 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     if(m_cube!=NULL)
         m_renderer->init(m_cube);
 
-//    for(unsigned int i = 0; i < m_cube->getFaceCentroid().size() ; ++i) {
-//        if(m_polylines[i] != NULL) {
-//            m_renderer->init(m_polylines[i]);
-//        }
-//    }
+    for(unsigned int i = 0; i < m_polylines.size() ; i++) {
+        if(m_polylines[i] != NULL)
+            m_renderer->render(m_polylines[i]);
+    }
 
     if(m_polyline!=NULL)
             m_renderer->init(m_polyline);
@@ -140,6 +135,11 @@ void CgSceneControl::renderObjects()
 
     if(m_cube!=NULL)
         m_renderer->render(m_cube);
+
+    for(unsigned int i = 0; i < m_polylines.size() ; i++) {
+        if(m_polylines[i] != NULL)
+            m_renderer->render(m_polylines[i]);
+    }
 
     if(m_polyline!=NULL)
         m_renderer->render(m_polyline);
@@ -229,10 +229,19 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         std::vector<unsigned int> indx;
         loader->getFaceIndexData(indx);
 
-        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
+        //m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
         //m_loadObj->init(pos,norm,indx);
+
+        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,indx);
+
         m_renderer->init(m_loadObj);
         m_renderer->redraw();
+
+//        int indexx = 1;
+//        std::cout << norm.at(indexx)[0] << " == "  << m_loadObj->getVertexNormals().at(indexx)[0] << std::endl;
+//        std::cout << norm.at(indexx)[1] << " == "  << m_loadObj->getVertexNormals().at(indexx)[1] << std::endl;
+//        std::cout << norm.at(indexx)[2] << " == "  << m_loadObj->getVertexNormals().at(indexx)[2] << std::endl;
+
     }
 
     //change color event Farber aendern Event
@@ -285,8 +294,9 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         std::cout << *ev << std::endl;
 
         if(m_rotation != nullptr) {
-            delete m_rotation;
             m_polyline = new CgPolyline(Functions::getId(),curve);
+            m_polylines.clear();
+            delete m_rotation;
         }
 
         if( m_polyline != nullptr) {
@@ -310,17 +320,22 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             m_polyline = nullptr;
 
             if (ev->getNormals() == true) {
+
                 for(unsigned int i = 0; i < m_rotation->getFaceCentroid().size() ; ++i) {
                     std::vector<glm::vec3> vertices;
-                    vertices.push_back(m_rotation->getFaceCentroid()[i]);
-                    vertices.push_back(m_rotation->getFaceCentroid()[i] + m_rotation->getFaceNormals()[i]);
+
+                    vertices.push_back( m_rotation->getFaceCentroid()[i] );
+                    vertices.push_back( (m_rotation->getFaceCentroid()[i] + (m_rotation->getFaceNormals()[i]* (-1.0f)) ) );
                     m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+                }
+
+                for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
+                    m_renderer->render(m_polylines[i]);
+                    m_renderer->init(m_polylines[i]);
                 }
             }
 
-            for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
-                m_renderer->init(m_polylines[i]);
-            }
+
 
             m_renderer->init(m_rotation);
             m_renderer->redraw();
