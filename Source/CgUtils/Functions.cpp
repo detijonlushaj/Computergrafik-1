@@ -9,6 +9,11 @@ int Functions::getId()
     return unique_id;
 }
 
+bool Functions::XOR(bool a, bool b)
+{
+    return (a + b) % 2;
+}
+
 std::vector<glm::vec3> Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(std::vector<glm::vec3> verticesold, int n) {
     // Unter 3 macht der Algorithmus keinen Sinn
     if(verticesold.size() < 3 || n == 0) return verticesold;

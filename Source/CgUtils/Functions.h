@@ -9,6 +9,8 @@ class Functions
 public:
     static std::vector<glm::vec3> Lane_Riesenfeld_Unterteilungs_Algorithmus(std::vector<glm::vec3> vertices, int n);
     static int getId();
+    static bool XOR(bool a, bool b);
+
 
 private:
     static int unique_id;
