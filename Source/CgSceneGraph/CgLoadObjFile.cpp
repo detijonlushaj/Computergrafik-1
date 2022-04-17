@@ -1,6 +1,7 @@
 #include "CgLoadObjFile.h"
 #include "CgBase/CgEnums.h"
 #include "CgUtils/ObjLoader.h"
+#include <iostream>
 
 CgLoadObjFile::CgLoadObjFile(int id):
 m_type(Cg::TriangleMesh),
@@ -21,9 +22,16 @@ m_id(id)
     m_triangle_indices=arg_triangle_indices;
 
     //5.b)
-    for(unsigned int i = 0; i < m_vertices.size(); i++){
-        //Normale pro Punkt:  Mittelwert der Normalen aller Dreiecke berechnet, in denen der jeweils betrachtete Punkt vorkommt!
+    //Normalen  berechnen
+    for (unsigned int i = 0; i < m_triangle_indices.size(); i+=3) {
+        glm::vec3 vec1 = m_vertices[m_triangle_indices[i+1]] - m_vertices[m_triangle_indices[i]];
+        glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
+
+        glm::vec3 normal = glm::cross(vec1, vec2);
+        normal=glm::normalize(normal);
+        m_face_normals.push_back(normal);
     }
+
 }
 
 
