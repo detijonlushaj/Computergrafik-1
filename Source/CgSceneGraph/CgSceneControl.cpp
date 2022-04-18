@@ -237,6 +237,20 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->init(m_loadObj);
         m_renderer->redraw();
 
+        for(unsigned int i = 0; i < m_loadObj->getVertexNormals().size() ; ++i) {
+            std::vector<glm::vec3> vertices;
+
+            vertices.push_back( m_loadObj->getVertices()[i] );
+            vertices.push_back( (m_loadObj->getVertices()[i] + m_loadObj->getVertexNormals()[i] ) );
+            m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+        }
+
+        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
+            m_renderer->render(m_polylines[i]);
+            m_renderer->init(m_polylines[i]);
+        }
+        m_renderer->redraw();
+
 //        int indexx = 1;
 //        std::cout << norm.at(indexx)[0] << " == "  << m_loadObj->getVertexNormals().at(indexx)[0] << std::endl;
 //        std::cout << norm.at(indexx)[1] << " == "  << m_loadObj->getVertexNormals().at(indexx)[1] << std::endl;
@@ -279,6 +293,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         if(m_polyline != nullptr){
             if(m_rotation != nullptr) {                                 //wieso soll das nicht gehen lol
                 delete m_rotation;
+                m_polylines.clear();
                 m_polyline = new CgPolyline(Functions::getId(),curve);
             }
             m_polyline->setVertices(curve);
@@ -325,7 +340,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
                     std::vector<glm::vec3> vertices;
 
                     vertices.push_back( m_rotation->getFaceCentroid()[i] );
-                    vertices.push_back( (m_rotation->getFaceCentroid()[i] + (m_rotation->getFaceNormals()[i]* (-1.0f)) ) );
+                    vertices.push_back( (m_rotation->getFaceCentroid()[i] + (m_rotation->getFaceNormals()[i]) ) );
                     m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
                 }
 

@@ -31,7 +31,7 @@ CgRotation::CgRotation(int id, std::vector<glm::vec3> indices, int originial_siz
         glm::vec3 vec1 = m_vertices[m_triangle_indices[i+1]] - m_vertices[m_triangle_indices[i]];
         glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
 
-        glm::vec3 normal = glm::cross(vec1, vec2);
+        glm::vec3 normal = glm::cross(vec2, vec1);
         normal=glm::normalize(normal);
         m_face_normals.push_back(normal);
 
