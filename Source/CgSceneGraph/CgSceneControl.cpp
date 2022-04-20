@@ -46,11 +46,11 @@ CgSceneControl::CgSceneControl()
 //        m_polylines.push_back(new CgPolyline(i, pp));
 //    }
 
-    curve.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
-    curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
-    curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
-    curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
-    m_polyline = new CgPolyline(Functions::getId(), curve);
+//    curve.push_back( glm::vec3(0.0  , 1.5  , 0.0) );
+//    curve.push_back( glm::vec3(1.0  , 0.5  , 0.0) );
+//    curve.push_back( glm::vec3(1.0  ,-0.5  , 0.0) );
+//    curve.push_back( glm::vec3(0.0  ,-1.5  , 0.0) );
+//    m_polyline = new CgPolyline(Functions::getId(), curve);
 
 }
 

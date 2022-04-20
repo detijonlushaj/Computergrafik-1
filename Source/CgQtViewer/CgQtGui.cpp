@@ -64,7 +64,7 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     m_tabs->addTab(opt_color,"&Color");        //tab name
     m_tabs->addTab(opt_LR_UA,"&L-R UA");
     m_tabs->addTab(opt_rotation,"&Rotation");
-    m_tabs->addTab(otheropt,"&tab");
+    //m_tabs->addTab(otheropt,"&tab");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);

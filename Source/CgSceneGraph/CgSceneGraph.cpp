@@ -6,9 +6,9 @@ CgSceneGraph::CgSceneGraph()
 
 }
 
-void CgSceneGraph::pushMatrix(glm::mat4 matrix) {m_modelview_matrix_stack.push(matrix);}
-void CgSceneGraph::popMatrix() {m_modelview_matrix_stack.pop();}
-void CgSceneGraph::applyTransform(glm::mat4 arg) {m_modelview_matrix_stack.top() *= arg;}
+void CgSceneGraph::pushMatrix(glm::mat4 matrix)     {m_modelview_matrix_stack.push(matrix);}
+void CgSceneGraph::popMatrix()                      {m_modelview_matrix_stack.pop();}
+void CgSceneGraph::applyTransform(glm::mat4 arg)    {m_modelview_matrix_stack.top() *= arg;}
 
 void CgSceneGraph::render(CgBaseRenderer *renderer) {
 //    CgSceneGraphEntity* child;
@@ -21,8 +21,8 @@ void CgSceneGraph::render(CgBaseRenderer *renderer) {
 //    pushMatrix(m_modelview_matrix_stack.top());
 }
 
-CgSceneGraphEntity* CgSceneGraph::getRootNode() {return m_root_node;}
-std::stack<glm::mat4> CgSceneGraph::getModelviewMatrixStack() {return m_modelview_matrix_stack;}
+CgSceneGraphEntity* CgSceneGraph::getRootNode()                 {return m_root_node;}
+std::stack<glm::mat4> CgSceneGraph::getModelviewMatrixStack()   {return m_modelview_matrix_stack;}
 
 void CgSceneGraph::setModelviewMatrixStack(std::stack<glm::mat4> modelview_matrix_stack) {
     while (!m_modelview_matrix_stack.empty()) m_modelview_matrix_stack.pop();
