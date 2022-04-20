@@ -235,7 +235,7 @@ void CgQtGui::createOptionPanelRotation(QWidget* parent)
     tab_Rotation->addWidget(SpinBox_rotatorische_Segmente);
     SpinBox_rotatorische_Segmente->setMinimum(0);
     SpinBox_rotatorische_Segmente->setMaximum(360);
-    SpinBox_rotatorische_Segmente->setValue(10);
+    SpinBox_rotatorische_Segmente->setValue(5);
     //SpinBox_rotatorische_Segmente->setPrefix("");
 
     //set spacing

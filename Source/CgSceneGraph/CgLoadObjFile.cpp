@@ -39,13 +39,14 @@ m_id(id)
         normal=glm::normalize(normal);
         m_face_normals.push_back(normal);
 
-//        m_vertex_normals.at(m_triangle_indices[i])      += normal;
-//        m_vertex_normals.at(m_triangle_indices[i+1])    += normal;
-//        m_vertex_normals.at(m_triangle_indices[i+2])    += normal;
+        m_vertex_normals.at(m_triangle_indices[i])      += normal;
+        m_vertex_normals.at(m_triangle_indices[i+1])    += normal;
+        m_vertex_normals.at(m_triangle_indices[i+2])    += normal;
 
-        m_vertex_normals.at(m_triangle_indices[i])      = glm::normalize(m_vertex_normals.at(m_triangle_indices[i])     + normal);
-        m_vertex_normals.at(m_triangle_indices[i+1])    = glm::normalize(m_vertex_normals.at(m_triangle_indices[i+1])   + normal);
-        m_vertex_normals.at(m_triangle_indices[i+2])    = glm::normalize(m_vertex_normals.at(m_triangle_indices[i+2])   + normal);
+    }
+
+    for(unsigned int i = 0; i<m_vertex_normals.size(); i++){
+        m_vertex_normals.at(i) = glm::normalize(m_vertex_normals.at(i));
 
     }
 
