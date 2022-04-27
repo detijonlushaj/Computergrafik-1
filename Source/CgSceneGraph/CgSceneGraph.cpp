@@ -26,10 +26,16 @@
 
 CgSceneGraph::CgSceneGraph()
 {
+    m_triangle      =nullptr;
+
     m_current_transformation    =glm::mat4(1.);
     m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
     m_proj_matrix               =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
     m_trackball_rotation        =glm::mat4(1.);
+
+    m_triangle = new CgExampleTriangle(Functions::getId());
+        m_root_node = new CgSceneGraphEntity();
+        m_root_node->pushObject(m_triangle);
 }
 
 void CgSceneGraph::setRenderer(CgBaseRenderer *r)
@@ -39,6 +45,9 @@ void CgSceneGraph::setRenderer(CgBaseRenderer *r)
 
     //set Color in the beginn of the Rendering - removed form rederObjects()!
     m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
+
+    if(m_triangle!=NULL)
+        m_renderer->init(m_triangle);
 }
 
 void CgSceneGraph::renderObjects()
@@ -58,6 +67,9 @@ void CgSceneGraph::renderObjects()
     m_renderer->setUniformValue("projMatrix"        ,m_proj_matrix);
     m_renderer->setUniformValue("modelviewMatrix"   ,mv_matrix);    //top of stack in case of scenegraph
     m_renderer->setUniformValue("normalMatrix"      ,normal_matrix);
+
+    if(m_triangle!=NULL)
+        m_renderer->render(m_triangle);
 }
 
 void CgSceneGraph::handleEvent(CgBaseEvent *e)
@@ -117,33 +129,7 @@ void CgSceneGraph::handleEvent(CgBaseEvent *e)
          m_proj_matrix=glm::perspective(45.0f, (float)(ev->w()) / ev->h(), 0.01f, 100.0f);
     }
 
-    if(e->getType() & Cg::LoadObjFileEvent)
-    {
 
-        CgLoadObjFileEvent* ev = (CgLoadObjFileEvent*)e;
-
-
-        ObjLoader* loader= new ObjLoader();
-        loader->load(ev->FileName());
-
-        std::cout << ev->FileName() << std::endl;
-
-        std::vector<glm::vec3> pos;
-        loader->getPositionData(pos);
-
-        std::vector<glm::vec3> norm;
-        loader->getNormalData(norm);
-
-        std::vector<unsigned int> indx;
-        loader->getFaceIndexData(indx);
-
-        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
-
-        m_renderer->init(m_loadObj);
-        m_renderer->redraw();
-
-
-    }
 
 
 }

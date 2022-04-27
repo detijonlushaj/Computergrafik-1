@@ -11,6 +11,7 @@
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
 #include "CgLoadObjFile.h"
+#include "CgExampleTriangle.h"
 
 
 class CgSceneGraphEntity;
@@ -55,7 +56,7 @@ private:
     glm::mat4 m_lookAt_matrix;
     glm::mat4 m_proj_matrix;
 
-    CgLoadObjFile* m_loadObj;
+    CgExampleTriangle* m_triangle;
 
 };
 
