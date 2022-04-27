@@ -11,16 +11,15 @@ void CgSceneGraphEntity::iterateAllChildren_DFS(CgSceneGraph* sceneGraph, CgBase
 {
 
     //push
-    sceneGraph->pushMatrix(this->getCurrentTransformation());
+//    sceneGraph->pushMatrix(this->getCurrentTransformation() * sceneGraph->getCurrent_transformation());
+//    sceneGraph->pushMatrix(this->getCurrentTransformation());
+    sceneGraph->pushMatrix(sceneGraph->getCurrent_transformation());
 
-    //apply transformation
-
-    // include a scenegraph into rendering
+    //apply transformation & include a scenegraph into rendering
     m_curren_transformation = sceneGraph->getModelviewMatrixStack().top();
 
-
     // applyTransormation
-    glm::mat4 mv_matrix = sceneGraph->getLookAt_matrix() * sceneGraph->getTrackball_rotation()* sceneGraph->getCurrent_transformation();
+    glm::mat4 mv_matrix = sceneGraph->getLookAt_matrix() * sceneGraph->getTrackball_rotation()* m_curren_transformation;
     glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
 
     renderer->setUniformValue("projMatrix"        ,sceneGraph->getProj_matrix());

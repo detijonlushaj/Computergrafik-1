@@ -37,6 +37,8 @@ CgSceneGraph::CgSceneGraph()
     m_triangle = new CgExampleTriangle(Functions::getId());
     m_cube= new CgUnityCube(Functions::getId());
 
+    glm::mat4x4 matrix = {1,0,0,0.5,    0,1,0,0.5,     0,0,1,0.5,     0,0,0,0.5};
+
     m_root_node = new CgSceneGraphEntity();
     m_root_node->pushObject(m_triangle);
 
@@ -45,6 +47,8 @@ CgSceneGraph::CgSceneGraph()
 
     m_root_node->pushChildren(new CgSceneGraphEntity());
     m_root_node->getChildren().at(1)->pushObject(m_cube);
+    m_root_node->getChildren().at(1)->setCurrentTransformation(matrix);
+
 
 }
 
