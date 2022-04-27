@@ -1,6 +1,27 @@
 #include "CgSceneGraph.h"
 
+#include "CgSceneControl.h"
+#include "CgBase/CgEnums.h"
+#include "CgEvents/CgMouseEvent.h"
+#include "CgEvents/CgKeyEvent.h"
+#include "CgEvents/CgWindowResizeEvent.h"
+#include "CgEvents/CgLoadObjFileEvent.h"
+#include "CgEvents/CgTrackballEvent.h"
+#include "CgBase/CgBaseRenderer.h"
+#include "CgEvents/CgColorChangeEvent.h"
+#include "CgEvents/CgLaneRiesenfeldEvent.h"
+#include "CgEvents/CgRotationEvent.h"
+#include "CgExampleTriangle.h"
+#include "CgUnityCube.h"
+#include "CgPolyline.h"
+#include "CgRotation.h"
+#include "CgLoadObjFile.h"
+#include "../CgUtils/Functions.h"
+#include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
+#include "CgUtils/ObjLoader.h"
+#include <string>
+#include <cmath>
 
 
 CgSceneGraph::CgSceneGraph()
@@ -124,17 +145,17 @@ void CgSceneGraph::handleEvent(CgBaseEvent *e)
         m_renderer->init(m_loadObj);
         m_renderer->redraw();
 
-        for(unsigned int i = 0; i < m_loadObj->getVertexNormals().size() ; ++i) {
-            std::vector<glm::vec3> vertices;
-            vertices.push_back( m_loadObj->getVertices()[i] );
-            vertices.push_back( (m_loadObj->getVertices()[i] + (m_loadObj->getVertexNormals()[i]/100.0f) ) );
-            m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
-        }
+//        for(unsigned int i = 0; i < m_loadObj->getVertexNormals().size() ; ++i) {
+//            std::vector<glm::vec3> vertices;
+//            vertices.push_back( m_loadObj->getVertices()[i] );
+//            vertices.push_back( (m_loadObj->getVertices()[i] + (m_loadObj->getVertexNormals()[i]/100.0f) ) );
+//            m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+//        }
 
-        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
-            m_renderer->render(m_polylines[i]);
-            m_renderer->init(m_polylines[i]);
-        }
+//        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
+//            m_renderer->render(m_polylines[i]);
+//            m_renderer->init(m_polylines[i]);
+//        }
         m_renderer->redraw();
 
     }

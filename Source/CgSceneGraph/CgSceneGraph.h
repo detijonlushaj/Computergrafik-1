@@ -10,6 +10,8 @@
 #include "CgBase/CgBaseRenderer.h"
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
+#include "CgLoadObjFile.h"
+
 
 class CgSceneGraphEntity;
 
@@ -52,6 +54,9 @@ private:
     glm::mat4 m_trackball_rotation;
     glm::mat4 m_lookAt_matrix;
     glm::mat4 m_proj_matrix;
+
+    CgLoadObjFile* m_loadObj;
+
 };
 
 #endif // SCENEGRAPH_H
