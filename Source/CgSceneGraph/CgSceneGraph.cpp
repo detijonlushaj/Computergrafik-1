@@ -22,6 +22,15 @@ void CgSceneGraph::setRenderer(CgBaseRenderer *r)
 
 void CgSceneGraph::renderObjects()
 {
+    m_renderer->setUniformValue("matDiffuseColor"   ,glm::vec4(0.35,0.31,0.09,1.0));
+    m_renderer->setUniformValue("lightDiffuseColor" ,glm::vec4(1.0,1.0,1.0,1.0));
+
+    m_renderer->setUniformValue("matAmbientColor"   ,glm::vec4(0.25,0.22,0.06,1.0));
+    m_renderer->setUniformValue("lightAmbientColor" ,glm::vec4(1.0,1.0,1.0,1.0));
+
+    m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
+    m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
+
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
     glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
 
@@ -32,6 +41,104 @@ void CgSceneGraph::renderObjects()
 
 void CgSceneGraph::handleEvent(CgBaseEvent *e)
 {
+    // die Enums sind so gebaut, dass man alle Arten von MausEvents über CgEvent::CgMouseEvent abprüfen kann,
+    // siehe dazu die CgEvent enums im CgEnums.h
+
+    if(e->getType() & Cg::CgMouseEvent)
+    {
+        CgMouseEvent* ev = (CgMouseEvent*)e;
+        std::cout << *ev << std::endl;
+
+         // hier kommt jetzt die Abarbeitung des Events hin...
+    }
+
+    if(e->getType() & Cg::CgTrackballEvent)
+    {
+        CgTrackballEvent* ev = (CgTrackballEvent*)e;
+
+        m_trackball_rotation=ev->getRotationMatrix();
+        m_renderer->redraw();
+
+    }
+
+    // die Enums sind so gebaut, dass man alle Arten von KeyEvents über CgEvent::CgKeyEvent abprüfen kann,
+    // siehe dazu die CgEvent enums im CgEnums.h
+    // momentan werden nur KeyPressEvents gefangen.
+
+    if(e->getType() & Cg::CgKeyEvent)
+    {
+        CgKeyEvent* ev = (CgKeyEvent*)e;
+        std::cout << *ev <<std::endl;
+
+        if(ev->text()=="+")
+        {
+            glm::mat4 scalemat = glm::mat4(1.);
+            scalemat = glm::scale(scalemat,glm::vec3(1.1,1.1,1.1));
+            m_current_transformation=m_current_transformation*scalemat;
+            m_renderer->redraw();
+        }
+        if(ev->text()=="-")
+        {
+            glm::mat4 scalemat = glm::mat4(1.);
+            scalemat = glm::scale(scalemat,glm::vec3(0.9,0.9,0.9));
+
+            m_current_transformation=m_current_transformation*scalemat;
+
+            m_renderer->redraw();
+        }
+        // hier kommt jetzt die Abarbeitung des Events hin...
+    }
+
+    if(e->getType() & Cg::WindowResizeEvent)
+    {
+         CgWindowResizeEvent* ev = (CgWindowResizeEvent*)e;
+         std::cout << *ev <<std::endl;
+         m_proj_matrix=glm::perspective(45.0f, (float)(ev->w()) / ev->h(), 0.01f, 100.0f);
+    }
+
+    if(e->getType() & Cg::LoadObjFileEvent)
+    {
+
+        CgLoadObjFileEvent* ev = (CgLoadObjFileEvent*)e;
+
+
+        ObjLoader* loader= new ObjLoader();
+        loader->load(ev->FileName());
+
+        std::cout << ev->FileName() << std::endl;
+
+        std::vector<glm::vec3> pos;
+        loader->getPositionData(pos);
+
+        std::vector<glm::vec3> norm;
+        loader->getNormalData(norm);
+
+        std::vector<unsigned int> indx;
+        loader->getFaceIndexData(indx);
+
+        //m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
+        //m_loadObj->init(pos,norm,indx);
+
+        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,indx);
+
+        m_renderer->init(m_loadObj);
+        m_renderer->redraw();
+
+        for(unsigned int i = 0; i < m_loadObj->getVertexNormals().size() ; ++i) {
+            std::vector<glm::vec3> vertices;
+            vertices.push_back( m_loadObj->getVertices()[i] );
+            vertices.push_back( (m_loadObj->getVertices()[i] + (m_loadObj->getVertexNormals()[i]/100.0f) ) );
+            m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+        }
+
+        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
+            m_renderer->render(m_polylines[i]);
+            m_renderer->init(m_polylines[i]);
+        }
+        m_renderer->redraw();
+
+    }
+
 
 }
 
