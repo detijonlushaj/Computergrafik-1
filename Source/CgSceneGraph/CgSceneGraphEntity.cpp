@@ -20,11 +20,17 @@ void CgSceneGraphEntity::iterateAllChildren_DFS(CgSceneGraph* sceneGraph, CgBase
 
 
     // applyTransormation
-    sceneGraph->renderObjects();
+    glm::mat4 mv_matrix = sceneGraph->getLookAt_matrix() * sceneGraph->getTrackball_rotation()* sceneGraph->getCurrent_transformation();
+    glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
+
+    renderer->setUniformValue("projMatrix"        ,sceneGraph->getProj_matrix());
+    renderer->setUniformValue("modelviewMatrix"   ,mv_matrix);    //top of stack in case of scenegraph
+    renderer->setUniformValue("normalMatrix"      ,normal_matrix);
 
 
     // zeichne das aktuelle Entity
     for(unsigned int i = 0; i < this->getListOfObject().size(); i++) {
+//        renderer->init(this->getListOfObject().at(i));
         renderer->render(this->getListOfObject().at(i));
     }
 

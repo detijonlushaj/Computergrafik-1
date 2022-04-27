@@ -34,8 +34,8 @@ CgSceneGraph::CgSceneGraph()
     m_trackball_rotation        =glm::mat4(1.);
 
     m_triangle = new CgExampleTriangle(Functions::getId());
-//    m_root_node = new CgSceneGraphEntity();
-//    m_root_node->pushObject(m_triangle);
+    m_root_node = new CgSceneGraphEntity();
+    m_root_node->pushObject(m_triangle);
 }
 
 
@@ -62,15 +62,8 @@ void CgSceneGraph::renderObjects()
     m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
-    glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
-    glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
+    m_root_node->iterateAllChildren_DFS(this, m_renderer);
 
-    m_renderer->setUniformValue("projMatrix"        ,m_proj_matrix);
-    m_renderer->setUniformValue("modelviewMatrix"   ,mv_matrix);    //top of stack in case of scenegraph
-    m_renderer->setUniformValue("normalMatrix"      ,normal_matrix);
-
-    if(m_triangle!=NULL)
-        m_renderer->render(m_triangle);
 }
 
 void CgSceneGraph::render(CgBaseRenderer *renderer) {
