@@ -1,30 +1,43 @@
 #include "CgSceneGraphEntity.h"
 
+
 CgSceneGraphEntity::CgSceneGraphEntity()
 {
 
 }
 
 
-void CgSceneGraphEntity::iterateAllChildren_DFS()
+void CgSceneGraphEntity::iterateAllChildren_DFS(CgSceneGraph* sceneGraph, CgBaseRenderer* renderer)
 {
 
     //push
-    // applyTransormation
-    // zeichne das aktuelle Entity
+    sceneGraph->pushMatrix(this->getCurrentTransformation());
 
-    // m_renderer->setCurrentMatrix(stack.top())
-    // m_renderer->render(m_current_object);
+    //apply transformation
+
+    // include a scenegraph into rendering
+    m_curren_transformation = sceneGraph->getModelviewMatrixStack().top();
+
+
+    // applyTransormation
+    sceneGraph->renderObjects();
+
+
+    // zeichne das aktuelle Entity
+    for(unsigned int i = 0; i < this->getListOfObject().size(); i++) {
+        renderer->render(this->getListOfObject().at(i));
+    }
 
     for(unsigned int i=0;i<m_children.size();i++)
     {
-        m_children[i]->iterateAllChildren_DFS();
+        m_children[i]->iterateAllChildren_DFS(sceneGraph, renderer);
     }
-   //pop
+    //pop
+    sceneGraph->popMatrix();
 }
 
 std::vector<CgBaseRenderableObject*> CgSceneGraphEntity::getListOfObject() {return m_list_of_objects;}
-glm::mat4 CgSceneGraphEntity::getCurrentTransformation() {m_curren_transformation;}
+glm::mat4 CgSceneGraphEntity::getCurrentTransformation() {return m_curren_transformation;}
 CgAppearance CgSceneGraphEntity::getAppearance() {return m_appearance;}
 CgSceneGraphEntity* CgSceneGraphEntity::getParent() {return m_parent;}
 std::vector<CgSceneGraphEntity*> CgSceneGraphEntity::getChildren() {return m_children;}
