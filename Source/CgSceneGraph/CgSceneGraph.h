@@ -10,8 +10,10 @@
 #include "CgBase/CgBaseRenderer.h"
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
-#include "CgLoadObjFile.h"
+
 #include "CgExampleTriangle.h"
+#include "CgUnityCube.h"
+
 
 
 class CgSceneGraphEntity;
@@ -57,6 +59,8 @@ private:
     glm::mat4 m_proj_matrix;
 
     CgExampleTriangle* m_triangle;
+    CgUnityCube* m_cube;
+
 
 };
 

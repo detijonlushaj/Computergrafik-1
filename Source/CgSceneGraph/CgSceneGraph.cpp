@@ -27,6 +27,7 @@
 CgSceneGraph::CgSceneGraph()
 {
     m_triangle      =nullptr;
+    m_cube          =nullptr;
 
     m_current_transformation    =glm::mat4(1.);
     m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
@@ -34,8 +35,17 @@ CgSceneGraph::CgSceneGraph()
     m_trackball_rotation        =glm::mat4(1.);
 
     m_triangle = new CgExampleTriangle(Functions::getId());
+    m_cube= new CgUnityCube(Functions::getId());
+
     m_root_node = new CgSceneGraphEntity();
     m_root_node->pushObject(m_triangle);
+
+    m_root_node->pushChildren(new CgSceneGraphEntity());
+    m_root_node->getChildren().at(0)->pushObject(m_triangle);
+
+    m_root_node->pushChildren(new CgSceneGraphEntity());
+    m_root_node->getChildren().at(1)->pushObject(m_cube);
+
 }
 
 
@@ -49,6 +59,9 @@ void CgSceneGraph::setRenderer(CgBaseRenderer *r)
 
     if(m_triangle!=NULL)
         m_renderer->init(m_triangle);
+
+    if(m_cube!=NULL)
+        m_renderer->init(m_cube);
 }
 
 void CgSceneGraph::renderObjects()
