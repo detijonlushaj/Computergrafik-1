@@ -34,9 +34,10 @@ CgSceneGraph::CgSceneGraph()
     m_trackball_rotation        =glm::mat4(1.);
 
     m_triangle = new CgExampleTriangle(Functions::getId());
-        m_root_node = new CgSceneGraphEntity();
-        m_root_node->pushObject(m_triangle);
+//    m_root_node = new CgSceneGraphEntity();
+//    m_root_node->pushObject(m_triangle);
 }
+
 
 void CgSceneGraph::setRenderer(CgBaseRenderer *r)
 {
@@ -70,6 +71,10 @@ void CgSceneGraph::renderObjects()
 
     if(m_triangle!=NULL)
         m_renderer->render(m_triangle);
+}
+
+void CgSceneGraph::render(CgBaseRenderer *renderer) {
+    m_root_node->iterateAllChildren_DFS(this, renderer);
 }
 
 void CgSceneGraph::handleEvent(CgBaseEvent *e)
@@ -132,12 +137,6 @@ void CgSceneGraph::handleEvent(CgBaseEvent *e)
 
 
 
-}
-
-
-
-void CgSceneGraph::render(CgBaseRenderer *renderer) {
-    m_root_node->iterateAllChildren_DFS(this, renderer);
 }
 
 void CgSceneGraph::pushMatrix(glm::mat4 matrix) {m_modelview_matrix_stack.push(matrix);}
