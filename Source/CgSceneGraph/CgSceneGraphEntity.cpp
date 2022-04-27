@@ -9,7 +9,6 @@ CgSceneGraphEntity::CgSceneGraphEntity()
 
 void CgSceneGraphEntity::iterateAllChildren_DFS(CgSceneGraph* sceneGraph, CgBaseRenderer* renderer)
 {
-
     //push
 //    sceneGraph->pushMatrix(this->getCurrentTransformation() * sceneGraph->getCurrent_transformation());
 //    sceneGraph->pushMatrix(this->getCurrentTransformation());
@@ -25,7 +24,6 @@ void CgSceneGraphEntity::iterateAllChildren_DFS(CgSceneGraph* sceneGraph, CgBase
     renderer->setUniformValue("projMatrix"        ,sceneGraph->getProj_matrix());
     renderer->setUniformValue("modelviewMatrix"   ,mv_matrix);    //top of stack in case of scenegraph
     renderer->setUniformValue("normalMatrix"      ,normal_matrix);
-
 
     // zeichne das aktuelle Entity
     for(unsigned int i = 0; i < this->getListOfObject().size(); i++) {
