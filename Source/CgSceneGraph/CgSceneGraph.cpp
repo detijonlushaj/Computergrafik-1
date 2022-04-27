@@ -137,26 +137,11 @@ void CgSceneGraph::handleEvent(CgBaseEvent *e)
         std::vector<unsigned int> indx;
         loader->getFaceIndexData(indx);
 
-        //m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
-        //m_loadObj->init(pos,norm,indx);
-
-        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,indx);
+        m_loadObj = new CgLoadObjFile(Functions::getId(),pos,norm,indx);
 
         m_renderer->init(m_loadObj);
         m_renderer->redraw();
 
-//        for(unsigned int i = 0; i < m_loadObj->getVertexNormals().size() ; ++i) {
-//            std::vector<glm::vec3> vertices;
-//            vertices.push_back( m_loadObj->getVertices()[i] );
-//            vertices.push_back( (m_loadObj->getVertices()[i] + (m_loadObj->getVertexNormals()[i]/100.0f) ) );
-//            m_polylines.push_back(new CgPolyline(Functions::getId(), vertices));
-//        }
-
-//        for(unsigned int i = 0; i < m_polylines.size() ; ++i) {
-//            m_renderer->render(m_polylines[i]);
-//            m_renderer->init(m_polylines[i]);
-//        }
-        m_renderer->redraw();
 
     }
 
