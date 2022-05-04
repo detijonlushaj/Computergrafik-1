@@ -35,7 +35,7 @@ CgSceneGraph::CgSceneGraph()
     m_trackball_rotation        =glm::mat4(1.);
 
     m_triangle = new CgExampleTriangle(Functions::getId());
-    m_cube= new CgUnityCube(Functions::getId(), 0.5);
+    m_cube= new CgUnityCube(Functions::getId(), 1);
 
     glm::mat4x4 matrix = { 1.0,  0.0,  0.0,  0.5,
                            0.0,  1.0,  0.0,  0.5,
