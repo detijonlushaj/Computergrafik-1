@@ -6,6 +6,12 @@ CgSceneGraphEntity::CgSceneGraphEntity()
 {
 
 }
+CgSceneGraphEntity::CgSceneGraphEntity(std::vector<CgBaseRenderableObject*> objects) : m_list_of_objects(objects) {
+    setCurrentTransformation(glm::mat4(glm::vec4(1.0, 0.0, 0.0, 0.0),
+                                       glm::vec4(0.0, 1.0, 0.0, 0.0),
+                                       glm::vec4(0.0, 0.0, 1.0, 0.0),
+                                       glm::vec4(0.0, 0.0, 0.0, 1.0)));
+}
 
 const std::vector<CgBaseRenderableObject*>& CgSceneGraphEntity::getListOfObjects() const {
     return m_list_of_objects;
@@ -25,7 +31,7 @@ void CgSceneGraphEntity::setCurrentTransformation(glm::mat4 curren_transformatio
 }
 
 
-CgAppearance& CgSceneGraphEntity::getApperance() {
+CgAppearance& CgSceneGraphEntity::getAppearance() {
     return m_appearance;
 }
 void CgSceneGraphEntity::setAppearance(CgAppearance* appearance) {
@@ -45,16 +51,11 @@ const std::vector<CgSceneGraphEntity*> CgSceneGraphEntity::getChildren() const {
     return m_children;
 }
 
-void CgSceneGraphEntity::setChildren(std::vector<CgSceneGraphEntity*> children) {
-    m_children.clear();
-    for (unsigned int i = 0; children.size(); ++i) {
-        m_children.push_back(children[i]);
-    }
-}
-
-void CgSceneGraphEntity::pushObject(CgBaseRenderableObject* object) {
-    m_list_of_objects.push_back(object);
-}
 void CgSceneGraphEntity::pushChildren(CgSceneGraphEntity* child) {
     m_children.push_back(child);
 }
+
+void CgSceneGraphEntity::removeLastChild() {
+    m_children.pop_back();
+}
+

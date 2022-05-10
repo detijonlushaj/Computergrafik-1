@@ -3,65 +3,66 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-#include <string>
 #include <stack>
-#include "CgSceneGraphEntity.h"
-#include "../CgBase/CgBaseRenderableObject.h"
+#include <iostream>
+#include <string>
 #include "CgBase/CgBaseRenderer.h"
-#include "CgBase/CgObserver.h"
-#include "CgBase/CgBaseSceneControl.h"
+#include "CgSceneGraphEntity.h"
+#include "CgSceneGraph.h"
+#include "CgSceneControl.h"
 
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
+#include "CgRotation.h"
+#include "CgLoadObjFile.h"
+#include "CgPolyline.h"
 
-
+#include"../CgUtils/Functions.h"
 
 class CgSceneGraphEntity;
+class CgSceneControl;
+class CgBaseRenderer;
 
-
-class CgSceneGraph : public CgObserver, public CgBaseSceneControl
-{
+class CgSceneGraph {
 public:
     CgSceneGraph();
+    ~CgSceneGraph();
 
-    void render(CgBaseRenderer* renderer);
+    void setRenderer(CgBaseRenderer* renderer);
+    void setRootNode(CgSceneGraphEntity* root);
     CgSceneGraphEntity* getRootNode();
-    std::stack<glm::mat4> getModelviewMatrixStack();
-    void setRootNode(CgSceneGraphEntity* root_node);
-    void setModelviewMatrixStack(std::stack<glm::mat4> modelview_matrix_stack);
-    void addModelviewMatrixStack(glm::mat4 modelview_matrix);
-    void pushMatrix(glm::mat4 matrix);
+    void initializeInorderList(CgSceneGraphEntity* entity);
+    glm::vec4 getCurrentEntityOldColor();
+    CgSceneGraphEntity* getCurrentEntity();
+    CgSceneGraphEntity* getNextEntity();
+    void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
+
+private:
+    void pushMatrix();
     void popMatrix();
     void applyTransform(glm::mat4 arg);
-
-    void iterateAllChildren_DFS(CgSceneGraphEntity* node);
-
-    glm::mat4 getCurrent_transformation() const;
-    void setCurrent_transformation(const glm::mat4 &current_transformation);
-    glm::mat4 getTrackball_rotation() const;
-    void setTrackball_rotation(const glm::mat4 &trackball_rotation);
-    glm::mat4 getLookAt_matrix() const;
-    void setLookAt_matrix(const glm::mat4 &lookAt_matrix);
-    glm::mat4 getProj_matrix() const;
-    void setProj_matrix(const glm::mat4 &proj_matrix);
-
-    void handleEvent(CgBaseEvent* e);
-    void setRenderer(CgBaseRenderer* r);
-    void renderObjects();
 
 private:
     CgSceneGraphEntity* m_root_node;
     std::stack<glm::mat4> m_modelview_matrix_stack;
 
-    CgBaseRenderer* m_renderer;
-
-    glm::mat4 m_current_transformation;
-    glm::mat4 m_trackball_rotation;
-    glm::mat4 m_lookAt_matrix;
-    glm::mat4 m_proj_matrix;
+    int m_index_of_selected_gui_elem;
+    glm::vec4 m_current_entity_old_color;
+    std::vector<CgSceneGraphEntity*> m_inorder_scene_entities;
 
     CgExampleTriangle* m_triangle;
     CgUnityCube* m_cube;
+    CgRotation* m_rotation;
+    CgLoadObjFile* m_loadFile;
+    CgPolyline* m_polyline;
+
+    CgSceneGraphEntity* m_sun;
+    CgSceneGraphEntity* m_planet1;
+    CgSceneGraphEntity* m_planet2;
+    CgSceneGraphEntity* m_moon1;
+    CgSceneGraphEntity* m_moon2;
+
+
 };
 
 #endif // SCENEGRAPH_H

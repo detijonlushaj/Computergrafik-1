@@ -1,241 +1,183 @@
 #include "CgSceneGraph.h"
 
-#include "CgSceneControl.h"
-#include "CgBase/CgEnums.h"
-#include "CgEvents/CgMouseEvent.h"
-#include "CgEvents/CgKeyEvent.h"
-#include "CgEvents/CgWindowResizeEvent.h"
-#include "CgEvents/CgLoadObjFileEvent.h"
-#include "CgEvents/CgTrackballEvent.h"
-#include "CgBase/CgBaseRenderer.h"
-#include "CgEvents/CgColorChangeEvent.h"
-#include "CgEvents/CgLaneRiesenfeldEvent.h"
-#include "CgEvents/CgRotationEvent.h"
-#include "CgExampleTriangle.h"
-#include "CgUnityCube.h"
-#include "CgPolyline.h"
-#include "CgRotation.h"
-#include "CgLoadObjFile.h"
-#include "CgAppearance.h"
-#include "../CgUtils/Functions.h"
-#include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
-#include "CgUtils/ObjLoader.h"
-#include <string>
-#include <cmath>
-
 CgSceneGraph::CgSceneGraph()
 {
-    m_triangle      =nullptr;
-    m_cube          =nullptr;
+    m_triangle   =nullptr;
+    m_cube       =nullptr;
+    m_rotation   =nullptr;
+    m_loadFile   =nullptr;
+    m_polyline   =nullptr;
 
-    m_current_transformation    =glm::mat4(1.);
-    m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
-    m_proj_matrix               =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
-    m_trackball_rotation        =glm::mat4(1.);
+    m_sun       =nullptr;
+    m_planet1   =nullptr;
+    m_planet2   =nullptr;
+    m_moon1     =nullptr;
+    m_moon2     =nullptr;
 
-    m_triangle = new CgExampleTriangle(Functions::getId());
-    m_cube= new CgUnityCube(Functions::getId());
+    m_index_of_selected_gui_elem = -1;
+    std::vector<CgBaseRenderableObject*> objects;
 
-    float a = 1.5;
-    glm::mat4 matrix_cube = { glm::vec4( 1.0,  0.0,  0.0,  0.0),
-                              glm::vec4( 0.0,  1.0,  0.0,  0.0),
-                              glm::vec4( 0.0,  0.0,  1.0,  0.0),
-                              glm::vec4(   a,    a,    a,  1.0)};
+    m_cube = new CgUnityCube(Functions::getId());
+    objects.push_back(m_cube);
 
-    float b = 1.0;
-    glm::mat4 matrix_triangle1 = { glm::vec4(   b,  0.0,  0.0,  0.0),
-                                   glm::vec4( 0.0,    b,  0.0,  0.0),
-                                   glm::vec4( 0.0,  0.0,    b,  0.0),
-                                   glm::vec4( 0.0,  0.0,  0.0,  1.0)};
-    float c = -1.5;
-    glm::mat4 matrix_triangle2 = { glm::vec4( 1.0,  0.0,  0.0,  0.0),
-                                   glm::vec4( 0.0,  1.0,  0.0,  0.0),
-                                   glm::vec4( 0.0,  0.0,  1.0,  0.0),
-                                   glm::vec4(   c,    c,    c,  1.0)};
+    // Initialize sun
+    m_sun = new CgSceneGraphEntity(objects);
+    m_sun->setAppearance(new CgAppearance());
+    m_sun->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 0.0, 1.0));
+    m_modelview_matrix_stack.push(m_sun->getCurrentTransformation());
 
-    m_root_node = new CgSceneGraphEntity();
-    m_root_node->pushObject(m_cube);
-    m_root_node->setCurrentTransformation(glm::mat4(1.0));
+    // Initialize planet 1
+    m_planet1 = new CgSceneGraphEntity(objects);
+    m_planet1->setAppearance(new CgAppearance());
+    m_planet1->getAppearance().setObjectColor(glm::vec4(255.0, 0.0, 0.0, 1.0));
+    m_planet1->setCurrentTransformation(glm::mat4(glm::vec4(0.5, 0.0, 0.0, 0.0),
+                                                  glm::vec4(0.0, 0.5, 0.0, 0.0),
+                                                  glm::vec4(0.0, 0.0, 0.5, 0.0),
+                                                  glm::vec4(2.0, 2.0, 0.0, 1.0)));
+    m_planet1->setParent(m_sun);
 
-    m_root_node->pushChildren(new CgSceneGraphEntity());
-    m_root_node->getChildren().at(0)->pushObject(m_triangle);
-    m_root_node->getChildren().at(0)->setCurrentTransformation(matrix_triangle1);
+    // Initialize planet 2
+    m_planet2 = new CgSceneGraphEntity(objects);
+    m_planet2->setCurrentTransformation(glm::mat4(glm::vec4(0.5, 0.0, 0.0, 0.0),
+                                                  glm::vec4(0.0, 0.5, 0.0, 0.0),
+                                                  glm::vec4(0.0, 0.0, 0.5, 0.0),
+                                                  glm::vec4(0.0, -2.0, -2.0, 1.0)));
+    m_planet2->setAppearance(new CgAppearance());
+    m_planet2->getAppearance().setObjectColor(glm::vec4(100.0, 200.0, 200.0, 1.0));
+    m_planet2->setParent(m_sun);
 
-    m_root_node->pushChildren(new CgSceneGraphEntity());
-    m_root_node->getChildren().at(1)->pushObject(m_triangle);
-    m_root_node->getChildren().at(1)->setCurrentTransformation(matrix_triangle2);
+    // Initialize moon 1
+    m_moon1 = new CgSceneGraphEntity(objects);
+    m_moon1->setCurrentTransformation(glm::mat4(glm::vec4(0.3, 0.0, 0.0, 0.0),
+                                                glm::vec4(0.0, 0.3, 0.0, 0.0),
+                                                glm::vec4(0.0, 0.0, 0.3, 0.0),
+                                                glm::vec4(0.0, 2.0, 0.0, 1.0)));
+    m_moon1->setAppearance(new CgAppearance());
+    m_moon1->getAppearance().setObjectColor(glm::vec4(53.0, 40.0, 200.0, 1.0));
+    m_moon1->setParent(m_planet1);
 
-    m_root_node->pushChildren(new CgSceneGraphEntity());
-    m_root_node->getChildren().at(2)->pushObject(m_cube);
-    m_root_node->getChildren().at(2)->setCurrentTransformation(matrix_cube);
+    // Initialize moon 2
+    m_moon2 = new CgSceneGraphEntity(objects);
+    m_moon2->setCurrentTransformation(glm::mat4(glm::vec4(0.4, 0.0, 0.0, 0.0),
+                                                glm::vec4(0.0, 0.4, 0.0, 0.0),
+                                                glm::vec4(0.0, 0.0, 0.4, 0.0),
+                                                glm::vec4(0.0, -2.0, 0.0, 1.0)));
+    m_moon2->setAppearance(new CgAppearance());
+    m_moon2->getAppearance().setObjectColor(glm::vec4(1.0, 66.0, 200.0, 1.0));
+    m_moon2->setParent(m_planet2);
 
-    m_root_node->getChildren().at(2)->setAppearance(new CgAppearance());
-    m_root_node->getChildren().at(2)->getApperance().setObjectColor(glm::vec4(1.0, 66.0, 200.0, 1.0));
+    // Children of planet 1 and planet 2
+    m_planet1->pushChildren(m_moon1);
+    m_planet2->pushChildren(m_moon2);
+
+    // Children of sun
+    m_sun->pushChildren(m_planet1);
+    m_sun->pushChildren(m_planet2);
+
+    this->setRootNode(m_sun);
+
+    m_sun = new CgSceneGraphEntity(objects);
+
+
+   initializeInorderList(m_root_node);
 }
 
-
-void CgSceneGraph::setRenderer(CgBaseRenderer *r)
-{
-    m_renderer=r;
-    m_renderer->setSceneControl(this);
-
-    //set Color in the beginn of the Rendering - removed form rederObjects()!
-    m_renderer->setUniformValue("mycolor",glm::vec4(0.0,1.0,0.0,1.0));
-
-    if(m_triangle!=NULL)
-        m_renderer->init(m_triangle);
-
-    if(m_cube!=NULL)
-        m_renderer->init(m_cube);
-}
-
-void CgSceneGraph::renderObjects()
-{
-    // Materialeigenschaften setzen
-    // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
-
-    m_renderer->setUniformValue("matDiffuseColor"   ,glm::vec4(0.35,0.31,0.09,1.0));
-    m_renderer->setUniformValue("lightDiffuseColor" ,glm::vec4(1.0,1.0,1.0,1.0));
-
-    m_renderer->setUniformValue("matAmbientColor"   ,glm::vec4(0.25,0.22,0.06,1.0));
-    m_renderer->setUniformValue("lightAmbientColor" ,glm::vec4(1.0,1.0,1.0,1.0));
-
-    m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
-    m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
-
-    // include a scenegraph into rendering
-    // m_current_transformation = scenegrap
-
-    glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
-    glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
-
-    m_renderer->setUniformValue("projMatrix"        ,m_proj_matrix);
-    m_renderer->setUniformValue("modelviewMatrix"   ,mv_matrix); //top of stack in case of scenegraph
-    m_renderer->setUniformValue("normalMatrix"      ,normal_matrix);
-
-    iterateAllChildren_DFS(m_root_node);
-}
-
-void CgSceneGraph::render(CgBaseRenderer *renderer) {
-    iterateAllChildren_DFS(m_root_node);
-}
-
-void CgSceneGraph::iterateAllChildren_DFS(CgSceneGraphEntity* node)
-{
-    //push
-      pushMatrix(getCurrent_transformation());
-    //apply transformation & include a scenegraph into rendering
-      applyTransform(node->getCurrentTransformation());
-     // m_current_transformation = getModelviewMatrixStack().top();
-
-    // applyTransormation
-    m_renderer->setUniformValue("modelviewMatrix", m_lookAt_matrix * m_trackball_rotation * getModelviewMatrixStack().top());    //top of stack in case of scenegraph
-
-    // zeichne das aktuelle Entity
-    for(unsigned int i = 0; i < node->getListOfObjects().size(); i++) {
-//        renderer->init(this->getListOfObject().at(i));
-        m_renderer->render(node->getListOfObjects().at(i));
-    }
-
-    for(unsigned int i=0;i<node->getChildren().size();i++)
-    {
-        iterateAllChildren_DFS(node->getChildren()[i]);
-    }
-    //pop
-    popMatrix();
-}
-
-void CgSceneGraph::handleEvent(CgBaseEvent *e)
-{
-    // die Enums sind so gebaut, dass man alle Arten von MausEvents über CgEvent::CgMouseEvent abprüfen kann,
-    // siehe dazu die CgEvent enums im CgEnums.h
-
-    if(e->getType() & Cg::CgMouseEvent)
-    {
-        CgMouseEvent* ev = (CgMouseEvent*)e;
-        std::cout << *ev << std::endl;
-
-         // hier kommt jetzt die Abarbeitung des Events hin...
-    }
-
-    if(e->getType() & Cg::CgTrackballEvent)
-    {
-        CgTrackballEvent* ev = (CgTrackballEvent*)e;
-
-        m_trackball_rotation=ev->getRotationMatrix();
-        m_renderer->redraw();
-
-    }
-
-    // die Enums sind so gebaut, dass man alle Arten von KeyEvents über CgEvent::CgKeyEvent abprüfen kann,
-    // siehe dazu die CgEvent enums im CgEnums.h
-    // momentan werden nur KeyPressEvents gefangen.
-
-    if(e->getType() & Cg::CgKeyEvent)
-    {
-        CgKeyEvent* ev = (CgKeyEvent*)e;
-        std::cout << *ev <<std::endl;
-
-        if(ev->text()=="+")
-        {
-            glm::mat4 scalemat = glm::mat4(1.);
-            scalemat = glm::scale(scalemat,glm::vec3(1.1,1.1,1.1));
-            m_current_transformation=m_current_transformation*scalemat;
-            m_renderer->redraw();
+CgSceneGraph::~CgSceneGraph() {
+    if (m_sun!=NULL) {
+        for (unsigned int i=0; i<m_sun->getListOfObjects().size(); ++i) {
+            delete m_sun->getListOfObjects()[i];
         }
-        if(ev->text()=="-")
-        {
-            glm::mat4 scalemat = glm::mat4(1.);
-            scalemat = glm::scale(scalemat,glm::vec3(0.9,0.9,0.9));
-
-            m_current_transformation=m_current_transformation*scalemat;
-
-            m_renderer->redraw();
+    }
+    if (m_planet1!=NULL) {
+        for ( unsigned int i=0; i<m_planet1->getListOfObjects().size(); ++i) {
+            delete m_planet1->getListOfObjects()[i];
         }
-        // hier kommt jetzt die Abarbeitung des Events hin...
     }
+    if (m_planet2!=NULL) {
+        for (unsigned int i=0; i<m_planet2->getListOfObjects().size(); ++i) {
+            delete m_planet2->getListOfObjects()[i];
+        }
+    }
+    if (m_moon1!=NULL) {
+        for ( unsigned int i=0; i<m_moon1->getListOfObjects().size(); ++i) {
+            delete m_moon1->getListOfObjects()[i];
+        }
+    }
+    if (m_moon2!=NULL) {
+        for ( unsigned int i=0; i<m_moon2->getListOfObjects().size(); ++i) {
+            delete m_moon2->getListOfObjects()[i];
+        }
+    }
+}
 
-    if(e->getType() & Cg::WindowResizeEvent)
-    {
-         CgWindowResizeEvent* ev = (CgWindowResizeEvent*)e;
-         std::cout << *ev <<std::endl;
-         m_proj_matrix=glm::perspective(45.0f, (float)(ev->w()) / ev->h(), 0.01f, 100.0f);
+CgSceneGraphEntity* CgSceneGraph::getCurrentEntity() {
+    if (m_index_of_selected_gui_elem != -1) {
+        return m_inorder_scene_entities[m_index_of_selected_gui_elem];
+    }
+    return NULL;
+}
+glm::vec4 CgSceneGraph::getCurrentEntityOldColor() {
+    return m_current_entity_old_color;
+}
+
+CgSceneGraphEntity* CgSceneGraph::getNextEntity() {
+    if ((int)m_index_of_selected_gui_elem == (int)(m_inorder_scene_entities.size()-1)) {
+        m_index_of_selected_gui_elem = -1;
+    }
+    m_index_of_selected_gui_elem++;
+    m_current_entity_old_color = m_inorder_scene_entities[m_index_of_selected_gui_elem]->
+            getAppearance().getObjectColor();
+    return m_inorder_scene_entities[m_index_of_selected_gui_elem];
+}
+
+void CgSceneGraph::setRenderer(CgBaseRenderer* renderer) {
+    if (m_sun!=NULL) {
+        for (unsigned int i=0; i<m_sun->getListOfObjects().size(); ++i)  {
+            renderer->init(m_sun->getListOfObjects()[i]);
+        }
     }
 }
 
-void CgSceneGraph::pushMatrix(glm::mat4 matrix) {m_modelview_matrix_stack.push(matrix);}
-void CgSceneGraph::popMatrix() {m_modelview_matrix_stack.pop();}
-void CgSceneGraph::applyTransform(glm::mat4 arg) {m_modelview_matrix_stack.top() *= arg;}
+void CgSceneGraph::pushMatrix() {
+    m_modelview_matrix_stack.push(m_modelview_matrix_stack.top());
+}
 
-glm::mat4 CgSceneGraph::getCurrent_transformation() const {return m_current_transformation;}
-void CgSceneGraph::setCurrent_transformation(const glm::mat4 &current_transformation) {m_current_transformation = current_transformation;}
+void CgSceneGraph::popMatrix() {
+    m_modelview_matrix_stack.pop();
+}
 
-glm::mat4 CgSceneGraph::getTrackball_rotation() const {return m_trackball_rotation;}
-void CgSceneGraph::setTrackball_rotation(const glm::mat4 &trackball_rotation){m_trackball_rotation = trackball_rotation;}
+void CgSceneGraph::applyTransform(glm::mat4 arg) {
+    m_modelview_matrix_stack.top()*=arg;
+}
 
-glm::mat4 CgSceneGraph::getLookAt_matrix() const {return m_lookAt_matrix;}
-void CgSceneGraph::setLookAt_matrix(const glm::mat4 &lookAt_matrix) {m_lookAt_matrix = lookAt_matrix;}
+void CgSceneGraph::setRootNode(CgSceneGraphEntity* root) {
+    m_root_node = root;
+}
 
-glm::mat4 CgSceneGraph::getProj_matrix() const {return m_proj_matrix;}
-void CgSceneGraph::setProj_matrix(const glm::mat4 &proj_matrix){m_proj_matrix = proj_matrix;}
+CgSceneGraphEntity* CgSceneGraph::getRootNode() {
+    return m_root_node;
+}
 
-CgSceneGraphEntity* CgSceneGraph::getRootNode() {return m_root_node;}
-std::stack<glm::mat4> CgSceneGraph::getModelviewMatrixStack() {return m_modelview_matrix_stack;}
-
-void CgSceneGraph::setModelviewMatrixStack(std::stack<glm::mat4> modelview_matrix_stack) {
-    while (!m_modelview_matrix_stack.empty()) m_modelview_matrix_stack.pop();
-    std::stack<glm::mat4> temp_stack;
-    int stack_size = modelview_matrix_stack.size();
-    for (int i = 0; i < stack_size; ++i) {
-        temp_stack.push(modelview_matrix_stack.top());
-        modelview_matrix_stack.pop();
-    }
-    for (int i = 0; i < stack_size; ++i) {
-        m_modelview_matrix_stack.push(temp_stack.top());
-        temp_stack.pop();
+void CgSceneGraph::initializeInorderList(CgSceneGraphEntity* entity) {
+    m_inorder_scene_entities.push_back(entity);
+    for (unsigned int i=0; i<entity->getChildren().size(); ++i) {
+        initializeInorderList(entity->getChildren()[i]);
     }
 }
-void CgSceneGraph::addModelviewMatrixStack(glm::mat4 modelview_matrix) {
-    m_modelview_matrix_stack.push(modelview_matrix);
+
+void CgSceneGraph::render(CgSceneControl* scene_control, CgSceneGraphEntity* entity) {
+    scene_control->setCurrentTransformation(m_modelview_matrix_stack.top());
+    scene_control->getRenderer()->setUniformValue("mycolor", entity->getAppearance().getObjectColor());
+
+    for (unsigned int i=0; i < entity->getListOfObjects().size(); ++i) {
+        scene_control->getRenderer()->render(entity->getListOfObjects()[i]);
+    }
+
+    for (unsigned int i=0; i < entity->getChildren().size(); ++i) {
+        pushMatrix();
+        applyTransform(entity->getChildren()[i]->getCurrentTransformation());
+        render(scene_control, entity->getChildren()[i]);
+        m_modelview_matrix_stack.pop();
+    }
+
 }
