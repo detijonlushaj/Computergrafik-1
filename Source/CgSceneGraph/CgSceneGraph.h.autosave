@@ -27,9 +27,11 @@ public:
     void render(CgBaseRenderer* renderer);
     CgSceneGraphEntity* getRootNode();
     std::stack<glm::mat4> getModelviewMatrixStack();
+    
     void setRootNode(CgSceneGraphEntity* root_node);
     void setModelviewMatrixStack(std::stack<glm::mat4> modelview_matrix_stack);
     void addModelviewMatrixStack(glm::mat4 modelview_matrix);
+    
     void pushMatrix(glm::mat4 matrix);
     void popMatrix();
     void applyTransform(glm::mat4 arg);

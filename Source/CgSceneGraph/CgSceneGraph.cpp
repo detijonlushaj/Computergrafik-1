@@ -16,13 +16,13 @@
 #include "CgPolyline.h"
 #include "CgRotation.h"
 #include "CgLoadObjFile.h"
+#include "CgAppearance.h"
 #include "../CgUtils/Functions.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
 #include <string>
 #include <cmath>
-
 
 CgSceneGraph::CgSceneGraph()
 {
@@ -35,23 +35,43 @@ CgSceneGraph::CgSceneGraph()
     m_trackball_rotation        =glm::mat4(1.);
 
     m_triangle = new CgExampleTriangle(Functions::getId());
-    m_cube= new CgUnityCube(Functions::getId(), 1);
+    m_cube= new CgUnityCube(Functions::getId());
 
-    glm::mat4x4 matrix = { 1.0,  0.0,  0.0,  0.5,
-                           0.0,  1.0,  0.0,  0.5,
-                           0.0,  0.0,  1.0,  0.5,
-                           0.0,  0.0,  0.0,  0.5 };
+    float a = 1.5;
+    glm::mat4 matrix_cube = { glm::vec4( 1.0,  0.0,  0.0,  0.0),
+                              glm::vec4( 0.0,  1.0,  0.0,  0.0),
+                              glm::vec4( 0.0,  0.0,  1.0,  0.0),
+                              glm::vec4(   a,    a,    a,  1.0)};
+
+    float b = 1.0;
+    glm::mat4 matrix_triangle1 = { glm::vec4(   b,  0.0,  0.0,  0.0),
+                                   glm::vec4( 0.0,    b,  0.0,  0.0),
+                                   glm::vec4( 0.0,  0.0,    b,  0.0),
+                                   glm::vec4( 0.0,  0.0,  0.0,  1.0)};
+    float c = -1.5;
+    glm::mat4 matrix_triangle2 = { glm::vec4( 1.0,  0.0,  0.0,  0.0),
+                                   glm::vec4( 0.0,  1.0,  0.0,  0.0),
+                                   glm::vec4( 0.0,  0.0,  1.0,  0.0),
+                                   glm::vec4(   c,    c,    c,  1.0)};
 
     m_root_node = new CgSceneGraphEntity();
-    m_root_node->pushObject(m_triangle);
+    m_root_node->pushObject(m_cube);
+    m_root_node->setCurrentTransformation(glm::mat4(1.0));
 
     m_root_node->pushChildren(new CgSceneGraphEntity());
     m_root_node->getChildren().at(0)->pushObject(m_triangle);
+    m_root_node->getChildren().at(0)->setCurrentTransformation(matrix_triangle1);
 
     m_root_node->pushChildren(new CgSceneGraphEntity());
-    m_root_node->getChildren().at(1)->pushObject(m_cube);
-    m_root_node->getChildren().at(1)->setCurrentTransformation(matrix);
+    m_root_node->getChildren().at(1)->pushObject(m_triangle);
+    m_root_node->getChildren().at(1)->setCurrentTransformation(matrix_triangle2);
 
+    m_root_node->pushChildren(new CgSceneGraphEntity());
+    m_root_node->getChildren().at(2)->pushObject(m_cube);
+    m_root_node->getChildren().at(2)->setCurrentTransformation(matrix_cube);
+
+    m_root_node->getChildren().at(2)->setAppearance(new CgAppearance());
+    m_root_node->getChildren().at(2)->getApperance().setObjectColor(glm::vec4(1.0, 66.0, 200.0, 1.0));
 }
 
 
@@ -72,6 +92,9 @@ void CgSceneGraph::setRenderer(CgBaseRenderer *r)
 
 void CgSceneGraph::renderObjects()
 {
+    // Materialeigenschaften setzen
+    // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
+
     m_renderer->setUniformValue("matDiffuseColor"   ,glm::vec4(0.35,0.31,0.09,1.0));
     m_renderer->setUniformValue("lightDiffuseColor" ,glm::vec4(1.0,1.0,1.0,1.0));
 
@@ -81,12 +104,46 @@ void CgSceneGraph::renderObjects()
     m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
-    m_root_node->iterateAllChildren_DFS(this, m_renderer);
+    // include a scenegraph into rendering
+    // m_current_transformation = scenegrap
 
+    glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
+    glm::mat3 normal_matrix = glm::transpose(glm::inverse(glm::mat3(mv_matrix)));
+
+    m_renderer->setUniformValue("projMatrix"        ,m_proj_matrix);
+    m_renderer->setUniformValue("modelviewMatrix"   ,mv_matrix); //top of stack in case of scenegraph
+    m_renderer->setUniformValue("normalMatrix"      ,normal_matrix);
+
+    iterateAllChildren_DFS(m_root_node);
 }
 
 void CgSceneGraph::render(CgBaseRenderer *renderer) {
-    m_root_node->iterateAllChildren_DFS(this, renderer);
+    iterateAllChildren_DFS(m_root_node);
+}
+
+void CgSceneGraph::iterateAllChildren_DFS(CgSceneGraphEntity* node)
+{
+    //push
+      pushMatrix(getCurrent_transformation());
+    //apply transformation & include a scenegraph into rendering
+      applyTransform(node->getCurrentTransformation());
+     // m_current_transformation = getModelviewMatrixStack().top();
+
+    // applyTransormation
+    m_renderer->setUniformValue("modelviewMatrix", m_lookAt_matrix * m_trackball_rotation * getModelviewMatrixStack().top());    //top of stack in case of scenegraph
+
+    // zeichne das aktuelle Entity
+    for(unsigned int i = 0; i < node->getListOfObjects().size(); i++) {
+//        renderer->init(this->getListOfObject().at(i));
+        m_renderer->render(node->getListOfObjects().at(i));
+    }
+
+    for(unsigned int i=0;i<node->getChildren().size();i++)
+    {
+        iterateAllChildren_DFS(node->getChildren()[i]);
+    }
+    //pop
+    popMatrix();
 }
 
 void CgSceneGraph::handleEvent(CgBaseEvent *e)
@@ -145,10 +202,6 @@ void CgSceneGraph::handleEvent(CgBaseEvent *e)
          std::cout << *ev <<std::endl;
          m_proj_matrix=glm::perspective(45.0f, (float)(ev->w()) / ev->h(), 0.01f, 100.0f);
     }
-
-
-
-
 }
 
 void CgSceneGraph::pushMatrix(glm::mat4 matrix) {m_modelview_matrix_stack.push(matrix);}
