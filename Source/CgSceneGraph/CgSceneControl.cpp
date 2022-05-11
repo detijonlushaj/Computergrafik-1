@@ -50,12 +50,15 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
+    // iterate all children
     if (m_scene!=NULL) {
         m_scene->render(this, m_scene->getRootNode());
     }
 
+    // set coordinate system
     if (entity_selected) {
         for (int i=0; i<3; ++i) {
+            // verschieben zum selektierten Objekt
             setCurrentTransformation(selected_entity->getCurrentTransformation());
             m_renderer->setUniformValue("mycolor", m_scene->getCoordSystem()->getColorSystem()[i]);
             m_renderer->render(m_scene->getCoordSystem()->getCoordSystem()[i]);
@@ -94,9 +97,11 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     {
         CgKeyEvent* ev = (CgKeyEvent*)e;
         std::cout << *ev <<std::endl;
+        // unselect object
         if (ev->text() == "w") {
             if (entity_selected) {
                 entity_selected = false;
+                // restore color of current entity because will be overwritten when selected
                 glm::vec4 old_color = m_scene->getCurrentEntityOldColor();
                 old_color *= 255.0;
                 m_scene->getCurrentEntity()->getAppearance().setObjectColor(old_color);
@@ -104,9 +109,21 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             }
 
         }
+        // select group object
+        if (ev->text() == "e") {
+            if (!entity_group_selected) {
+                entity_group_selected = true;
+
+                selected_entity->getAppearance().setObjectColor(glm::vec4(255.0, 0.0, 0.0, 1.0));
+                m_renderer->redraw();
+            }
+
+        }
+        // select object
         if(ev->text()=="q")
         {
             entity_selected = true;
+            entity_group_selected = false;
             // restore color of current entity
             if (m_scene->getCurrentEntity() != NULL) {
                 glm::vec4 old_color = m_scene->getCurrentEntityOldColor();
@@ -118,13 +135,26 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             selected_entity->getAppearance().setObjectColor(glm::vec4(0.0, 255.0, 0.0, 1.0));
             m_renderer->redraw();
         }
-        if(entity_selected && ev->text()=="+")
+
+        // zoom if object selected
+        if(entity_selected && !entity_group_selected && ev->text()=="+")
         {
+            // getObjectTransformation due to only want to scale current object and not getCurrentTransformation
             selected_entity->setObjectTransformation(glm::scale(selected_entity->getObjectTransformation(),
                                                                    glm::vec3(1.2,1.2,1.2)));
             //selected_entity->setCurrentTransformation(scaled_matrix);
             m_renderer->redraw();
         }
+        // zoom if object group selected
+        if(entity_selected && entity_group_selected && ev->text()=="+")
+        {
+            // getObjectTransformation due to only want to scale current object and not getCurrentTransformation
+            glm::mat4 scaled_matrix = glm::scale(selected_entity->getCurrentTransformation(),
+                                                 glm::vec3(1.2,1.2,1.2));
+            selected_entity->setCurrentTransformation(scaled_matrix);
+            m_renderer->redraw();
+        }
+
         if((!entity_selected) && ev->text()=="+")
         {
             // glm::mat4 scalemat = glm::mat4(1.);
@@ -132,11 +162,21 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             // m_current_transformation=m_current_transformation*scalemat;
             m_renderer->redraw();
         }
-        if(entity_selected && ev->text()=="-")
+
+        if(entity_selected && !entity_group_selected && ev->text()=="-")
         {
             selected_entity->setObjectTransformation(glm::scale(selected_entity->getObjectTransformation(),
                                                                    glm::vec3(0.8,0.8,0.8)));
             //selected_entity->setCurrentTransformation(scaled_matrix);
+            m_renderer->redraw();
+        }
+        // zoom if object group selected
+        if(entity_selected && entity_group_selected && ev->text()=="-")
+        {
+            // getObjectTransformation due to only want to scale current object and not getCurrentTransformation
+            glm::mat4 scaled_matrix = glm::scale(selected_entity->getCurrentTransformation(),
+                                                 glm::vec3(0.8,0.8,0.8));
+            selected_entity->setCurrentTransformation(scaled_matrix);
             m_renderer->redraw();
         }
         if((!entity_selected) && ev->text()=="-")

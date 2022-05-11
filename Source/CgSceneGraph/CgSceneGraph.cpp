@@ -82,6 +82,7 @@ CgSceneGraph::CgSceneGraph()
 
    initializeInorderList(m_root_node);
 
+   // coordination system
    std::vector<CgPolyline*> polylines;
    std::vector<glm::vec3> vertices;
    vertices.push_back(glm::vec3(0.0, 0.0, 0.0));
@@ -137,6 +138,7 @@ glm::vec4 CgSceneGraph::getCurrentEntityOldColor() {
 }
 
 CgSceneGraphEntity* CgSceneGraph::getNextEntity() {
+    // if iterated trough all gui elem then reset index
     if ((int)m_index_of_selected_gui_elem == (int)(m_inorder_scene_entities.size()-1)) {
         m_index_of_selected_gui_elem = -1;
     }
@@ -189,10 +191,12 @@ void CgSceneGraph::render(CgSceneControl* scene_control, CgSceneGraphEntity* ent
     scene_control->setCurrentTransformation(m_modelview_matrix_stack.top()*entity->getObjectTransformation());
     scene_control->getRenderer()->setUniformValue("mycolor", entity->getAppearance().getObjectColor());
 
+    // render objects of the group
     for (unsigned int i=0; i < entity->getListOfObjects().size(); ++i) {
         scene_control->getRenderer()->render(entity->getListOfObjects()[i]);
     }
 
+    // iterate through children recursive
     for (unsigned int i=0; i < entity->getChildren().size(); ++i) {
         pushMatrix();
         applyTransform(entity->getChildren()[i]->getCurrentTransformation());

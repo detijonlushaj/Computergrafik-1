@@ -54,6 +54,7 @@ private:
 
     CgSceneGraphEntity* selected_entity;
     bool entity_selected;
+    bool entity_group_selected;
 
     CgBaseRenderer* m_renderer;
 
