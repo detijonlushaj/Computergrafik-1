@@ -8,6 +8,7 @@ SOURCES += main.cpp \
     CgEvents/CgColorChangeEvent.cpp \
     CgEvents/CgLaneRiesenfeldEvent.cpp \
     CgEvents/CgRotationEvent.cpp \
+    CgEvents/CgTranslationEvent.cpp \
     CgQtViewer/CGQtGLRenderWidget.cpp \
     CgQtViewer/CgQtGui.cpp \
     CgBase/CgObservable.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     CgEvents/CgColorChangeEvent.h \
     CgEvents/CgLaneRiesenfeldEvent.h \
     CgEvents/CgRotationEvent.h \
+    CgEvents/CgTranslationEvent.h \
     CgQtViewer/CgQtGLRenderWidget.h \
     CgQtViewer/CgQtGui.h \
     CgBase/CgObserver.h \

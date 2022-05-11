@@ -11,6 +11,7 @@
 #include "../CgEvents/CgColorChangeEvent.h"
 #include "../CgEvents/CgLaneRiesenfeldEvent.h"
 #include "../CgEvents/CgRotationEvent.h"
+#include "../CgEvents/CgTranslationEvent.h"
 
 #include <QSlider>
 #include <QVBoxLayout>
@@ -57,6 +58,9 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QWidget *opt_rotation = new QWidget;
     createOptionPanelRotation(opt_rotation);
 
+    QWidget *opt_translation = new QWidget;
+    createOptionPanelTranslation(opt_translation);
+
     QWidget *otheropt = new QWidget;
     createOptionPanelExample1(otheropt);
 
@@ -64,6 +68,7 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     m_tabs->addTab(opt_color,"&Color");        //tab name
     m_tabs->addTab(opt_LR_UA,"&L-R UA");
     m_tabs->addTab(opt_rotation,"&Rotation");
+    m_tabs->addTab(opt_translation,"&Translation");
     //m_tabs->addTab(otheropt,"&tab");
     container->addWidget(m_tabs);
 
@@ -256,6 +261,50 @@ void CgQtGui::createOptionPanelRotation(QWidget* parent)
     connect(Button_Rotation, SIGNAL( clicked() ), this, SLOT(slotButtonRotation()));
 }
 
+void CgQtGui::createOptionPanelTranslation(QWidget *parent){
+    QVBoxLayout *tab_Translation = new QVBoxLayout();
+
+    QLabel *options_label = new QLabel("Vekotr:");
+    tab_Translation->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignCenter);
+
+    SpinBoxTranslationX = new QSpinBox();
+    tab_Translation->addWidget(SpinBoxTranslationX);
+    SpinBoxTranslationX->setMinimum(-5);
+    SpinBoxTranslationX->setMaximum(5);
+    SpinBoxTranslationX->setValue(0);
+    SpinBoxTranslationX->setPrefix("X: ");
+
+    SpinBoxTranslationY = new QSpinBox();
+    tab_Translation->addWidget(SpinBoxTranslationY);
+    SpinBoxTranslationY->setMinimum(-5);
+    SpinBoxTranslationY->setMaximum(5);
+    SpinBoxTranslationY->setValue(0);
+    SpinBoxTranslationY->setPrefix("Y: ");
+
+    SpinBoxTranslationZ = new QSpinBox();
+    tab_Translation->addWidget(SpinBoxTranslationZ);
+    SpinBoxTranslationZ->setMinimum(-5);
+    SpinBoxTranslationZ->setMaximum(5);
+    SpinBoxTranslationZ->setValue(0);
+    SpinBoxTranslationZ->setPrefix("Z: ");
+
+    //set spacing
+    tab_Translation->addSpacing(20);
+
+    QPushButton* Button_Translation = new QPushButton("translate obj");
+    tab_Translation->addWidget(Button_Translation);
+    connect(Button_Translation, SIGNAL( clicked() ), this, SLOT(slotButtonTranslation()));
+
+    CheckBox_group = new QCheckBox("translate obj group");
+    CheckBox_group->setCheckable(true);
+    CheckBox_group->setChecked(false);
+    tab_Translation->addWidget(CheckBox_group);
+
+    parent->setLayout(tab_Translation);
+}
+
+
 void CgQtGui::createOptionPanelExample1(QWidget* parent)
 {
    /*Example for using a checkbox */
@@ -368,6 +417,13 @@ void CgQtGui::slotButtonRotation()
    notifyObserver(e);
 
 }
+
+void CgQtGui::slotButtonTranslation(){
+    std::cout << "button pressed to Translate" << std::endl;
+    CgBaseEvent* e= new CgTranslationEvent(Cg::CgButtonTranslation, SpinBoxTranslationX->value(),SpinBoxTranslationY->value(),SpinBoxTranslationZ->value(),CheckBox_group->isChecked());
+    notifyObserver(e);
+}
+
 
 
 void CgQtGui::mouseEvent(QMouseEvent* event)

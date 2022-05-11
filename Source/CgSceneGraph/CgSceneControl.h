@@ -19,6 +19,7 @@
 #include "CgEvents/CgColorChangeEvent.h"
 #include "CgEvents/CgLaneRiesenfeldEvent.h"
 #include "CgEvents/CgRotationEvent.h"
+#include "CgEvents/CgTranslationEvent.h"
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
 #include "CgPolyline.h"

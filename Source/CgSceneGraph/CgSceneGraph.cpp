@@ -34,7 +34,7 @@ CgSceneGraph::CgSceneGraph()
     m_planet1->setCurrentTransformation(glm::mat4(glm::vec4(0.5, 0.0, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.5, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.0, 0.5, 0.0),
-                                                  glm::vec4(2.0, 2.0, 0.0, 1.0)));
+                                                  glm::vec4(1.0, 1.0, 0.0, 1.0)));
     m_planet1->setParent(m_sun);
 
     // Initialize planet 2
@@ -42,7 +42,7 @@ CgSceneGraph::CgSceneGraph()
     m_planet2->setCurrentTransformation(glm::mat4(glm::vec4(0.5, 0.0, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.5, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.0, 0.5, 0.0),
-                                                  glm::vec4(0.0, -2.0, -2.0, 1.0)));
+                                                  glm::vec4(0.0, -1.0, -1.0, 1.0)));
     m_planet2->setAppearance(new CgAppearance());
     m_planet2->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_planet2->setParent(m_sun);
@@ -52,7 +52,7 @@ CgSceneGraph::CgSceneGraph()
     m_moon1->setCurrentTransformation(glm::mat4(glm::vec4(0.3, 0.0, 0.0, 0.0),
                                                 glm::vec4(0.0, 0.3, 0.0, 0.0),
                                                 glm::vec4(0.0, 0.0, 0.3, 0.0),
-                                                glm::vec4(0.0, 2.0, 0.0, 1.0)));
+                                                glm::vec4(0.0, 1.0, 0.0, 1.0)));
     m_moon1->setAppearance(new CgAppearance());
     m_moon1->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_moon1->setParent(m_planet1);
@@ -62,7 +62,7 @@ CgSceneGraph::CgSceneGraph()
     m_moon2->setCurrentTransformation(glm::mat4(glm::vec4(0.4, 0.0, 0.0, 0.0),
                                                 glm::vec4(0.0, 0.4, 0.0, 0.0),
                                                 glm::vec4(0.0, 0.0, 0.4, 0.0),
-                                                glm::vec4(0.0, -2.0, 0.0, 1.0)));
+                                                glm::vec4(0.0, -1.0, 0.0, 1.0)));
     m_moon2->setAppearance(new CgAppearance());
     m_moon2->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_moon2->setParent(m_planet2);

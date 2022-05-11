@@ -32,7 +32,7 @@ namespace Cg{
     CgButton_LR_UA_start            = 0x0002000,
     CgButton_LR_UA_reset            = 0x0004000,
     CgButtonRotation                = 0x0008000,
-    CgEventGroup1                   = 0x000f000,
+    CgButtonTranslation             = 0x000f000,
 
     // feel free to add whatever you like
     }EventType;

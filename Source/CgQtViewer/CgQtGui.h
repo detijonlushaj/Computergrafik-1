@@ -100,6 +100,7 @@ private:
     void OptionPanelColorChange(QWidget* panel);
     void createOptionPanelLaneRiesenfeld_UA(QWidget* panel);
     void createOptionPanelRotation(QWidget* panel);
+    void createOptionPanelTranslation(QWidget* panel);
     void createOptionPanelExample1(QWidget* panel);
 
     QButtonGroup* myButtonGroup;
@@ -112,6 +113,10 @@ private:
     QSpinBox*   SpinBox_rotatorische_Segmente;
     QCheckBox*  CheckBox_shownormals;
 
+    QSpinBox*   SpinBoxTranslationX;
+    QSpinBox*   SpinBoxTranslationY;
+    QSpinBox*   SpinBoxTranslationZ;
+    QCheckBox*  CheckBox_group;
 
 
 private slots:
@@ -134,6 +139,9 @@ private slots:
     void slotButton_LR_UA_reset_Pressed();
 
     void slotButtonRotation();
+
+    void slotButtonTranslation();
+    void slotButtonTranslation_grp();
 
 
 
