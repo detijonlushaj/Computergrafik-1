@@ -1,16 +1,13 @@
 #include "CgSceneGraphEntity.h"
 #include "CgAppearance.h"
 
-
 CgSceneGraphEntity::CgSceneGraphEntity()
 {
 
 }
 CgSceneGraphEntity::CgSceneGraphEntity(std::vector<CgBaseRenderableObject*> objects) : m_list_of_objects(objects) {
-    setCurrentTransformation(glm::mat4(glm::vec4(1.0, 0.0, 0.0, 0.0),
-                                       glm::vec4(0.0, 1.0, 0.0, 0.0),
-                                       glm::vec4(0.0, 0.0, 1.0, 0.0),
-                                       glm::vec4(0.0, 0.0, 0.0, 1.0)));
+    setCurrentTransformation(glm::mat4(1.));
+    setObjectTransformation(glm::mat4(1.));
 }
 
 const std::vector<CgBaseRenderableObject*>& CgSceneGraphEntity::getListOfObjects() const {
@@ -58,4 +55,15 @@ void CgSceneGraphEntity::pushChildren(CgSceneGraphEntity* child) {
 void CgSceneGraphEntity::removeLastChild() {
     m_children.pop_back();
 }
+
+glm::mat4 CgSceneGraphEntity::getObjectTransformation() const
+{
+    return m_object_transformation;
+}
+
+void CgSceneGraphEntity::setObjectTransformation(const glm::mat4 &object_transformation)
+{
+    m_object_transformation = object_transformation;
+}
+
 

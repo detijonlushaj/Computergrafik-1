@@ -33,9 +33,13 @@ public:
     void pushChildren(CgSceneGraphEntity* child);
     void removeLastChild();
 
+    glm::mat4 getObjectTransformation() const;
+    void setObjectTransformation(const glm::mat4 &object_transformation);
+
 private:
     std::vector<CgBaseRenderableObject*> m_list_of_objects;
     glm::mat4 m_current_transformation;
+    glm::mat4 m_object_transformation;
 
     CgAppearance m_appearance;
 

@@ -14,6 +14,7 @@ SOURCES += main.cpp \
     CgEvents/CgMouseEvent.cpp \
     CgQtViewer/CgQtMainApplication.cpp \
     CgSceneGraph/CgAppearance.cpp \
+    CgSceneGraph/CgCoordSystem.cpp \
     CgSceneGraph/CgLoadObjFile.cpp \
     CgSceneGraph/CgPolyline.cpp \
     CgSceneGraph/CgRotation.cpp \
@@ -44,6 +45,7 @@ HEADERS += \
     CgEvents/CgMouseEvent.h \
     CgQtViewer/CgQtMainApplication.h \
     CgSceneGraph/CgAppearance.h \
+    CgSceneGraph/CgCoordSystem.h \
     CgSceneGraph/CgLoadObjFile.h \
     CgSceneGraph/CgPolyline.h \
     CgSceneGraph/CgRotation.h \

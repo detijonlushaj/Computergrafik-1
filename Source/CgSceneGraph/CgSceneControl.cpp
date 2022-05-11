@@ -74,6 +74,13 @@ void CgSceneControl::renderObjects()
         m_scene->render(this, m_scene->getRootNode());
     }
 
+    if (entity_selected) {
+        for (int i=0; i<3; ++i) {
+            setCurrentTransformation(selected_entity->getCurrentTransformation());
+            m_renderer->setUniformValue("mycolor", m_scene->getCoordSystem()->getColorSystem()[i]);
+            m_renderer->render(m_scene->getCoordSystem()->getCoordSystem()[i]);
+        }
+    }
 }
 
 void CgSceneControl::handleEvent(CgBaseEvent* e)
@@ -107,7 +114,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     {
         CgKeyEvent* ev = (CgKeyEvent*)e;
         std::cout << *ev <<std::endl;
-        if (ev->text() == "e") {
+        if (ev->text() == "w") {
             if (entity_selected) {
                 entity_selected = false;
                 glm::vec4 old_color = m_scene->getCurrentEntityOldColor();
@@ -117,24 +124,25 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             }
 
         }
-        if(ev->text()=="n")
+        if(ev->text()=="q")
         {
             entity_selected = true;
+            // restore color of current entity
             if (m_scene->getCurrentEntity() != NULL) {
                 glm::vec4 old_color = m_scene->getCurrentEntityOldColor();
                 old_color *= 255.0;
                 m_scene->getCurrentEntity()->getAppearance().setObjectColor(old_color);
             }
+            // select next entity and change its color
             selected_entity = m_scene->getNextEntity();
             selected_entity->getAppearance().setObjectColor(glm::vec4(0.0, 255.0, 0.0, 1.0));
             m_renderer->redraw();
         }
         if(entity_selected && ev->text()=="+")
         {
-            std::cout<<"hELLO"<<std::endl;
-            glm::mat4 scaled_matrix = glm::scale(selected_entity->getCurrentTransformation(),
-                                                 glm::vec3(1.2,1.2,1.2));
-            selected_entity->setCurrentTransformation(scaled_matrix);
+            selected_entity->setObjectTransformation(glm::scale(selected_entity->getObjectTransformation(),
+                                                                   glm::vec3(1.2,1.2,1.2)));
+            //selected_entity->setCurrentTransformation(scaled_matrix);
             m_renderer->redraw();
         }
         if((!entity_selected) && ev->text()=="+")
@@ -146,9 +154,9 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         }
         if(entity_selected && ev->text()=="-")
         {
-            selected_entity->setCurrentTransformation(
-                        glm::scale(selected_entity->getCurrentTransformation(),
-                                   glm::vec3(0.8, 0.8, 0.8)));
+            selected_entity->setObjectTransformation(glm::scale(selected_entity->getObjectTransformation(),
+                                                                   glm::vec3(0.8,0.8,0.8)));
+            //selected_entity->setCurrentTransformation(scaled_matrix);
             m_renderer->redraw();
         }
         if((!entity_selected) && ev->text()=="-")
@@ -160,7 +168,6 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         }
         // hier kommt jetzt die Abarbeitung des Events hin...
     }
-
     if(e->getType() & Cg::WindowResizeEvent)
     {
         CgWindowResizeEvent* ev = (CgWindowResizeEvent*)e;

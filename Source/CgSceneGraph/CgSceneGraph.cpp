@@ -13,6 +13,7 @@ CgSceneGraph::CgSceneGraph()
     m_planet2   =nullptr;
     m_moon1     =nullptr;
     m_moon2     =nullptr;
+    coord_system=nullptr;
 
     m_index_of_selected_gui_elem = -1;
     std::vector<CgBaseRenderableObject*> objects;
@@ -23,13 +24,13 @@ CgSceneGraph::CgSceneGraph()
     // Initialize sun
     m_sun = new CgSceneGraphEntity(objects);
     m_sun->setAppearance(new CgAppearance());
-    m_sun->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 0.0, 1.0));
+    m_sun->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_modelview_matrix_stack.push(m_sun->getCurrentTransformation());
 
     // Initialize planet 1
     m_planet1 = new CgSceneGraphEntity(objects);
     m_planet1->setAppearance(new CgAppearance());
-    m_planet1->getAppearance().setObjectColor(glm::vec4(255.0, 0.0, 0.0, 1.0));
+    m_planet1->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_planet1->setCurrentTransformation(glm::mat4(glm::vec4(0.5, 0.0, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.5, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.0, 0.5, 0.0),
@@ -43,7 +44,7 @@ CgSceneGraph::CgSceneGraph()
                                                   glm::vec4(0.0, 0.0, 0.5, 0.0),
                                                   glm::vec4(0.0, -2.0, -2.0, 1.0)));
     m_planet2->setAppearance(new CgAppearance());
-    m_planet2->getAppearance().setObjectColor(glm::vec4(100.0, 200.0, 200.0, 1.0));
+    m_planet2->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_planet2->setParent(m_sun);
 
     // Initialize moon 1
@@ -53,7 +54,7 @@ CgSceneGraph::CgSceneGraph()
                                                 glm::vec4(0.0, 0.0, 0.3, 0.0),
                                                 glm::vec4(0.0, 2.0, 0.0, 1.0)));
     m_moon1->setAppearance(new CgAppearance());
-    m_moon1->getAppearance().setObjectColor(glm::vec4(53.0, 40.0, 200.0, 1.0));
+    m_moon1->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_moon1->setParent(m_planet1);
 
     // Initialize moon 2
@@ -63,7 +64,7 @@ CgSceneGraph::CgSceneGraph()
                                                 glm::vec4(0.0, 0.0, 0.4, 0.0),
                                                 glm::vec4(0.0, -2.0, 0.0, 1.0)));
     m_moon2->setAppearance(new CgAppearance());
-    m_moon2->getAppearance().setObjectColor(glm::vec4(1.0, 66.0, 200.0, 1.0));
+    m_moon2->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
     m_moon2->setParent(m_planet2);
 
     // Children of planet 1 and planet 2
@@ -80,6 +81,21 @@ CgSceneGraph::CgSceneGraph()
 
 
    initializeInorderList(m_root_node);
+
+   std::vector<CgPolyline*> polylines;
+   std::vector<glm::vec3> vertices;
+   vertices.push_back(glm::vec3(0.0, 0.0, 0.0));
+   vertices.push_back(glm::vec3(1.0, 0.0, 0.0));
+   polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+
+   vertices.pop_back();
+   vertices.push_back(glm::vec3(0.0, 1.0, 0.0));
+   polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+
+   vertices.pop_back();
+   vertices.push_back(glm::vec3(0.0, 0.0, 1.0));
+   polylines.push_back(new CgPolyline(Functions::getId(), vertices));
+   coord_system = new CgCoordSystem(polylines);
 }
 
 CgSceneGraph::~CgSceneGraph() {
@@ -135,7 +151,11 @@ void CgSceneGraph::setRenderer(CgBaseRenderer* renderer) {
         for (unsigned int i=0; i<m_sun->getListOfObjects().size(); ++i)  {
             renderer->init(m_sun->getListOfObjects()[i]);
         }
+        for (int i=0; i<coord_system->getCoordSystem().size(); ++i) {
+            renderer->init(coord_system->getCoordSystem()[i]);
+        }
     }
+
 }
 
 void CgSceneGraph::pushMatrix() {
@@ -166,7 +186,7 @@ void CgSceneGraph::initializeInorderList(CgSceneGraphEntity* entity) {
 }
 
 void CgSceneGraph::render(CgSceneControl* scene_control, CgSceneGraphEntity* entity) {
-    scene_control->setCurrentTransformation(m_modelview_matrix_stack.top());
+    scene_control->setCurrentTransformation(m_modelview_matrix_stack.top()*entity->getObjectTransformation());
     scene_control->getRenderer()->setUniformValue("mycolor", entity->getAppearance().getObjectColor());
 
     for (unsigned int i=0; i < entity->getListOfObjects().size(); ++i) {
@@ -180,4 +200,8 @@ void CgSceneGraph::render(CgSceneControl* scene_control, CgSceneGraphEntity* ent
         m_modelview_matrix_stack.pop();
     }
 
+}
+
+CgCoordSystem* CgSceneGraph::getCoordSystem() {
+    return coord_system;
 }

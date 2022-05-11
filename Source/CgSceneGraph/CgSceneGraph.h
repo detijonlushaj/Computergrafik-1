@@ -16,6 +16,7 @@
 #include "CgRotation.h"
 #include "CgLoadObjFile.h"
 #include "CgPolyline.h"
+#include "CgCoordSystem.h"
 
 #include"../CgUtils/Functions.h"
 
@@ -36,6 +37,8 @@ public:
     CgSceneGraphEntity* getCurrentEntity();
     CgSceneGraphEntity* getNextEntity();
     void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
+
+    CgCoordSystem* getCoordSystem();
 
 private:
     void pushMatrix();
@@ -61,6 +64,9 @@ private:
     CgSceneGraphEntity* m_planet2;
     CgSceneGraphEntity* m_moon1;
     CgSceneGraphEntity* m_moon2;
+
+    CgCoordSystem* coord_system;
+
 
 
 };
