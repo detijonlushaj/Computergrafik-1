@@ -151,7 +151,7 @@ void CgSceneGraph::setRenderer(CgBaseRenderer* renderer) {
         for (unsigned int i=0; i<m_sun->getListOfObjects().size(); ++i)  {
             renderer->init(m_sun->getListOfObjects()[i]);
         }
-        for (int i=0; i<coord_system->getCoordSystem().size(); ++i) {
+        for (unsigned int i=0; i<coord_system->getCoordSystem().size(); ++i) {
             renderer->init(coord_system->getCoordSystem()[i]);
         }
     }

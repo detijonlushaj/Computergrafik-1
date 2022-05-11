@@ -1,27 +1,7 @@
 //Objekte und Strukturen anlegen, verwalten resetten und l¨oschen. Dies stellt den Bereich Control“ des MVC Konzeptes dar.
 
 #include "CgSceneControl.h"
-#include "CgBase/CgEnums.h"
-#include "CgEvents/CgMouseEvent.h"
-#include "CgEvents/CgKeyEvent.h"
-#include "CgEvents/CgWindowResizeEvent.h"
-#include "CgEvents/CgLoadObjFileEvent.h"
-#include "CgEvents/CgTrackballEvent.h"
-#include "CgBase/CgBaseRenderer.h"
-#include "CgEvents/CgColorChangeEvent.h"
-#include "CgEvents/CgLaneRiesenfeldEvent.h"
-#include "CgEvents/CgRotationEvent.h"
-#include "CgExampleTriangle.h"
-#include "CgUnityCube.h"
-#include "CgPolyline.h"
-#include "CgRotation.h"
-#include "CgLoadObjFile.h"
-#include "../CgUtils/Functions.h"
-#include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
-#include "CgUtils/ObjLoader.h"
-#include <string>
-#include <cmath>
+
 
 CgSceneControl::CgSceneControl()
 {
