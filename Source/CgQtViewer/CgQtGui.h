@@ -141,10 +141,6 @@ private slots:
     void slotButtonRotation();
 
     void slotButtonTranslation();
-    void slotButtonTranslation_grp();
-
-
-
 
 
 };

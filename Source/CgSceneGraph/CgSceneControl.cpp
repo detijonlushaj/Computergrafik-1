@@ -266,7 +266,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgTranslationEvent* ev = (CgTranslationEvent*)e;
         std::cout << *ev << " obj " <<std::endl;
 
-        if(true) {
+        if(!ev->getTranslate_grp()) {
             glm::mat4 translationMatrix = glm::mat4(glm::vec4(1.0, 0.0, 0.0, 0.0),
                                                   glm::vec4(0.0, 1.0, 0.0, 0.0),
                                                   glm::vec4(0.0, 0.0, 1.0, 0.0),
