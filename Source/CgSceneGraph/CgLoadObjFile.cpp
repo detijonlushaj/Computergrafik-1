@@ -7,6 +7,20 @@ CgLoadObjFile::CgLoadObjFile(int id):
 m_type(Cg::TriangleMesh),
 m_id(id)
 {
+
+}
+
+CgLoadObjFile::CgLoadObjFile(int id, std::string filename):
+m_type(Cg::TriangleMesh),
+m_id(id)
+{
+
+    ObjLoader loader;
+    loader.load(filename);
+
+    loader.getPositionData(m_vertices);
+    loader.getNormalData(m_vertex_normals);
+    loader.getFaceIndexData(m_triangle_indices);
 }
 
 CgLoadObjFile::CgLoadObjFile(int id, std::vector<glm::vec3> arg_verts,  std::vector<glm::vec3> arg_normals, std::vector<unsigned int> arg_triangle_indices):

@@ -67,6 +67,25 @@ private:
 
     CgCoordSystem* coord_system;
 
+    //die Welt
+    CgSceneGraphEntity* m_world;
+
+    //stuhl
+    CgSceneGraphEntity* m_chair;
+        //human
+        CgLoadObjFile* m_human;
+
+    //tisch
+    CgSceneGraphEntity* m_table;
+
+        //Schachfigurenbrett
+        CgSceneGraphEntity* m_checkerboard;
+        CgLoadObjFile* m_king;
+        CgLoadObjFile* m_queen;
+        CgLoadObjFile* m_bishop;
+        CgLoadObjFile* m_knight;
+        CgLoadObjFile* m_rock;
+        CgLoadObjFile* m_pawn;
 
 
 };
