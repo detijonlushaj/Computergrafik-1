@@ -27,7 +27,6 @@ namespace Cg{
     CgTrackballEvent                = 0x0000400,
 
     // unused, may be changed to whatever
-    //Event-Button for Color change
     CgButtonColorChangePress        = 0x0001000,
     CgButton_LR_UA_start            = 0x0002000,
     CgButton_LR_UA_reset            = 0x0004000,

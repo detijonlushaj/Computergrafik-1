@@ -36,4 +36,3 @@ private:
 #endif // CGROTATIONEVENT_H
 
 
-

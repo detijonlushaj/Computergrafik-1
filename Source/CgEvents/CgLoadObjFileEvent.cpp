@@ -2,6 +2,8 @@
 
 
 
+
+
 CgBaseEvent* CgLoadObjFileEvent::clone()
 {
     return new CgLoadObjFileEvent(m_type,m_filename);

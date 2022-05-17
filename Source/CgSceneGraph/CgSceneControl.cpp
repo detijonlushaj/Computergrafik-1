@@ -7,11 +7,11 @@ CgSceneControl::CgSceneControl()
 {
     m_scene = nullptr;
 
-    m_current_transformation    =glm::mat4(1.);
-    m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
-    m_proj_matrix               =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
-    m_trackball_rotation        =glm::mat4(1.);
-    m_scalemat                  = glm::mat4(1.);
+    m_current_transformation =glm::mat4(1.);
+    m_lookAt_matrix          =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
+    m_proj_matrix            =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
+    m_trackball_rotation     =glm::mat4(1.);
+    m_scalemat               =glm::mat4(1.);
 
 }
 

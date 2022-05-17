@@ -35,4 +35,3 @@ std::ostream& operator<<(std::ostream& os,const CgLaneRiesenfeldEvent& e)
     os << "Type: "<< e.m_type << "\t (SubdivisionStep:" << e.getSubdivisionStep() <<")";
     return os;
 }
-

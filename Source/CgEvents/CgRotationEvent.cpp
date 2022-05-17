@@ -39,4 +39,3 @@ std::ostream& operator<<(std::ostream& os,const CgRotationEvent& e)
     os << "Type: "<< e.m_type << "\t (Anzahl rotatorische Segmente:" << e.getRotatorischeSegmente() << "\t show normals: " << e.getNormals()<<")";
     return os;
 }
-

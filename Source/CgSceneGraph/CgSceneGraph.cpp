@@ -2,9 +2,6 @@
 
 CgSceneGraph::CgSceneGraph()
 {
-    m_index_of_selected_gui_elem = -1;
-    std::vector<CgBaseRenderableObject*> objects;
-
     m_triangle   =nullptr;
     m_cube       =nullptr;
     m_rotation   =nullptr;
@@ -18,36 +15,17 @@ CgSceneGraph::CgSceneGraph()
     m_moon2     =nullptr;
     coord_system=nullptr;
 
-    m_world     =nullptr;
+    m_index_of_selected_gui_elem = -1;
+    std::vector<CgBaseRenderableObject*> objects;
 
-    //schachbrett
-    m_checkerboard  =nullptr;
-    m_king          =nullptr;
-    m_queen         =nullptr;
-    m_bishop        =nullptr;
-    m_knight        =nullptr;
-    m_rock          =nullptr;
-    m_pawn          =nullptr;
-
-    m_king          = new CgLoadObjFile(Functions::getId(),"./CgData/king.obj");
-    m_queen         = new CgLoadObjFile(Functions::getId(),"king.obj");
-    m_bishop        = new CgLoadObjFile(Functions::getId(),"king.obj");
-    m_knight        = new CgLoadObjFile(Functions::getId(),"king.obj");
-    m_rock          = new CgLoadObjFile(Functions::getId(),"king.obj");
-    m_pawn          = new CgLoadObjFile(Functions::getId(),"king.obj");
-
-    objects.push_back(m_king);
-    objects.push_back(m_queen);
-    objects.push_back(m_bishop);
-    objects.push_back(m_knight);
-    objects.push_back(m_rock);
-    objects.push_back(m_pawn);
+    m_cube = new CgUnityCube(Functions::getId());
+    objects.push_back(m_cube);
 
     // Initialize sun
-    m_world = new CgSceneGraphEntity(objects);
-    m_world->setAppearance(new CgAppearance());
-    m_world->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
-    m_modelview_matrix_stack.push(m_world->getCurrentTransformation());
+    m_sun = new CgSceneGraphEntity(objects);
+    m_sun->setAppearance(new CgAppearance());
+    m_sun->getAppearance().setObjectColor(glm::vec4(255.0, 255.0, 255.0, 1.0));
+    m_modelview_matrix_stack.push(m_sun->getCurrentTransformation());
 
     // Initialize planet 1
     m_planet1 = new CgSceneGraphEntity(objects);
@@ -94,12 +72,12 @@ CgSceneGraph::CgSceneGraph()
     m_planet2->pushChildren(m_moon2);
 
     // Children of sun
-    m_world->pushChildren(m_planet1);
-    m_world->pushChildren(m_planet2);
+    m_sun->pushChildren(m_planet1);
+    m_sun->pushChildren(m_planet2);
 
-    this->setRootNode(m_world);
+    this->setRootNode(m_sun);
 
-    m_world = new CgSceneGraphEntity(objects);
+    m_sun = new CgSceneGraphEntity(objects);
 
 
    initializeInorderList(m_root_node);
@@ -120,6 +98,7 @@ CgSceneGraph::CgSceneGraph()
    polylines.push_back(new CgPolyline(Functions::getId(), vertices));
    coord_system = new CgCoordSystem(polylines);
 }
+
 
 CgSceneGraph::~CgSceneGraph() {
     if (m_sun!=NULL) {

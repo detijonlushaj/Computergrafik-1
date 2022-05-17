@@ -46,4 +46,3 @@ std::ostream& operator<<(std::ostream& os,const CgTranslationEvent& e)
     os << "Type: "<< e.m_type << "s";
     return os;
 }
-

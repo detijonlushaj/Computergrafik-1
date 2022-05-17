@@ -26,5 +26,5 @@ bool CgObservable::notifyObserver(CgBaseEvent* e)
     for (CgObserverListIterator i (m_observers.begin()); i != m_observers.end(); ++i)
 		(*i)->handleEvent(e->clone());
 	delete e;
-    return true;
+	return true;
 }
