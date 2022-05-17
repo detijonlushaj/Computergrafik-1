@@ -99,7 +99,6 @@ CgSceneGraph::CgSceneGraph()
    coord_system = new CgCoordSystem(polylines);
 }
 
-
 CgSceneGraph::~CgSceneGraph() {
     if (m_sun!=NULL) {
         for (unsigned int i=0; i<m_sun->getListOfObjects().size(); ++i) {
