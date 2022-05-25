@@ -1,18 +1,17 @@
 #include "CgCoordSystem.h"
 
-
 CgCoordSystem::CgCoordSystem() {
 }
 
 CgCoordSystem::CgCoordSystem(std::vector<CgPolyline*> polylines) {
     coord_system = polylines;
-    color_system.push_back(glm::vec4(1.0, 0.0, 0.0, 1.0));
-    color_system.push_back(glm::vec4(0.0, 1.0, 0.0, 1.0));
-    color_system.push_back(glm::vec4(0.0, 0.0, 1.0, 1.0));
+    color_system.push_back(Functions::getRed());
+    color_system.push_back(Functions::getYellow());
+    color_system.push_back(Functions::getBlue());
 }
 
 CgCoordSystem::~CgCoordSystem() {
-    for (int i=0; i<coord_system.size(); ++i) {
+    for (unsigned int i=0; i<coord_system.size(); ++i) {
         if (coord_system[i] != NULL) {
             delete coord_system[i];
         }

@@ -2,12 +2,29 @@
 #include <iostream>
 
 int Functions::unique_id {0};
+glm::vec4 Functions::white {glm::vec4(255.0, 255.0, 255.0, 1.0)};
+glm::vec4 Functions::red {glm::vec4(255.0, 0.0, 0.0, 1.0)};
+glm::vec4 Functions::green {glm::vec4(0.0, 255.0, 0.0, 1.0)};
+glm::vec4 Functions::blue {glm::vec4(0.0, 255.0, 255.0, 1.0)};
+glm::vec4 Functions::yellow {glm::vec4(255.0, 255.0, 0.0, 1.0)};
+glm::vec4 Functions::pink {glm::vec4(237.0, 36.0, 207.0, 1.0)};
+glm::vec4 Functions::chessPink {glm::vec4(255.0, 100.0, 255.0, 1.0)};
+glm::vec4 Functions::chessBlue {glm::vec4(100.0, 100.0, 255.0, 1.0)};
 
 int Functions::getId()
 {
     ++unique_id;
     return unique_id;
 }
+
+glm::vec4 Functions::getWhite() { return white; }
+glm::vec4 Functions::getRed() { return red; }
+glm::vec4 Functions::getGreen() { return green; }
+glm::vec4 Functions::getBlue() { return blue; }
+glm::vec4 Functions::getYellow() { return yellow; }
+glm::vec4 Functions::getPink() { return pink; }
+glm::vec4 Functions::getChessPink() { return chessPink; }
+glm::vec4 Functions::getChessBlue() { return chessBlue; }
 
 bool Functions::XOR(bool a, bool b)
 {

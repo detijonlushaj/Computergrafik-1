@@ -2,33 +2,15 @@
 #include "CgBase/CgEnums.h"
 #include "CgUtils/ObjLoader.h"
 
-CgExampleTriangle::CgExampleTriangle():
-m_type(Cg::TriangleMesh),
-m_id(42)
-{
-    m_vertices.push_back(glm::vec3(-0.5,0.0,0.0));
-    m_vertices.push_back(glm::vec3(0.5,-0.5,0.0));
-    m_vertices.push_back(glm::vec3(0.0,0.5,0.0));
-
-    m_triangle_indices.push_back(0);
-    m_triangle_indices.push_back(1);
-    m_triangle_indices.push_back(2);
-
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-
-}
-
 CgExampleTriangle::CgExampleTriangle(int id):
 m_type(Cg::TriangleMesh),
 m_id(id)
 {
-
-    m_vertices.push_back(glm::vec3(-0.5,0.0,0.0));
-    m_vertices.push_back(glm::vec3(0.0,-0.5,0.0));
-    m_vertices.push_back(glm::vec3(0.0,0.5,0.0));
-    m_vertices.push_back(glm::vec3(0.5,0.0,0.0));
+    double size = 0.5;
+    m_vertices.push_back(glm::vec3(-size,0.0,0.0));
+    m_vertices.push_back(glm::vec3(0.0,-size,0.0));
+    m_vertices.push_back(glm::vec3(0.0,size,0.0));
+    m_vertices.push_back(glm::vec3(size,0.0,0.0));
 
     m_triangle_indices.push_back(0);
     m_triangle_indices.push_back(1);
@@ -36,12 +18,6 @@ m_id(id)
     m_triangle_indices.push_back(2);
     m_triangle_indices.push_back(1);
     m_triangle_indices.push_back(3);
-
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-    m_vertex_normals.push_back(glm::vec3(0.0,0.0,1.0));
-
 }
 
 

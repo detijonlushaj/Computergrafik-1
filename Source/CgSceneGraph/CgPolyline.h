@@ -5,6 +5,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "CgBase/CgBaseRenderableObject.h"
+#include "../CgUtils/Functions.h"
 
 class CgPolyline : public CgBasePolyline
 {

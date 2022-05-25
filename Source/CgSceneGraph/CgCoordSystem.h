@@ -2,6 +2,7 @@
 #define COORDSYSTEM_H
 
 #include "CgPolyline.h"
+#include "../CgUtils/Functions.h"
 
 class CgPolyline;
 

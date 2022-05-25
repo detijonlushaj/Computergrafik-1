@@ -12,8 +12,7 @@ class CgRotation: public CgBaseTriangleMesh
 
 public:
     CgRotation(int, std::vector<glm::vec3>, int);
-    CgRotation(int, std::vector<glm::vec3>, int,int);
-
+    CgRotation(int id, std::vector<glm::vec3> indices, int originial_size, int n);
 
     ~CgRotation();
 

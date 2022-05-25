@@ -49,6 +49,7 @@ CgRotation::CgRotation(int id, std::vector<glm::vec3> indices, int originial_siz
         m_vertex_normals.at(i) = glm::normalize(m_vertex_normals.at(i));
     }
 
+        // Die Variante in O(n²) mit n = Anzahl vertices
 //    for(int i = 0; i < m_vertices.size(); i++){
 //        int pos1 = i;
 //        for(int j = 0; j< originial_size; j++){
