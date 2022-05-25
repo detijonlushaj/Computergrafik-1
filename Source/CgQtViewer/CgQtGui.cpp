@@ -65,10 +65,10 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     createOptionPanelExample1(otheropt);
 
     QTabWidget* m_tabs = new QTabWidget();
-    m_tabs->addTab(opt_color,"&Color");        //tab name
-    m_tabs->addTab(opt_LR_UA,"&L-R UA");
-    m_tabs->addTab(opt_rotation,"&Rotation");
-    m_tabs->addTab(opt_translation,"&Translation");
+    m_tabs->addTab(opt_color,"&C");        //tab name
+    m_tabs->addTab(opt_LR_UA,"&UA");
+    m_tabs->addTab(opt_rotation,"&R");
+    m_tabs->addTab(opt_translation,"&T");
     //m_tabs->addTab(otheropt,"&tab");
     container->addWidget(m_tabs);
 
@@ -264,7 +264,7 @@ void CgQtGui::createOptionPanelRotation(QWidget* parent)
 void CgQtGui::createOptionPanelTranslation(QWidget *parent){
     QVBoxLayout *tab_Translation = new QVBoxLayout();
 
-    QLabel *options_label = new QLabel("Vekotr:");
+    QLabel *options_label = new QLabel("Vektor:");
     tab_Translation->addWidget(options_label);
     options_label->setAlignment(Qt::AlignCenter);
 

@@ -31,21 +31,23 @@ public:
 
     void setRenderer(CgBaseRenderer* renderer);
     void setRootNode(CgSceneGraphEntity* root);
+
     CgSceneGraphEntity* getRootNode();
-    void initializeInorderList(CgSceneGraphEntity* entity);
     glm::vec4 getCurrentEntityOldColor();
     CgSceneGraphEntity* getCurrentEntity();
     CgSceneGraphEntity* getNextEntity();
-    void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
-
     CgCoordSystem* getCoordSystem();
 
+    void initializeInorderList(CgSceneGraphEntity* entity);
+
+    void pushMatrix(glm::mat4);
+    void popMatrix();
+
+    void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
 private:
     void pushMatrix();
-    void popMatrix();
     void applyTransform(glm::mat4 arg);
 
-private:
     CgSceneGraphEntity* m_root_node;
     std::stack<glm::mat4> m_modelview_matrix_stack;
 
@@ -53,41 +55,73 @@ private:
     glm::vec4 m_current_entity_old_color;
     std::vector<CgSceneGraphEntity*> m_inorder_scene_entities;
 
-    CgExampleTriangle* m_triangle;
-    CgUnityCube* m_cube;
-    CgRotation* m_rotation;
-    CgLoadObjFile* m_loadFile;
-    CgPolyline* m_polyline;
-
-    CgSceneGraphEntity* m_sun;
-    CgSceneGraphEntity* m_planet1;
-    CgSceneGraphEntity* m_planet2;
-    CgSceneGraphEntity* m_moon1;
-    CgSceneGraphEntity* m_moon2;
-
     CgCoordSystem* coord_system;
 
-    //die Welt
+    std::vector<CgBaseRenderableObject*> o_all_objects;
+
+    // all entities
     CgSceneGraphEntity* m_world;
-
-    //stuhl
-    CgSceneGraphEntity* m_chair;
-        //human
-        CgLoadObjFile* m_human;
-
-    //tisch
-    CgSceneGraphEntity* m_table;
-
-        //Schachfigurenbrett
+    CgSceneGraphEntity* m_stuhlbein_ul;
+        CgSceneGraphEntity* m_stuhlbein_ur;
+        CgSceneGraphEntity* m_stuhlbein_ol;
+        CgSceneGraphEntity* m_stuhlbein_or;
+        CgSceneGraphEntity* m_stuhlplate;
+        CgSceneGraphEntity* m_lehne;
+        CgSceneGraphEntity* m_man;
+    CgSceneGraphEntity* m_tischbein_ul;
+        CgSceneGraphEntity* m_tischbein_ur;
+        CgSceneGraphEntity* m_tischbein_ol;
+        CgSceneGraphEntity* m_tischbein_or;
+        CgSceneGraphEntity* m_tischplatte;
         CgSceneGraphEntity* m_checkerboard;
-        CgLoadObjFile* m_king;
-        CgLoadObjFile* m_queen;
-        CgLoadObjFile* m_bishop;
-        CgLoadObjFile* m_knight;
-        CgLoadObjFile* m_rock;
-        CgLoadObjFile* m_pawn;
+            CgSceneGraphEntity* m_b_king;
+            CgSceneGraphEntity* m_b_queen;
+            CgSceneGraphEntity* m_b_bishop_1;
+            CgSceneGraphEntity* m_b_bishop_2;
+            CgSceneGraphEntity* m_b_knight_1;
+            CgSceneGraphEntity* m_b_knight_2;
+            CgSceneGraphEntity* m_b_rook_1;
+            CgSceneGraphEntity* m_b_rook_2;
+            CgSceneGraphEntity* m_b_pawn_1;
+            CgSceneGraphEntity* m_b_pawn_2;
+            CgSceneGraphEntity* m_b_pawn_3;
+            CgSceneGraphEntity* m_b_pawn_4;
+            CgSceneGraphEntity* m_b_pawn_5;
+            CgSceneGraphEntity* m_b_pawn_6;
+            CgSceneGraphEntity* m_b_pawn_7;
+            CgSceneGraphEntity* m_b_pawn_8;
+
+            CgSceneGraphEntity* m_w_king;
+            CgSceneGraphEntity* m_w_queen;
+            CgSceneGraphEntity* m_w_bishop_1;
+            CgSceneGraphEntity* m_w_bishop_2;
+            CgSceneGraphEntity* m_w_knight_1;
+            CgSceneGraphEntity* m_w_knight_2;
+            CgSceneGraphEntity* m_w_rook_1;
+            CgSceneGraphEntity* m_w_rook_2;
+            CgSceneGraphEntity* m_w_pawn_1;
+            CgSceneGraphEntity* m_w_pawn_2;
+            CgSceneGraphEntity* m_w_pawn_3;
+            CgSceneGraphEntity* m_w_pawn_4;
+            CgSceneGraphEntity* m_w_pawn_5;
+            CgSceneGraphEntity* m_w_pawn_6;
+            CgSceneGraphEntity* m_w_pawn_7;
+            CgSceneGraphEntity* m_w_pawn_8;
+        CgSceneGraphEntity* m_box_plate;
+            CgSceneGraphEntity* m_box_wand1;
+            CgSceneGraphEntity* m_box_wand2;
+            CgSceneGraphEntity* m_box_wand3;
+            CgSceneGraphEntity* m_box_wand4;
 
 
+    //all objs
+    CgLoadObjFile*  obj_man;
+    CgLoadObjFile*  obj_king;
+    CgLoadObjFile*  obj_queen;
+    CgLoadObjFile*  obj_bishop;
+    CgLoadObjFile*  obj_knight;
+    CgLoadObjFile*  obj_rook;
+    CgUnityCube*    obj_cube;
+    CgRotation*     obj_pawn;
 };
-
 #endif // SCENEGRAPH_H

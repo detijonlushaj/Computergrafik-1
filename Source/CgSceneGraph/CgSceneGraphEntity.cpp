@@ -3,21 +3,19 @@
 
 CgSceneGraphEntity::CgSceneGraphEntity()
 {
-
+    setCurrentTransformation(glm::mat4(1.));
+    setObjectTransformation(glm::mat4(1.));
 }
-CgSceneGraphEntity::CgSceneGraphEntity(std::vector<CgBaseRenderableObject*> objects) : m_list_of_objects(objects) {
+CgSceneGraphEntity::CgSceneGraphEntity(CgBaseRenderableObject* object) : m_object(object) {
     setCurrentTransformation(glm::mat4(1.));
     setObjectTransformation(glm::mat4(1.));
 }
 
-const std::vector<CgBaseRenderableObject*>& CgSceneGraphEntity::getListOfObjects() const {
-    return m_list_of_objects;
+CgBaseRenderableObject* CgSceneGraphEntity::getObject() {
+    return m_object;
 }
-void CgSceneGraphEntity::setListOfObjects(std::vector<CgBaseRenderableObject*> list_of_objects) {
-    m_list_of_objects.clear();
-    for (unsigned int i = 0; list_of_objects.size(); ++i) {
-        m_list_of_objects.push_back(list_of_objects[i]);
-    }
+void CgSceneGraphEntity::setObject(CgBaseRenderableObject* object) {
+    this->m_object = object;
 }
 
 glm::mat4 CgSceneGraphEntity::getCurrentTransformation() {

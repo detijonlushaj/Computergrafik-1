@@ -19,7 +19,6 @@
 #include "CgEvents/CgColorChangeEvent.h"
 #include "CgEvents/CgLaneRiesenfeldEvent.h"
 #include "CgEvents/CgRotationEvent.h"
-#include "CgEvents/CgTranslationEvent.h"
 #include "CgExampleTriangle.h"
 #include "CgUnityCube.h"
 #include "CgPolyline.h"
@@ -49,6 +48,8 @@ public:
     void renderObjects();
     void setScene(CgSceneGraph* scene);
     void setCurrentTransformation(glm::mat4);
+    void iterateChildren(CgSceneGraphEntity* entity,glm::vec4 color);
+
 
 private:
     CgSceneGraph* m_scene;
@@ -56,6 +57,13 @@ private:
     CgSceneGraphEntity* selected_entity;
     bool entity_selected;
     bool entity_group_selected;
+
+    bool doTranslate;
+    bool doScale;
+    bool doRotate;
+    bool doX;
+    bool doY;
+    bool doZ;
 
     CgBaseRenderer* m_renderer;
 

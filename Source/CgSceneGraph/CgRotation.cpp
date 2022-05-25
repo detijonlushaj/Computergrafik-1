@@ -67,6 +67,67 @@ CgRotation::CgRotation(int id, std::vector<glm::vec3> indices, int originial_siz
 
 }
 
+CgRotation::CgRotation(int id, std::vector<glm::vec3> indices, int originial_size, int n): m_type(Cg::TriangleMesh), m_id(id)
+{
+    double angle = 2*M_PI / (double)n;
+
+    for (int j = 0; j < n; ++j) {
+
+        for (int i = 0; i < originial_size; ++i) {
+            float x = indices.at(i)[0]*cos(angle) - indices.at(i)[2]*sin(angle);
+            float z = indices.at(i)[2]*cos(angle) + indices.at(i)[0]*sin(angle);
+            indices.push_back(glm::vec3(x, indices.at(i)[1], z));
+        }
+
+        angle+=2*M_PI / (double)n;
+    }
+
+    for (unsigned int i = 0; i < indices.size(); ++i) {
+        m_vertices.push_back(indices.at(i));
+    }
+    int pos;
+
+    for (unsigned int i = 0; i < (m_vertices.size()/originial_size)-1; i+=1) {      // i-tes Segment
+        for (int j = 0; j < originial_size - 1; ++j) {                              // pos j im i-ten segment
+            pos = i * originial_size + j;
+
+            m_triangle_indices.push_back(pos);
+            m_triangle_indices.push_back(pos + 1);
+            m_triangle_indices.push_back(pos + originial_size + 1);
+
+            m_triangle_indices.push_back(pos);
+            m_triangle_indices.push_back(pos + originial_size + 1);
+            m_triangle_indices.push_back(pos + originial_size);
+        }
+    }
+
+    for (unsigned int i = 0; i < m_vertices.size(); i++) {
+        m_vertex_normals.push_back(glm::vec3(0,0,0));
+    }
+
+    //dreieck Normalen + punkt normalen berechnen
+    for (unsigned int i = 0; i < m_triangle_indices.size(); i+=3) {
+        glm::vec3 vec1 = m_vertices[m_triangle_indices[i+1]] - m_vertices[m_triangle_indices[i]];
+        glm::vec3 vec2 = m_vertices[m_triangle_indices[i+2]] - m_vertices[m_triangle_indices[i]];
+
+        glm::vec3 normal = glm::cross(vec2, vec1);
+        normal=glm::normalize(normal);
+        m_face_normals.push_back(normal);
+
+        glm::vec3 vec_centroid = (m_vertices[m_triangle_indices[i]] + m_vertices[m_triangle_indices[i+1]] + m_vertices[m_triangle_indices[i+2]]) / (3.0f);
+        m_face_centroid.push_back(vec_centroid);
+
+        m_vertex_normals.at(m_triangle_indices[i])      += normal;
+        m_vertex_normals.at(m_triangle_indices[i+1])    += normal;
+        m_vertex_normals.at(m_triangle_indices[i+2])    += normal;
+    }
+
+    for(unsigned int i = 0; i<m_vertex_normals.size(); i++){
+        m_vertex_normals.at(i) = glm::normalize(m_vertex_normals.at(i));
+    }
+
+}
+
 CgRotation::~CgRotation()
 {
     m_vertices.clear();
