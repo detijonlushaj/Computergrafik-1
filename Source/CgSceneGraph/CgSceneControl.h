@@ -57,6 +57,8 @@ private:
     CgSceneGraphEntity* selected_entity;
     bool entity_selected;
     bool entity_group_selected;
+    bool lastPressQ;
+    bool lastPressE;
 
     bool doTranslate;
     bool doScale;
