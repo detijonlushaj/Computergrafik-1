@@ -1,23 +1,19 @@
+#ifndef AABB_H
+#define AABB_H
+
 #include <vector>
 #include <glm/glm.hpp>
 #include <string>
 #include "CgBase/CgBaseTriangleMesh.h"
 
-#ifndef CGUNITYCUBE_H
-#define CGUNITYCUBE_H
-
-
-class CgUnityCube: public CgBaseTriangleMesh
+class CgAABB: public CgBaseTriangleMesh
 {
 
 public:
-    CgUnityCube();
-    CgUnityCube(int id);
-    CgUnityCube(int id, glm::vec3);
-    CgUnityCube(int id, double a);
-    CgUnityCube(int id, float, float, float, float, float, float);
+    CgAABB();
+    CgAABB(int id);
 
-    ~CgUnityCube();
+    ~CgAABB();
 
     //inherited from CgBaseRenderableObject
     Cg::ObjectType getType() const override;
@@ -38,8 +34,7 @@ public:
     const std::vector<glm::vec3>& getFaceColors() const override;
     const std::vector<glm::vec3>& getFaceCentroid() const;
 
-    std::vector<float> min_pos;
-    std::vector<float> max_pos;
+    void setVertices(float, float, float, float, float, float);
 private:
 
     std::vector<glm::vec3> m_vertices;
@@ -58,7 +53,7 @@ private:
 };
 
 
-inline Cg::ObjectType  CgUnityCube::getType() const {return m_type;}
-inline unsigned int CgUnityCube::getID() const {return m_id;}
+inline Cg::ObjectType  CgAABB::getType() const {return m_type;}
+inline unsigned int CgAABB::getID() const {return m_id;}
 
-#endif // CGUNITYCUBE_H
+#endif // AABB_H

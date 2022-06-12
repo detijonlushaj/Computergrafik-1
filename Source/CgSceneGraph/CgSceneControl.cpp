@@ -10,13 +10,16 @@ CgSceneControl::CgSceneControl()
     m_trackball_rotation        =glm::mat4(1.);
     m_scalemat                  = glm::mat4(1.);
 
-
     doTranslate = false;
     doScale = false;
     doRotate = false;
     doX=false;
     doY=false;
     doZ=false;
+    showAABB=false;
+    entity_selected=false;
+
+    selected_entity = NULL;
 }
 
 
@@ -24,13 +27,16 @@ CgSceneControl::~CgSceneControl()
 {
     if (m_scene != NULL)
         delete m_scene;
+    if (m_renderer != NULL)
+        delete m_renderer;
+    if (selected_entity != NULL)
+        delete selected_entity;
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
 {
     m_renderer=r;
     m_renderer->setSceneControl(this);
-
 }
 CgBaseRenderer*& CgSceneControl::getRenderer()
 {
@@ -54,7 +60,8 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("matSpecularColor"  ,glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
 
-    setCurrentTransformation(selected_entity->getCurrentTransformation()*selected_entity->getObjectTransformation());
+    if (entity_selected && selected_entity != NULL && selected_entity != nullptr)
+        setCurrentTransformation(selected_entity->getCurrentTransformation()*selected_entity->getObjectTransformation());
 
     // iterate all children
     if (m_scene!=NULL) {
@@ -64,14 +71,45 @@ void CgSceneControl::renderObjects()
     }
 
     // set coordinate system
-    if (entity_selected) {
+    if (entity_selected && selected_entity != m_scene->getRootNode() && selected_entity != NULL) {
         for (int i=0; i<3; ++i) {
             // verschieben zum selektierten Objekt
             setCurrentTransformation(selected_entity->getCurrentTransformation()*selected_entity->getObjectTransformation());
             m_renderer->setUniformValue("mycolor", m_scene->getCoordSystem()->getColorSystem()[i]);
             m_renderer->render(m_scene->getCoordSystem()->getCoordSystem()[i]);
         }
+
+        setCurrentTransformation(glm::mat4(1.0f));
+        m_renderer->render(selected_entity->getObject());
+        glm::mat4 currentTransformation = selected_entity->getCurrentTransformation() * selected_entity->getObjectTransformation();
+        glm::mat4 currentTransformation_inverse = glm::inverse(currentTransformation);
+
+        CgRay* local_ray = new CgRay(Functions::getId());
+
+        local_ray->setA(currentTransformation_inverse * m_scene->getRay()->getA());
+        local_ray->setB(currentTransformation_inverse * m_scene->getRay()->getB());
+        local_ray->setDirection(currentTransformation_inverse * m_scene->getRay()->getDirection());
+
+        m_renderer->init(local_ray);
+        m_renderer->render(local_ray);
+        delete local_ray;
     }
+
+    setCurrentTransformation(glm::mat4(1.0));
+    if (m_scene != NULL &&  m_scene->getRay() != NULL) {
+        m_renderer->setUniformValue("mycolor", glm::vec4(100.0, 0.0, 255.0, 1.0));
+        m_renderer->render(m_scene->getRay());
+    }
+
+    getRenderer()->setUniformValue("mycolor", Functions::getRed());
+    for (unsigned int i = 0; i < m_scene->getIntersections().size(); ++i) {
+        glm::vec3 q = m_scene->getIntersections()[i];
+        CgUnityCube* obj_intersection = new CgUnityCube(Functions::getId(), q);
+        getRenderer()->init(obj_intersection);
+        getRenderer()->render(obj_intersection);
+        delete obj_intersection;
+    }
+    std::cout << "----------------------------------------\n";
 }
 
 void CgSceneControl::handleEvent(CgBaseEvent* e)
@@ -84,13 +122,45 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         CgMouseEvent* ev = (CgMouseEvent*)e;
         std::cout << *ev << std::endl;
 
-        // hier kommt jetzt die Abarbeitung des Events hin...
+        // Dann durch alle Entities iterieren und Inverse der CurrentMatrix und ObjectMatrix anwenden => Objektkoordinaten
+
+        if (ev->getMouseButton() == 2) {
+            // Pixelkoordinaten in NDCs
+            float xNDC = (2.0 * ev->x())/(Functions::getWidth()) - 1.0;
+            float yNDC = -(2.0 * ev->y())/(Functions::getHeight()) + 1.0;
+
+            if (xNDC > 1) xNDC = 1;
+            if (xNDC < -1) xNDC = -1;
+            if (yNDC > 1) yNDC = 1;
+            if (yNDC < -1) yNDC = -1;
+
+            //  NDC mit Inverse der Proje^ktionsmatrix von m_proj_matrix und durch homogene Koordinate teilen
+            // => Kamerakoordinaten
+            m_scene->getRay()->setA(glm::inverse(m_proj_matrix) * glm::vec4(xNDC, yNDC, -0.01f, 1.0f));
+            m_scene->getRay()->setB(glm::inverse(m_proj_matrix) * glm::vec4(xNDC, yNDC, 1.0f, 1.f));
+
+            // Koordinaten mit Inverse von m_lookAt_matrix UND m_trackball_rotation und durch homogene Koordinate teilen
+            // => Weltkoordinaten
+            // currentTransformation Einheitmatrix setzten und m_scalemat wird so auch berücksichtigt
+            m_scene->getRay()->applyTransformationA(glm::inverse(m_lookAt_matrix * m_trackball_rotation
+                                                                 * m_current_transformation));
+            m_scene->getRay()->applyTransformationB(glm::inverse(m_lookAt_matrix * m_trackball_rotation
+                                                                 * m_current_transformation));
+
+            m_scene->getRay()->setDirection(m_scene->getRay()->getB() - m_scene->getRay()->getA());
+
+            //pickingIntersection();
+            m_scene->startIntersection(this, m_scene->getRootNode());
+
+            //m_scene->setRenderer(m_renderer);
+            m_renderer->init(m_scene->getRay());
+            m_renderer->redraw();
+        }
     }
 
     if(e->getType() & Cg::CgTrackballEvent)
     {
         CgTrackballEvent* ev = (CgTrackballEvent*)e;
-
 
         m_trackball_rotation=ev->getRotationMatrix();
         m_renderer->redraw();
@@ -109,18 +179,19 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         // zoom in
         if((!entity_selected) && ev->text()=="+")
         {
-            // glm::mat4 scalemat = glm::mat4(1.);
             m_scalemat = glm::scale(m_scalemat,glm::vec3(1.2,1.2,1.2));
-            // m_current_transformation=m_current_transformation*scalemat;
             m_renderer->redraw();
         }
 
         // zoom out
         if((!entity_selected) && ev->text()=="-")
         {
-            // glm::mat4 scalemat = glm::mat4(1.);
             m_scalemat = glm::scale(m_scalemat,glm::vec3(0.8,0.8,0.8));
-            // m_current_transformation=m_current_transformation*scalemat;
+            m_renderer->redraw();
+        }
+
+        if (ev->text() == "a") {
+            showAABB = !showAABB;
             m_renderer->redraw();
         }
 
@@ -165,7 +236,8 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         }
         // select object
         if(ev->text()=="q")
-        {   lastPressQ = true;
+        {
+            lastPressQ = true;
             if (entity_group_selected)
                 iterateChildrenRestoreOldColor(selected_entity);
             entity_group_selected = false;
@@ -180,10 +252,10 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
                 selected_entity = m_scene->getNextEntity();
             }
             entity_selected=true;
-            selected_entity->getAppearance().setObjectColor(Functions::getGreen());
+            if (selected_entity != NULL)
+                selected_entity->getAppearance().setObjectColor(Functions::getGreen());
             m_renderer->redraw();
-            lastPressE = false;
-        }
+            lastPressE = false;        }
 
         if(ev->text()=="t") {
             doTranslate = true;
@@ -464,6 +536,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         {
             CgWindowResizeEvent* ev = (CgWindowResizeEvent*)e;
             std::cout << *ev <<std::endl;
+
             m_proj_matrix=glm::perspective(45.0f, (float)(ev->w()) / ev->h(), 0.01f, 100.0f);
         }
 
@@ -496,10 +569,66 @@ void CgSceneControl::iterateChildrenSetColor(CgSceneGraphEntity* entity,glm::vec
 }
 
 void CgSceneControl::iterateChildrenRestoreOldColor(CgSceneGraphEntity* entity) {
-    for(unsigned int i = 0; i < entity->getChildren().size(); i++) {
-        glm::vec4 old_color = entity->getChildren()[i]->getAppearance().getOldColor();
-        old_color *= 255.0;
-        entity->getChildren()[i]->getAppearance().setObjectColor(old_color);
-        iterateChildrenRestoreOldColor(entity->getChildren()[i]);
+    if (entity != NULL) {
+        for(unsigned int i = 0; i < entity->getChildren().size(); i++) {
+            glm::vec4 old_color = entity->getChildren()[i]->getAppearance().getOldColor();
+            old_color *= 255.0;
+            entity->getChildren()[i]->getAppearance().setObjectColor(old_color);
+            iterateChildrenRestoreOldColor(entity->getChildren()[i]);
+        }
     }
 }
+
+CgSceneGraphEntity* CgSceneControl::getSelectedEntity() {
+    return selected_entity;
+}
+
+bool CgSceneControl::getShowAABB() { return showAABB; }
+
+/*void CgSceneControl::pickingIntersection() {
+    m_intersections.clear();
+    for (unsigned int i = 0; i < m_cube->getTriangleIndices().size(); i+=3) {
+        glm::vec3 a = m_cube->getVertices()[m_cube->getTriangleIndices()[i]];
+        glm::vec3 b = m_cube->getVertices()[m_cube->getTriangleIndices()[i+1]];
+        glm::vec3 c = m_cube->getVertices()[m_cube->getTriangleIndices()[i+2]];
+        CgPlane p {CgPlane(a, b, c)};
+        float t;
+        glm::vec3 q;
+        if (IntersectRayPlane(p, t, q))
+        {
+            float u, v, w;
+            Barycentric(a, b, c, q, u, v, w);
+            if(u >= 0 && u <= 1 && v >= 0 && v <= 1 && w >= 0 && w <= 1)
+                 m_intersections.push_back(glm::vec3(q[0], q[1], q[2]));
+        }
+    }
+}
+
+bool CgSceneControl::IntersectRayPlane(CgPlane& p, float& t, glm::vec3& q) {
+    glm::vec3 a = glm::vec3(m_scene->getRay()->getA()[0], m_scene->getRay()->getA()[1], m_scene->getRay()->getA()[2]);
+    glm::vec3 ab = glm::vec3(m_scene->getRay()->getDirection()[0], m_scene->getRay()->getDirection()[1], m_scene->getRay()->getDirection()[2]);
+
+    t = (p.d - glm::dot(p.n, a)) / glm::dot(p.n, ab);
+
+    if (std::isfinite(t) && t >= 0.0f ) {
+        q = a + t * ab;
+        return 1;
+    }
+    return 0;
+}
+
+void CgSceneControl::Barycentric(glm::vec3& a, glm::vec3& b, glm::vec3& c, glm::vec3& q,
+                               float& u, float& v, float& w) {
+    glm::vec3 v0 = b - a;
+    glm::vec3 v1 = c - a;
+    glm::vec3 v2 = q - a;
+    float d00 = glm::dot(v0, v0);
+    float d01 = glm::dot(v0, v1);
+    float d11 = glm::dot(v1, v1);
+    float d20 = glm::dot(v2, v0);
+    float d21 = glm::dot(v2, v1);
+    float denom = d00 * d11 - d01 * d01;
+    v = (d11 * d20 - d01 * d21) / denom;
+    w = (d00 * d21 - d01 * d20) / denom;
+    u = 1.0f - v - w;
+}*/

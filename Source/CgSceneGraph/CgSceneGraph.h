@@ -17,6 +17,8 @@
 #include "CgLoadObjFile.h"
 #include "CgPolyline.h"
 #include "CgCoordSystem.h"
+#include "CgRay.h"
+#include "CgPlane.h"
 
 #include"../CgUtils/Functions.h"
 
@@ -37,13 +39,30 @@ public:
     CgSceneGraphEntity* getCurrentEntity();
     CgSceneGraphEntity* getNextEntity();
     CgCoordSystem* getCoordSystem();
+    CgRay* getRay();
+    std::vector<glm::vec3> getIntersections();
 
     void initializeInorderList(CgSceneGraphEntity* entity);
 
     void pushMatrix(glm::mat4);
     void popMatrix();
 
+    void startIntersection(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
+    void checkIntersection(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
+    void pickingIntersection(CgSceneGraphEntity* entity, CgRay* local_ray);
+    bool IntersectRayPlane(CgRay* local_ray, CgPlane& p, float& t, glm::vec3& q);
+    void Barycentric(glm::vec3& a, glm::vec3& b, glm::vec3& c, glm::vec3& q, float& u, float& v, float& w);
+    void setAABBForAllChildren(CgBaseRenderer* renderer, CgSceneGraphEntity*);
+    void calculateAABB(CgSceneGraphEntity* entity);
+    void calculateTransformedAABB(CgSceneGraphEntity* entity);
+    bool IntersectRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray, float& t, glm::vec3& q);
+    bool IntersectsRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray, float& t, glm::vec3& q);
+
     void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
+
+    std::vector<glm::vec3> m_intersections;
+
+    glm::mat4 selected_matrix;
 private:
     void pushMatrix();
     void applyTransform(glm::mat4 arg);
@@ -58,6 +77,8 @@ private:
     CgCoordSystem* coord_system;
 
     std::vector<CgBaseRenderableObject*> o_all_objects;
+
+    CgRay* m_ray;
 
     // all entities
     CgSceneGraphEntity* m_world;

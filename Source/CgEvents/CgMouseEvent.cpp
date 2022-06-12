@@ -28,3 +28,9 @@ std::ostream& operator<<(std::ostream& os,const CgMouseEvent& e)
     os << "Mouse-Event of Type: "<< e.m_type <<", LocalPos:(" << e.m_localPos.x << "," << e.m_localPos.y <<"), Button: "<< e.m_button;
     return os;
 }
+
+int CgMouseEvent::x() const { return  m_localPos.x; }
+
+int CgMouseEvent::y() const { return  m_localPos.y; }
+
+Cg::MouseButtons CgMouseEvent::getMouseButton() { return m_button; }

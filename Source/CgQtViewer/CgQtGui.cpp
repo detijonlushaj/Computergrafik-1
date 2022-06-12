@@ -12,6 +12,7 @@
 #include "../CgEvents/CgLaneRiesenfeldEvent.h"
 #include "../CgEvents/CgRotationEvent.h"
 #include "../CgEvents/CgTranslationEvent.h"
+#include "../CgUtils/Functions.h"
 
 #include <QSlider>
 #include <QVBoxLayout>
@@ -61,15 +62,12 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QWidget *opt_translation = new QWidget;
     createOptionPanelTranslation(opt_translation);
 
-    QWidget *otheropt = new QWidget;
-    createOptionPanelExample1(otheropt);
 
     QTabWidget* m_tabs = new QTabWidget();
     m_tabs->addTab(opt_color,"&C");        //tab name
     m_tabs->addTab(opt_LR_UA,"&UA");
     m_tabs->addTab(opt_rotation,"&R");
     m_tabs->addTab(opt_translation,"&T");
-    //m_tabs->addTab(otheropt,"&tab");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -304,75 +302,6 @@ void CgQtGui::createOptionPanelTranslation(QWidget *parent){
     parent->setLayout(tab_Translation);
 }
 
-
-void CgQtGui::createOptionPanelExample1(QWidget* parent)
-{
-   /*Example for using a checkbox */
-
-//    myCheckBox1 = new QCheckBox("enable Option 1");
-//    myCheckBox1->setCheckable(true);
-//    myCheckBox1->setChecked(false);
-//    connect(myCheckBox1, SIGNAL( clicked() ), this, SLOT(slotMyCheckBox1Changed()) );
-//    tab1_control->addWidget(myCheckBox1);
-
-
-    QVBoxLayout *tab_control = new QVBoxLayout();
-    QHBoxLayout *subBox = new QHBoxLayout();
-
-
-
-    /*Example for using a button group */
-
-    QGroupBox* myGroupBox = new QGroupBox("Radiobutton Group Example ");
-
-    myButtonGroup = new QButtonGroup(subBox);
-    myButtonGroup->setExclusive(true);
-
-    QRadioButton* radiobutton1 = new QRadioButton( "&Option1");
-    QRadioButton* radiobutton2 = new QRadioButton( "&Option2");
-    QRadioButton* radiobutton3 = new QRadioButton( "&Option3");
-    QRadioButton* radiobutton4 = new QRadioButton( "&Option4");
-    QRadioButton* radiobutton5 = new QRadioButton( "&Option5");
-
-    radiobutton2->setChecked(true);
-
-    myButtonGroup->addButton(radiobutton1,0);
-    myButtonGroup->addButton(radiobutton2,1);
-    myButtonGroup->addButton(radiobutton3,2);
-    myButtonGroup->addButton(radiobutton4,3);
-    myButtonGroup->addButton(radiobutton5,4);
-
-
-    QVBoxLayout *vbox = new QVBoxLayout;
-    vbox->addWidget(radiobutton1);
-    vbox->addWidget(radiobutton2);
-    vbox->addWidget(radiobutton3);
-    vbox->addWidget(radiobutton4);
-    vbox->addWidget(radiobutton5);
-    vbox->addStretch(1);
-    myGroupBox->setLayout(vbox);
-    subBox->addWidget(myGroupBox);
-    tab_control->addLayout(subBox);
-
-    connect(myButtonGroup, SIGNAL( buttonClicked(int) ), this, SLOT( slotButtonGroupSelectionChanged() ) );
-    parent->setLayout(tab_control);
-}
-
-void CgQtGui::slotButtonGroupSelectionChanged()
-{
-
-}
-
-void CgQtGui::slotMySpinBox1Changed()
-{
-
-}
-
-void CgQtGui::slotMyCheckBox1Changed()
-{
-
-}
-
 void CgQtGui::slotLoadMeshFile()
 {
    QString file=  QFileDialog::getOpenFileName(this, tr("Open Obj-File"),"",tr("Model Files (*.obj)"));
@@ -463,6 +392,8 @@ void CgQtGui::keyPressEvent(QKeyEvent *event)
 
 void CgQtGui::viewportChanged(int w, int h)
 {
+    Functions::setWidth(w);
+    Functions::setHeight(h);
      CgBaseEvent* e = new CgWindowResizeEvent(Cg::WindowResizeEvent,w,h);
      notifyObserver(e);
 }

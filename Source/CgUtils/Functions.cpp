@@ -2,6 +2,8 @@
 #include <iostream>
 
 int Functions::unique_id {0};
+int Functions::width {0};
+int Functions::height {0};
 glm::vec4 Functions::white {glm::vec4(255.0, 255.0, 255.0, 1.0)};
 glm::vec4 Functions::red {glm::vec4(255.0, 0.0, 0.0, 1.0)};
 glm::vec4 Functions::green {glm::vec4(0.0, 255.0, 0.0, 1.0)};
@@ -26,10 +28,10 @@ glm::vec4 Functions::getPink() { return pink; }
 glm::vec4 Functions::getChessPink() { return chessPink; }
 glm::vec4 Functions::getChessBlue() { return chessBlue; }
 
-bool Functions::XOR(bool a, bool b)
-{
-    return (a + b) % 2;
-}
+int Functions::getWidth() { return width; }
+void Functions::setWidth(int value) { width = value; }
+int Functions::getHeight() { return height; }
+void Functions::setHeight(int value) { height = value; }
 
 std::vector<glm::vec3> Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(std::vector<glm::vec3> verticesold, int n) {
     // Unter 3 macht der Algorithmus keinen Sinn
@@ -74,6 +76,7 @@ std::vector<glm::vec3> Functions::Lane_Riesenfeld_Unterteilungs_Algorithmus(std:
     }
     return vertices;
 }
+
 std::string Functions::getPathtoObj(std::string s){
     return "/home/uni/Desktop/cg1/Source/CgData/" + s;
 }

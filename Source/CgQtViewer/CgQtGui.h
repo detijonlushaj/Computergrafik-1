@@ -101,7 +101,6 @@ private:
     void createOptionPanelLaneRiesenfeld_UA(QWidget* panel);
     void createOptionPanelRotation(QWidget* panel);
     void createOptionPanelTranslation(QWidget* panel);
-    void createOptionPanelExample1(QWidget* panel);
 
     QButtonGroup* myButtonGroup;
     QSpinBox*   SpinBoxRed;
@@ -121,17 +120,12 @@ private:
 
 private slots:
 
-
-
     /* slots to catch events directly from renderer */
     void mouseEvent(QMouseEvent* event);
     void viewportChanged(int,int);
     void slotTrackballChanged();
 
     /* slots example qt gui elements */
-    void slotMySpinBox1Changed();
-    void slotMyCheckBox1Changed();
-    void slotButtonGroupSelectionChanged();
     void slotLoadMeshFile();
 
     void slotButtonChangeColorPressed();

@@ -1,4 +1,5 @@
 #include "CgWindowResizeEvent.h"
+#include "../CgUtils/Functions.h"
 
 CgWindowResizeEvent::CgWindowResizeEvent():
 m_type(Cg::WindowResizeEvent),
@@ -14,7 +15,8 @@ m_type(type),
 m_w(w),
 m_h(h)
 {
-
+    Functions::setWidth(w);
+    Functions::setHeight(h);
 }
 
 

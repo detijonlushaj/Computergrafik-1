@@ -29,12 +29,16 @@
 #include "CgUtils/ObjLoader.h"
 #include <string>
 #include <cmath>
+#include <vector>
+#include <glm/glm.hpp>
+#include "glm/gtx/string_cast.hpp"
+#include "CgPlane.h"
 
 class CgSceneGraph;
 class CgSceneGraphEntity;
 class CgBaseEvent;
 class CgBaseRenderer;
-
+class CgPolyline;
 
 class CgSceneControl : public CgObserver, public CgBaseSceneControl
 {
@@ -51,8 +55,16 @@ public:
     void iterateChildrenSetColor(CgSceneGraphEntity* entity, glm::vec4 color);
     void iterateChildrenRestoreOldColor(CgSceneGraphEntity* entity);
 
+    void pickingIntersection();
+    bool IntersectRayPlane(CgPlane& p, float& t, glm::vec3& q);
+    void Barycentric(glm::vec3& a, glm::vec3& b, glm::vec3& c, glm::vec3& q, float& u, float& v, float& w);
+
+    CgSceneGraphEntity* getSelectedEntity();
+    bool getShowAABB();
 private:
     CgSceneGraph* m_scene;
+
+    bool showAABB;
 
     CgSceneGraphEntity* selected_entity;
     bool entity_selected;
