@@ -56,11 +56,11 @@ public:
     void calculateAABB(CgSceneGraphEntity* entity);
     void calculateTransformedAABB(CgSceneGraphEntity* entity);
     bool IntersectRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray, float& t, glm::vec3& q);
-    bool IntersectsRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray, float& t, glm::vec3& q);
 
     void render(CgSceneControl* scene_control, CgSceneGraphEntity* entity);
 
     std::vector<glm::vec3> m_intersections;
+    std::vector<glm::vec3> m_intersections_aabb;
 
     glm::mat4 selected_matrix;
 private:

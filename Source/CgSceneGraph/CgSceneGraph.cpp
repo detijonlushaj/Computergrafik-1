@@ -782,6 +782,7 @@ void CgSceneGraph::render(CgSceneControl* scene_control, CgSceneGraphEntity* ent
 
 void CgSceneGraph::startIntersection(CgSceneControl* scene_control, CgSceneGraphEntity* entity) {
     m_intersections.clear();
+    m_intersections_aabb.clear();
     checkIntersection(scene_control, entity);
     std::cout << "Anzahl Schnittpunkte: " << m_intersections.size() << "\n";
 }
@@ -856,10 +857,19 @@ bool CgSceneGraph::IntersectRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray
                 return false;
         }
     }
+    // first intersection t_min with box
     q = local_ray->getA() + local_ray->getDirection()*t_min;
     glm::vec4 intersection_point = glm::vec4(q[0], q[1], q[2], 1.0);
     intersection_point = entity->getObjectTransformation() * m_modelview_matrix_stack.top() * intersection_point;
-    m_intersections.push_back(glm::vec3(intersection_point[0], intersection_point[1], intersection_point[2]));
+    m_intersections_aabb.push_back(glm::vec3(intersection_point[0], intersection_point[1], intersection_point[2]));
+
+    // second intersection t_min with box
+    glm::vec3 q_max = local_ray->getA() + local_ray->getDirection()*t_max;
+    intersection_point = glm::vec4(q_max[0], q_max[1], q_max[2], 1.0);
+    intersection_point = entity->getObjectTransformation() * m_modelview_matrix_stack.top() * intersection_point;
+    m_intersections_aabb.push_back(glm::vec3(intersection_point[0], intersection_point[1], intersection_point[2]));
+
+    t = t_min;
     return true;
 }
 
@@ -922,22 +932,4 @@ void CgSceneGraph::calculateAABB(CgSceneGraphEntity* entity) {
             z_max = entity->getObject()->getVertices()[i][2];
     }
     entity->setAABB(x_min, x_max, y_min, y_max, z_min, z_max);
-}
-
-bool CgSceneGraph::IntersectsRayAABB(CgSceneGraphEntity* entity, CgRay* local_ray, float& t, glm::vec3& q) {
-    for (unsigned int i = 0; i < entity->getAABB()->getTriangleIndices().size(); i+=3) {
-        glm::vec3 a = entity->getAABB()->getVertices()[entity->getAABB()->getTriangleIndices()[i]];
-        glm::vec3 b = entity->getAABB()->getVertices()[entity->getAABB()->getTriangleIndices()[i+1]];
-        glm::vec3 c = entity->getAABB()->getVertices()[entity->getAABB()->getTriangleIndices()[i]+2];
-        CgPlane p {CgPlane(a, b, c)};
-        float t;
-        glm::vec3 q;
-        if (IntersectRayPlane(local_ray, p, t, q))
-        {
-            float u, v, w;
-            Barycentric(a, b, c, q, u, v, w);
-            return u >= 0 && u <= 1 && v >= 0 && v <= 1 && w >= 0 && w <= 1;
-        }
-    }
-    return false;
 }

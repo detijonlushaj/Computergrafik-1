@@ -8,7 +8,10 @@ CgSceneControl::CgSceneControl()
     m_lookAt_matrix             =glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
     m_proj_matrix               =glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
     m_trackball_rotation        =glm::mat4(1.);
-    m_scalemat                  = glm::mat4(1.);
+    m_scalemat                  = glm::mat4(glm::vec4(0.07, 0.0, 0.0, 0.0),
+                                            glm::vec4(0.0, 0.07, 0.0, 0.0),
+                                            glm::vec4(0.0, 0.0, 0.07, 0.0),
+                                            glm::vec4(0.0, 0.0, 0.0, 1.0));
 
     doTranslate = false;
     doScale = false;
@@ -104,6 +107,15 @@ void CgSceneControl::renderObjects()
     getRenderer()->setUniformValue("mycolor", Functions::getRed());
     for (unsigned int i = 0; i < m_scene->getIntersections().size(); ++i) {
         glm::vec3 q = m_scene->getIntersections()[i];
+        CgUnityCube* obj_intersection = new CgUnityCube(Functions::getId(), q);
+        getRenderer()->init(obj_intersection);
+        getRenderer()->render(obj_intersection);
+        delete obj_intersection;
+    }
+
+    getRenderer()->setUniformValue("mycolor", Functions::getGreen());
+    for (unsigned int i = 0; i < m_scene->m_intersections_aabb.size(); ++i) {
+        glm::vec3 q = m_scene->m_intersections_aabb[i];
         CgUnityCube* obj_intersection = new CgUnityCube(Functions::getId(), q);
         getRenderer()->init(obj_intersection);
         getRenderer()->render(obj_intersection);
