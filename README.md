@@ -1,8 +1,22 @@
-# Computergrafik 1
+# chess_scene
 
-Created a chess scene with QT and OpenGL.
+Created a chess scene with QT and OpenGL during the computer graphics 1 course. Focusing on the computer graphics pipeline and rendering a scene with geometric objects.
 
 Runs on Ubuntu 20.04. The GPU has to support OpenGL 3.3.
+
+Run Manual:
+
+- following packets need to be installed
+  > - g++
+  > - libglm-dev
+  > - qt5-default (optional)
+  > - g++ (optional)
+  > - qtcreator (optional)
+- Commands typed in terminal
+  > - make clean
+  > - qmake
+  > - make
+  > - ./CgViewer
 
 Controls:
 
@@ -29,8 +43,8 @@ Objects can be transformed when selected
 >   > - plus
 >   > - minus
 
-A right click in the scene will created a picking ray. All Intersections with the objects will be marked with a red cube. In Addition all AABB-Boxes of the objects will be marked with a green cube.
+A right click in the scene will create a picking ray. All Intersections with the objects will be marked with a red cube. In Addition, all AABB-Boxes of the objects will be marked with a green cube.
 
 > - a: show AABB-Box of selected object
 
-The blue object in the center is the object in object coordinates placed in the scene and the blue ray projected from the scene to the object coordinates of the selected object.
+The blue object in the center is the object in object coordinates placed in the scene and the blue ray projected from the scene (in world coordinates) to the object coordinates of the selected object.
